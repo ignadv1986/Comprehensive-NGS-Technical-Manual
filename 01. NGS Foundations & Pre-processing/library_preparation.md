@@ -56,21 +56,29 @@ To ensure library integrity, fragment size and concentration are assessed before
 - **Fragment Size**
 
 Both Tapestation and Bioanalyzer are microfluidic electrophoresis instruments, while the fragment analyzer uses capillary electrophoresis. For all of them, the principle is the same: samples are loaded together with a fluorescent dye and a molecular size marker and fragments are subjected to an electric field so that they separate by size. The instruments detects the fluorescent signal vs time and transforms it into bp using the provided ladder.
-Tapestation takes more samples than Bioanalyzer, and the sample preparation is easier, so it´s usually the preferred option. However, the fragment analyzer has higher throughput and precision than the other 2, allowing greater resolution and distinction between small framents and primer dimers or other artifacts.
-The result from fragment size analysis is presented as both an electropherogram and a virtual gel. 
+Tapestation takes more samples than Bioanalyzer, and the sample preparation is easier, so it´s usually the preferred option. However, the fragment analyzer has higher throughput and precision than the other two, allowing greater resolution and distinction between small framents and primer dimers or other artifacts.
+The result from fragment size analysis is presented as both an **electropherogram** and a **virtual gel**. 
 
 Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter/primer dimers. Because full primers are longer, then the likelihood of forming dimers is higher. This can be problematic for several reasons:
 
 -	Smaller molecules physically diffuse to the flow cell surface and "capture" a grafting oligo much faster than long library fragments (300-500 bp).
--	Because they are short, the "bridge" is easier to form, and they amplify more efficiently during cluster generation.
+-	Because they are short, the "bridge" is easier to form, and they amplify more efficiently during cluster generation **(cluster side bias)**.
 
 Even if the library has only 5% dimers by mass (ng), they can take up 50% or more of the "clustering occupancy." Libraries with a percentage below 5% of primer dimers are usually acceptable for sequencing.
-It is advisable to use a hot-start polymerase (see above), and sometimes to increase the annealing Temperature 2C with problematic libraries to increase stringency. Another important metric is the primer concentration added into the mix. The final concentration of each primer should be between 0.2-0-5 µM, but it's essential to take into account the primer-to-template ratio. If you have too much primer relative to very few DNA fragments, the primers are more likely to find each other (dimerization) than they are to find a rare DNA template, but we still need to make sure that to ensure the reaction doesn't "starve" before a detectable library concentration is reached. 
+It is advisable to use a hot-start polymerase (see above), and sometimes to increase the annealing Temperature 2°C with problematic libraries to increase stringency. Another important metric is the primer concentration added into the mix. The final concentration of each primer should be between 0.2-0-5 µM, but it's essential to take into account the primer-to-template ratio. If you have too much primer relative to very few DNA fragments, the primers are more likely to find each other (dimerization) than they are to find a rare DNA template, but we still need to make sure that to ensure the reaction doesn't "starve" before a detectable library concentration is reached. 
 The solution, if all measures were taken and there is still over 5% of primer dimers, is a further 0.6x or 0.8x AMPure bead cleanup to "right-size" the library. A ratio (e.g., 40µL beads to 50µL DNA) is the "sweet spot" for removing 120 bp dimers while keeping 300 bp+ libraries.
 
 When the DNA/RNA has been degraded during the process, the electropherogram shows a very wide peak, that sometimes fuses with the primer dimer one, and the virtual gel shows a smeary signal.
 
-If an **HMW** (high molecular weight) smear is present, this is usually due to a problem with the fragmentation or sonication conditions
+If an **HMW** (high molecular weight) smear is present, this is usually due to a problem with the fragmentation or sonication conditions.
+
+- **Molarity Calculation**
+
+Sequencers don’t take absolute quantities of DNA, they work on molarities. In PCR-free protocols, where the quantification is done through qPCR (see above), the molarity (in nM) is already obtained. If no qPCR was done, then the formula to calculate the molarity of a library is:
+**Molarity (nM) = Concentration (ng/µL)×$10^6$ / Fragment length (bp) x 660**
+This is assuming the result is in nM, where 660 is tha average molecular weight of a bp, the average fragment length is provided by the TapeStation/fragment analyzer, and the concentration is obtained from the mass provided by the Qubit quantification. 
+Note: Always use the region tool in the TapeStation software to capture the entire smear, not just the highest peak, to get a true "average bp" for the formula.
+
 
  
 
