@@ -5,13 +5,13 @@ The key innovation that transforms DNA replication into the DNA-sequencing strat
 
 The fundamental challenge for the sequencer, then, is to organize molecules such that their fluorescence signal is interpretable. In Sanger sequencing, an ensemble of DNA molecules — all originating from the same position on the template but having different size due to termination at different positions — are arranged in an electric field by capillary electrophoresis, which separates them by size because DNA is negatively charged. As the molecules migrate in the presence of the electric field, they flow past a detector that registers the fluorescence intensity and color, yielding a series of peaks that can be mapped directly to a DNA sequence.
 
+While Sanger relies on physical separation by size, the leap to NGS was made possible by **massively parallel sequencing**, where millions of unique clusters are sequenced simultaneously on a solid surface (the flow cell).
+
 | Sanger | NGS |
 |--------|-----|
 | 1 fragment at a time | Millions of fragments |
 | Slow | Fast |
 | Limited throughput | Detects small changes |
-
-While Sanger relies on physical separation by size, the leap to NGS was made possible by **massively parallel sequencing**, where millions of unique clusters are sequenced simultaneously on a solid surface (the flow cell).
 
 -**Library Preparation**
 
@@ -36,7 +36,18 @@ The process relies on charge-shielding rather than direct molecular bridging. Hi
 Large DNA molecules dehydrate more easily, so they bind to the beads even at lower PEG concentrations, while small molecules are more soluble and therefore require higher PEG concentrations to bind the beads. Using different bead volume to sample volume ratios, different DNA sizes can be selected. A lower ratio (0.5x) captures only very large fragments, while a higher ratio (1.8x), captures almost everything.
 To make sure that only the fragments of the right size are captured, a double-sided selection is normally used. First, a “right-side cut”, where a really low ratio (0.5x) is used, is performed. In this scenario, large pieces of DNA bind to the beads, and the rest stays on the liquid, so the beads can be discarded. Then, more beads are added to bring the total ratio up to, say, 0.8x (“left-side cut”), so that the rest of the DNA, except for small pieces like primer dimers stick to the beads. These are kept, washed with ethanol 80% to remove contaminants, and finally eluted with water or a low-salt buffer. 80% ethanol is used because it’s strong enough to keep the DNA precipitated on the bead, but contains enough water to dissolve the salts and PEG so they can be washed away.
 
+Lastly, in some protocols the library is amplified with a PCR step, to increase the concentration of DNA (see next section). In **PCR-free NGS protocols**, like whole genome-sequencing (WGS), we start with a much higher initial concentration of DNA (like 1 µg), so there is already enough material to be sequenced after adapter ligation. This has some advantages: PCR polymerases naturally "dislike" areas with high GC content (promoters) or high AT content. PCR-free sequencing provides the most even coverage across the entire genome because you remove the "enzyme preference" entirely. Additionally, PCR can sometimes introduce small insertions or deletions (stutter). PCR-free is superior for clinical variant calling. On the downside, PCR-free NGS protocols contain molecules with both, only one, or no adapters. This is because such adapters are used for library amplification in libraries that have a PCR step, so virtually all fragments will contain both adapters. However, in PCR-free protocols, the adapters are not used for amplification and there is no way to guarantee that all fragments will bind to both adapters.
 
-Lastly, in some protocols the library is amplified with a PCR step, to increase the concentration of DNA. In **PCR-free NGS protocols**, like whole genome-sequencing (WGS), we start with a much higher initial concentration of DNA (like 1 µg), so there is already enough material to be sequenced after adapter ligation. This has some advantages: PCR polymerases naturally "dislike" areas with high GC content (promoters) or high AT content. PCR-free sequencing provides the most even coverage across the entire genome because you remove the "enzyme preference" entirely. Additionally, PCR can sometimes introduce small insertions or deletions (stutter). PCR-free is superior for clinical variant calling. On the downside, PCR-free NGS protocols contain molecules with both, only one, or no adapters. This is because such adapters are used for library amplification in libraries that have a PCR step, so virtually all fragments will contain both adapters. However, in PCR-free protocols, the adapters are not used for amplification and there is no way to guarantee that all fragments will bind to both adapters. 
+- **Library amplification by PCR**
 
+The goal of library PCR is to add the remaining adapter sequences (if using indexed primers) and to amplify the library to a measurable concentration (typically 2–10 nM for loading). When deciding on the number of PCR cycles, two scenarios need to be avoided:
 
+-	Under-amplification: Leads to a library concentration below the detection limit of the Qubit or TapeStation (<0.5ng/µl), making accurate loading impossible.
+-	Over-amplification: Leads to PCR duplicates (reducing unique data) and heteroduplexes (the "bubble product").
+
+| Input DNA | Typical cycle range |
+|-----------|---------------------|
+| 1 µg (WGS) | 0-4 cycles |
+| 50–100 ng (standard) | 5-8 cycles |
+| 1–10 ng (low input) | 10-15 cycles |
+| <1 ng (single-cell, ultra-low) | 18+ cycles |
