@@ -37,3 +37,42 @@ The uniformity of coverage is usually calculated by tools like Picard or Mosdept
 
 **Coefficient of Variation (CV) = Standard Deviation of Depth / Average Sequencing Depth**. The lower this metric (0.1-0.2), the more uniform the data.
 
+## Sequencing QC
+
+- **Per Base Sequence Quality**
+
+It shows the average **Phred score** for each position in the reads. The Phred score measures how confident the sequencer is that the detected base is the correct one, so the higher the score, the better the quality. The Pred score is calculated as **Q = -10log~10~(P)**, where P is the probability of an incorrect base call. Q30, the usually aimed for Phred score, translates to a 1 in 1000 error rate, or a 99.9% accuracy. Scores above 28 are categorized as good quality, and the score should remain uniform throughout the whole sequence. A drop at the end is normal in Illumina sequencers and it's usually solved during the trimming process.
+
+- **Per Sequence Quality Score**
+
+Average Phred score of the bases constituting each read sequence. It shows as a histogram with ideally a unique peak at high Phred scores.
+
+- **Per Base Sequence Content**
+Shows the proportion of each nucleotide for each position in our reads. This proportion should be roughly the same for all nucleotides. We should therefore see straight lines very close to each other for all nucleotides. 
+The presence of wavy lines at the beginning of the reads is usually caused by adapters or random hexamer primer bias in the case of RNA-seq. In ATAC-seq, the Tn5 Transposase has a specific "insertion bias". 
+Differences in G-C vs A-T might have a biological meaning, so worth investigating, while sudden peaks are usually a red flag.
+
+- **Per Sequence GC Content**
+This indicates the percentage of AT-GC bases for all reads, represented as a histogram.
+The GC distribution should form a smooth, bell-shaped curve (approximately normal), matching the GC content of the organism of interest (around 50% in humans).
+If we see two peaks instead of one, that might be a sign of contamination with DNA from a different species. 
+
+-**Per Base N Content**
+N is referred by the sequencer as bases that could not be properly identified. Obviously, this number should be close to 0 for all reads.
+As little as an increase to 1% in any position is already a bad sign.
+A raise towards the end of the ends might be normal and depending on the size it might be worth trimming.
+
+-**Sequence Length Distribution**
+ 
+Shows the distribution of the reads' lengths. All reads should be the same size in a successful sequencing, unless different adapters or trimming attributes were applied.
+
+- **Sequence Duplication Levels**
+
+Shows the percentage of repeated reads, and how many times they are present. The title of the graph tells us what percentage of reads we would be left with if we removed all duplicated reads (so the percentage of unique reads). 
+This really changes depending on the type of samples we have. In RNA-seq, a high number of duplicated reads is expected, since many reads will map to abundant transcripts, while a high number of duplicates in WGS usually means that the library was overamplified. 
+
+- **Overrepresented sequences**
+A sequence is reported if it makes up >0.1% of total reads. This can happen for adapters or primers, which would require further processing of the samples.
+
+- **Adapter Content**
+Especifically detects the presence of adapters. It should be 0, or otherwise trimming is required. 
