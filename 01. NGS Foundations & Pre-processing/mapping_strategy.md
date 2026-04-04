@@ -27,6 +27,14 @@ Importantly, each aligner generates a different indexing, and they are not compa
 ## The Mapping Process
 
 Aligners take short sequences (**seeds**) from the sequencing reads and try to find candidate alignment locations in the index. Once the aligner has "anchored" the read to a specific spot, it attempts to align the remainder of the read to the adjacent genomic coordinates, allowing for a predefined number of mismatches or gaps (indels). This is called the **seed-and-extend method**, and it is essential because, if the aligner tried to find an exact 150-base match in the 3-billion-base human genome, it would almost always fail, due to the presence of point mutations and sequencing errors. The aligner calculates an **alignment score** by rewarding matches and applying "penalties" for mismatches and indels. If a sequences maps to several locations, the aligner chooses the one with the highest alignment score. If multiple locations have the same top score, the read is considered **multi-mapped**, which significantly lowers its Mapping Quality (MAPQ) score (see below).
-The result of this complex scoring and pairing process is recorded in a **SAM or BAM file**.
+The result of this complex scoring and pairing process is recorded in a **SAM file**.
 
+Sam are human-readable text files, where each line is tab-delimited, showing:
 
+- the read name
+- a numerical "flag" (which tells you if it's paired or mapped)
+- the chromosome
+- the position
+- the **CIGAR string**. This is a compact code that describes the extend part of the mapping. For example, 150M means 150 bases matched perfectly, while 100M2D48M means 100 matches, a 2-base deletion, and 48 more matches.
+
+Due to the immense size of sequencing data, SAM files are typically converted into **BAM** (Binary Alignment Map) files. BAM files are compressed, non-human-readable versions of SAM files that allow for much faster data processing and significantly reduced storage footprints. For most downstream analyses, BAM files must be sorted by genomic coordinate and indexed (creating a .bai file) to allow software to quickly access specific regions of the genome.
