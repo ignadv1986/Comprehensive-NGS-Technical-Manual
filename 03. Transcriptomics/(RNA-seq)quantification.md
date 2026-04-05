@@ -28,14 +28,18 @@ It is important to note that the depletion approach is more expensive and requir
 
 ## RNA fragmentation
 
-As most NGS protocols, RNA-seq starts with a fragmentation step, to generate smaller fragments that can be processed by the sequencer after cDNA generation. However, because RNA is single-stranded and much more fragile than DNA, sonication is not recommended. It generates local heat and cavitation that can damage the RNA, and it might contain traces of RNase. The go-to method for RNA is **chemical fragmentation**, based on a combination of heat (94°C) and a buffer containing bivalent metal ions (like Zn or Mg). At high temperatures, the metal ions act as Lewis acids. They coordinate with the oxygen atoms in the phosphodiester backbone of the RNA, making the backbone susceptible to hydrolysis (breaking the bond using a water molecule).
+As most NGS protocols, RNA-seq starts with a fragmentation step, to generate smaller fragments that can be processed by the sequencer after cDNA generation. The goal for most Illumina libraries is a fragment size of ~200–300 bp However, because RNA is single-stranded and much more fragile than DNA, sonication is not recommended. It generates local heat and cavitation that can damage the RNA, and it might contain traces of RNase. The go-to method for RNA is **chemical fragmentation**, based on a combination of heat (94°C) and a buffer containing bivalent metal ions (like Zn or Mg). At high temperatures, the metal ions act as Lewis acids. They coordinate with the oxygen atoms in the phosphodiester backbone of the RNA, making the backbone susceptible to hydrolysis (breaking the bond using a water molecule).
 
-| RIN | Quality | Strategy | Fragmentation |
-|-----|---------|----------|---------------|
-| 8-10 | Excellent | Poly-A/Ribo-depletion | Standard heat-Mg |
-| 6-7 | Acceptable | Recommended ribo-depletion | Standard heat-Mg |
-| 2-5 | Highly degraded | Ribosomal depletion mandatory | Skip or heavily reduce |
+| RIN | Quality | Strategy | Fragmentation | Note |
+|-----|---------|----------|---------------|------|
+| 8-10 | Excellent | Poly-A/Ribo-depletion | Standard heat-Mg | Ideal for high-coverage mRNA-seq |
+| 6-7 | Acceptable | Recommended ribo-depletion | Standard heat-Mg | Watch for "3' bias" if using Poly-A selection |
+| 2-5 | Highly degraded | Ribosomal depletion mandatory | Skip or heavily reduce | Use DV200 to assess if sample is even sequenceable |
+
+DV200: percentage of RNA fragments that are longer than 200 nucleotides. If the DV200 is >30%, the sample is usually "salvageable" for a specialized Ribo-depletion library.
 
 ## cDNA Generation
 
-The most critical challenge of RNA-seq is that Illumina sequencers (and most other platforms) cannot sequence RNA directly; they require a stable, double-stranded DNA template. Therefore, the first step in any RNA-seq protocol is converting fragile RNA into complementary DNA (cDNA).
+The most critical challenge of RNA-seq is that Illumina sequencers (and most other platforms) cannot sequence RNA directly; they require a stable, double-stranded DNA template. Therefore, the first step in any RNA-seq protocol is converting RNA into complementary DNA (cDNA). Since the RNA is fragmented in a previous step, the poly-A can no longer be used to prime the reverse transcriptase (RT) activity. The standard priming method consists on the use of **random hexameres**, 6-nucleotide random sequences that bind all along the RNA fragments, allowing the reverse transcriptase to initiate synthesis regardless of the original 3' or 5' position.
+
+After the initial synthesis by the RT, an RNA-DNA hybrid is formed. 
