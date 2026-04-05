@@ -28,14 +28,7 @@ When performing the size selection step, two measurements need to be considered:
 - The **fragment size** is the total length of the DNA fragment (genomic DNA + adapters)
 - The **insert size** refers only to the genomic DNA between the two adapters
 
-The relationship between the fragment size and the **read length**, a setting that can be selected in the sequencer, determines how the data will look to the aligner. A detailed breakdown of fragment size choice can be found in the [Mapping](mapping.md) of this manual.
-
-
-To illustrate this, we will use a paired-end sequencing set to 150 bp read length as an example:
-
-- If the insert size is less than 300 bp, the R1 and R2 reads will overlap in the middle (**overlapping reads**). This provides double sequencing depth for the center of the fragment, which can be used to correct sequencing errors, but limits the overall genomic coverage.
-- If inserts are over 400 bp, there will be an unsequenced gap in the middle, which the aligner will fill using pared-end logic. This reduces sequencing depth, but allows for a higher coverage in exchange.
-- Finally, if the insert is shorter than the read length (below 150 bp), both R1 and R2 will cover the full genomic sequence and read into the adapter on the other end. This provides very high sequencing depth, but requires very heavy trimming to remove the adapter sequences.
+The relationship between the fragment size and the **read length**, a setting that can be selected in the sequencer, determines how the data will look to the aligner. A detailed breakdown of fragment size choice can be found in the [mapping](mapping.md) section of this repository.
 
 Lastly, in some protocols the library is amplified with a PCR step, to increase the concentration of DNA (see next section). In **PCR-free NGS protocols**, like whole genome-sequencing (WGS), we start with a much higher initial concentration of DNA (like 1 µg), so there is already enough material to be sequenced after adapter ligation. This has some advantages: PCR polymerases naturally "dislike" areas with high GC content (promoters) or high AT content. PCR-free sequencing provides the most even coverage across the entire genome because you remove the "enzyme preference" entirely. Additionally, PCR can sometimes introduce small insertions or deletions (stutter). PCR-free is superior for clinical variant calling. On the downside, PCR-free NGS protocols contain molecules with both, only one, or no adapters. This is because such adapters are used for library amplification in libraries that have a PCR step, so virtually all fragments will contain both adapters. However, in PCR-free protocols, the adapters are not used for amplification and there is no way to guarantee that all fragments will bind to both adapters.
 
