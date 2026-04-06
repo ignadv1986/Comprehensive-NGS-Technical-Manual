@@ -20,6 +20,8 @@ A database that maps genes to specific metabolic and signaling pathways, providi
 
 When doing functional enrichment, a critical step is choosing the right background genes list. Using the complete genome is not advisable, since not all genes are detected in most experiments and this can inflate the results. It is therefore more correct to use only the genes that were tested for differential expression in the first place.
 
-## Software & Tools
+## Software & Visualization
 
 The gold standard for functional enrichment analysis is the R/Bioconductor package **[clusterProfiler](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)**. It allows for advanced visualization and GSEA (Gene Set Enrichment Analysis).
+
+The standard output for this section includes **Dotplots** (showing the most enriched pathways by p-value and gene count) and **Cnetplots** (Gene-Concept Networks), which show the specific genes shared between different enriched pathways.
