@@ -22,7 +22,7 @@ While in other techniques, such as CUT&RUN and ChIP-seq, reads mapping to mitoch
 RNA-seq, on the other hand keeps both mtDNA and contigs, since an increase in the expression of these unlocalized regions can also be biologically meaningful.
 
 **Note:** For all tecnniques, removing alt haplotypes can technically erase biologically relevant differences — especially in highly polymorphic regions.
-We accept that tradeoff because most analysis frameworks aren’t designed for multi-haplotype coordinates.
+This trade-off is accepted because most analysis frameworks aren’t designed for multi-haplotype coordinates.
 If the protein is suspected to bind in such regions, the right move is:
 
 1.	keep haplotype contigs,
