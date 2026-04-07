@@ -24,6 +24,10 @@ Due to the size range of the molecules that provide valuable information in an A
 
 While a single-sided 1.8x SPRI is standard for high-quality cell suspensions, protocols such as Omni-ATAC—designed for frozen tissues or high-metabolic cell types—often utilize a double-sided SPRI (0.5x → 1.2–1.5x). Double-sided selection results in a cleaner-looking TapeStation profile, but it is more technically demanding. If the second ratio is too low (e.g., stopping at 1.1x), significant amounts of the biological multi-nucleosomal signal may be lost, reducing the library's complexity.
 
+## Alignment Strategy
+
+
+
 ## Post-alignment QC
 
 ### Mitochondrial DNA
@@ -38,5 +42,18 @@ The remaining reads mapping to mtDNA are removed in the processing steps after m
 
 TSS enrichment is a standard ATAC-seq quality metric that measures how strongly reads accumulate around transcription start sites. In high-quality ATAC-seq, accessible promoters show a sharp peak of signal exactly at the TSS and a well-defined nucleosome pattern flanking it. Low-quality libraries (e.g., too much background, poor nuclei prep, excessive mitochondrial contamination) show a flat or noisy profile.
 The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile):  reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable backgrpund noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
+
+## Analysis Workflow
+
+The workflow for ATAC-seq varies a lot depending on the aim of the experiment.
+
+### Global chromatin compaction analysis
+
+If the aim of the experiment is only to assess if a certain treatment produces changes in the overall chromatin compaction, there are various ways to do it:
+
+- The most straightforward way is to look at fragment size distribution, which can be done with [deepTools bamPEFragmentSize](https://deeptools.readthedocs.io/en/develop/content/tools/bamPEFragmentSize.html) or the R package [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html). More open chromatin gives an increase in the nucleosome-free fragments (50 bp, ~180 bp total length including adapters) and mononucleosomal fragments, while a shift toward larger fragments suggests global compaction.
+- The genome can be split into fixed windows, or bins, (10 kb for example), count reads with [deepTools multiBamSummary](https://deeptools.readthedocs.io/en/develop/content/tools/multiBamSummary.html) and plot a PCA to see if different chromatin states correlate between conditions.
+
+### Identification of differentially accesible regions (DARs)
 
 
