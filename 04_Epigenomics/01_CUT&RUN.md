@@ -43,11 +43,53 @@ While PCR amplification exponentially enriches for fragments with dual adapters,
 
 Because CUT&RUN has such a low background signal, traditional normalization methods (like total read count) can be misleading. It is critical to normalize using spike-in DNA (usually E. coli or yeast DNA added during the protocol). For a deeper dive into the theory behind this, see the section on [Spike-in Correction](../02_Mapping_&_Alignment/03_post-alignment_processing.md) of this repository.
 
-In CUT&RUN, we normalize technical variations by calculating a **Scaling Factor** for each sample:
+In CUT&RUN, we normalize technical variations by calculating a **scaling factor** for each sample:
 
 Scaling Factor = max spike-in reads across all samples / sample spike-in reads
 
 ​This normalizes technical variations between samples, since the apike-in  DNA goes through the same processes as the samples themselves. If spike-in fails for a sample (very low counts), scaling may produce extreme inflation and should be excluded.
+
+## Early Visualization
+
+The coverage from each replicate and the merge files can be visualized using the bam files on [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [USCS browser](https://genome.ucsc.edu). This serves as a QC control, where enrichment at expected regions, replicate similarity and whole genome background can be assessed.
+
+When raw BAM files are viewed, the IgG control may appear to have peaks as tall as the experimental samples. This is caused by an artifact of auto-scaling within the browser. Because the IgG library contains very few reads, the background noise is zoomed in upon by the software to fill the vertical space of the track. Bigwig generation and spike-in normalization must be completed before the true, scaled relationship between the samples can be observed.
+
+## Coverage Files: bedgraph vs bigwig
+
+Once the reads have been mapped and filtered, the next step in a CUT&RUN workflow is generating the **coverage files**. These files translate discrete aligned reads into a continuous signal profile representing the number of fragments overlapping each genomic region.
+
+There are two ways to represent coverage from bam files: generating **bedGraph** or **BigWig** files. bedGraph are plain text versions, easily readable, while BigWig are a compressed binary version, lighter but not human-readable. In consequence, BigWig files are smaller and easier to read for softwares but, unlike bedGraph, they cannot be edited.
+
+Both bedGraph and BigWig files are usually generated with the **bamcoverage** function of [deepTools](https://deeptools.readthedocs.io/en/latest/). This tool is preferred because it allows the spike-in scaling factor to be applied during the conversion process, thereby producing already normalized bedGraph/bigWig files.
+
+The choice between generating bedGraph or BigWig files is largely dictated by the requirements of the downstream peak-calling software (see next section), but the generation of BigWig files is always recommended to ensure smooth, high-performance visualization in IGV or other genome browsers. It is possible to generate BigWig files from bedGraph with [bedGraphToBigWig](https://anaconda.org/channels/bioconda/packages/ucsc-bedgraphtobigwig/overview). 
+
+## Peak Calling
+
+Following the generation of normalized coverage profiles, the final critical step in the CUT&RUN pipeline is peak calling. This process uses statistical models to identify genomic regions where the density of mapped fragments is significantly higher than the background noise (**peaks**), indicating a **true protein-DNA binding event** or histone modification. The goal of this step is to produce a BED or narrowPeak file containing the coordinates of these high-confidence binding sites for downstream functional analysis.
+
+### bed and narrowPeak files
+
+Peak infomation is stored in tab-delimited files known as **bed**(browser extensible data). They contain the chromosome number and the start and end of the coordinates for the different detected peaks. However, other elements can be attached to them for downstream analysis. Another common format of files used to store peak information is **narrowPeak**. These are basically 10-column bed files, with additional information such as the peak "summit" (the exact point of highest signal), fold-enrichment, and statistical significance (p-values and q-values).
+
+### Peak calling tools
+
+The two main tools used for peak-calling are [MACS3](https://macs3-project.github.io/MACS/) and [SEACR](https://github.com/FredHutch/SEACR). While both can be used for CUT&RUN analysis, **SEACR** (Simple Enrichment Analysis of CUT&RUN) was specifically created for this purpose. Opposed to ChIP-seq, CUT&RUN´s extremely low-background signal, with clear and spiked peaks, makes it perfect for an analysis with a threshold-based algorithm like the one SEACR uses, instead of statistical background models. Importantly, SEACR requires input in the form of bedgraph files and returns bed files, which can later be converted to narrowpeaks, while MACS2 uses bam files as input and returns narrowpeaks. It is worth mentioning that SEACR can be run in “relaxed” or “stringent” modes, with the latter usually being the preferred option due to the low background typical of CUT&RUN experiments.
+**MACS3**, on the other hand is better for the detection of broad histone marks and other “wider” peaks, and is therefore the go-to option when analyzing ChIP-seq data, but also useful in specific CUT&RUN experiments. It takes bam files as input and returns bed files, so bedGraph generation is normally skipped in a MACS3-based workflow. 
+
+Importanyly, in CUT&RUN, peak callers use the IgG control to establish a baseline. By comparing the experimental sample to the IgG, the algorithm can distinguish between true biological enrichment and technical artifacts or "open chromatin" noise.
+
+### Visualization in genome browsers
+
+As mentioned above, the ideal file format to visualize enrichment is BigWig. Because SEACR provides bedGraph files, converting these to BigWig with the bedGraphToBigWig tool is highly recommended to inspect the data. In the case of MACS3, BigWig files are generated form bam files with bamcoverage.
+
+It is also good practice to obtain BigWig files from merged replicates (see below). Comparing these tracks to the ones of the individual replicates in a browser allows for a qualitative sanity check to ensure that the merged signal accurately represents the individual replicates and that no unexpected artifacts were introduced during the pooling process.
+
+### Handling of replicates
+
+
+
 
 
 
