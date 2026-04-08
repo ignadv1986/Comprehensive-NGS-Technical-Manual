@@ -37,7 +37,7 @@ Primers are added together with nucleotides that have a specific fluorophor for 
 
 ### Paired-end sequencing
 
-In the case of **paired-end sequencing**, where fragments are read from both ends, as opposed to single-end sequencing, the process described before is repeated, but in this case the forward strand is cleaved, leaving the reverse one, which will be read as previously described. Paired-end sequencing, although more expensive, provides much higher confidence in the sequence prediction, making it the usual go-to choice for Illumina sequencing.
+In the case of **paired-end sequencing**, where fragments are read from both ends, as opposed to single-end sequencing, the process described before is repeated, but now the forward strand is cleaved, leaving the reverse one, which will be read as previously described. Paired-end sequencing, although more expensive, provides much higher confidence in the sequence prediction, making it the usual go-to choice for Illumina sequencing.
 
 ### Optical chemistry
 
