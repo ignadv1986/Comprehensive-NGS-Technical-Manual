@@ -4,7 +4,7 @@ Assay for Transposase-Accessible Chromatin using sequencing (ATAC-seq) is a powe
 
 ## Tn5 Mechanism
 
-The Tn5 transposase functions as a homodimer that is pre-loaded in vitro with synthetic, double-stranded 19-bp **Mosaic End** (ME) sequences of 19 bp attached to **truncated adapters** (for more information in truncated adapter, refer to the [library prepararion](../01_NGS_Foundations_&_Pre-processing/02_library_preparation.md) section of this repository. This pre-activated complex, known as **transposome**, physically scans for accessible, nucleosome-free DNA, where it simultaneously cleaves the genomic DNA backbone and ligates the ME-containing adapters to the new ends. The full-length sequencing adapters and i5/i7 barcodes are subsequently added during a limited-cycle PCR step.
+The Tn5 transposase functions as a homodimer that is pre-loaded in vitro with synthetic, double-stranded 19-bp **Mosaic End** (ME) sequences of 19 bp attached to **truncated adapters** (for more information on truncated adapter, refer to the [library prepararion](../01_NGS_Foundations_&_Pre-processing/02_library_preparation.md) section of this repository). This pre-activated complex, known as **transposome**, physically scans for accessible, nucleosome-free DNA, where it simultaneously cleaves the genomic DNA backbone and ligates the ME-containing adapters to the new ends. The full-length sequencing adapters and i5/i7 barcodes are subsequently added during a limited-cycle PCR step.
 
 ## Tagmentation and Fragment Size Distribution
 
@@ -20,7 +20,7 @@ Because Tn5 dimerizes when it cuts the DNA, the two Tn5 molecules are offset by 
 
 ## SPRI Selection
 
-Due to the size range of the molecules that provide valuable information in an ATAC-seq experiment being so big, usually a single-sided 1.8x SPRI clean-up is utilized. This high ratio ensures the retention of the small, highly informative nucleosome-free fragments while removing primer dimers (<130 bp).
+To capture the diverse range of fragments generated in ATAC-seq, a single-sided 1.8x SPRI clean-up is typically utilized. This high ratio ensures the retention of the small, highly informative nucleosome-free fragments while removing primer dimers (<130 bp).
 
 While a single-sided 1.8x SPRI is standard for high-quality cell suspensions, protocols such as Omni-ATAC—designed for frozen tissues or high-metabolic cell types—often utilize a double-sided SPRI (0.5x → 1.2–1.5x). Double-sided selection results in a cleaner-looking TapeStation profile, but it is more technically demanding. If the second ratio is too low (e.g., stopping at 1.1x), significant amounts of the biological multi-nucleosomal signal may be lost, reducing the library's complexity.
 
@@ -30,7 +30,7 @@ As mentioned in the mapping section of this repository, both [bowtie2](https://g
 
 - It can "soft-clip" the ends of reads if they contain a bit of adapter sequence that wasn't fully trimmed, whereas Bowtie2 might reject the entire read as an "unmapped" fragment. This maximizes the recovery of short, nucleosome-free fragments.
 - In low-input ATAC-seq, Tn5 can occasionally create chimeric "pasted" fragments. BWA-MEM2 handles these complex alignments more gracefully, preventing false-positive peaks.
-- 
+
 ## Post-alignment QC
 
 ### Mitochondrial DNA
@@ -44,16 +44,18 @@ The remaining reads mapping to mtDNA are removed in the processing steps after m
 ### TSS enrichment score
 
 TSS enrichment is a standard ATAC-seq quality metric that measures how strongly reads accumulate around transcription start sites. In high-quality ATAC-seq, accessible promoters show a sharp peak of signal exactly at the TSS and a well-defined nucleosome pattern flanking it. Low-quality libraries (e.g., too much background, poor nuclei prep, excessive mitochondrial contamination) show a flat or noisy profile.
-The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile):  reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable backgrpund noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
+The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile):  reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable background noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
 
 ## Coverage Files
 
 Once the reads have been mapped and filtered for mitochondrial contamination, the next step is generating coverage files. These files translate discrete, aligned fragments into a continuous signal profile (**tracks**) that represents the density of open chromatin across the genome.
 
-The standard coverage format for coverage files in ATAC-seq is BigWig, generated with the [**bamcoverage**](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) function of deepTools. These are compressed, indexed binary files that can be used for visualization in genome browsers like [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [USCS browser](https://genome.ucsc.edu). There are two important things to take into account when generating BigWig files:
+The standard coverage format for coverage files in ATAC-seq is BigWig, generated with the [**bamcoverage**](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) function of deepTools. These are compressed, indexed binary files that can be used for visualization in genome browsers like [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [UCSC Genome Browser](https://genome.ucsc.edu). There are two important things to take into account when generating BigWig files:
 
 - They must be generated from the 9 bp shifted coordinates. This ensures the signal accurately reflects the Tn5 cut site centers, resulting in sharp, high-resolution peaks.
-- Normalization: because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this is using **CPM (counts per million)**: the number of reads at a specific genomic bin is divided by the total number of mapped reads in the library and multiplied by 1,000,000. Another method, **RPKM (reads per kilobase per million)**, is similar to CPM but also adjusts for the size of the bin.
+- Normalization: because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this is using **CPM (counts per million)**. Another method, **RPKM (reads per kilobase per million)**, is similar to CPM but also adjusts for the size of the bin.
+
+$CPM = Reads in bin x 1,000.000 / Total mapped reads$
 
 ## Peak Calling
 
@@ -81,8 +83,6 @@ Once a final consensus BED file per condition is generated, the next step is to 
 
 **Note:** The manual consensus building described above (using bedtools) is essential for custom pipelines or counting with standalone tools like [featureCounts](https://subread.sourceforge.net/featureCounts.html). However, if the downstream analysis will be performed using the R package [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), this manual intersection and merging is unnecessary. DiffBind automates the consensus peak generation internally when provided with a sample sheet of individual BAM and narrowPeak files.
 
-## Read Counting
-
 ### Using featureCounts to count reads on consensus peaks
 
 The standard tool used to count reads after the consensus peak BED file generation is the feature of the RSubRead package [featureCounts](https://subread.sourceforge.net/featureCounts.html). While bedtools could do this, featureCounts is specifically optimized for high-performance counting. It is strand-aware, handles paired-end data natively, and produces a clean summary of how many reads were successfully assigned to peaks versus how many are just background. featureCounts takes the filtered, indexed BAM files and the master consensus peak set, and it counts reads on each peak for each sample. Then it returns a **count matrix**, a tab-delimited file with different metrics:
@@ -94,7 +94,19 @@ The standard tool used to count reads after the consensus peak BED file generati
 | **Peak_3** | chr2 | 78200 | 78650 | . | 450 | 88 | 92 | 85 | 90 |
 | **Peak_4** | chr10 | 500120 | 500400 | . | 280 | 310 | 295 | 45 | 38 |
 
-The first few columns (Chr, Start, End, Length) are metadata. If differential accesibility studies with DESeq2 (see below) are to be performed, these are stripped in R, leaving only the **Peak IDs** as rows and the **Sample Counts** as columns.
+The first few columns (Chr, Start, End, Length) are metadata. If differential accessibility studies with DESeq2 (see below) are to be performed, these are stripped in R, leaving only the **Peak IDs** as rows and the **Sample Counts** as columns.
+
+## The DiffBind Workflow
+
+While the manual consensus workflow explained above offers maximum transparency, many researchers prefer using the R/Bioconductor package [DiffBind](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf/), which automates the transition from peak files to differential analysis.
+
+DiffBind needs to be provided a **sample sheet** (as .csv), containing the paths to the BAM files, their respective narrowPeak files previously generated with MACS3, and (optionally) the condition that each sample belongs to. It creates a consensus peak, it re-centers every peak around its summit and makes them all a fixed width, and counts the reads in those standarized windows. 
+
+The primary output is a **DBA Object** in R, which can be exported as a report. This report contains the genomic coordinates of all consensus peaks, their normalized accessibility scores, and the statistical significance of their changes between conditions (Fold Change and FDR). To obtain these data diffBind uses DESeq2 or EdgeR internally (depending on the settings). Additionally, DiffBind provides built-in functions to generate PCA plots and binding affinity heatmaps, which are essential for validating the reproducibility of biological replicates, as well as volcano plots to quickly inspect open or closed chromatin regions.
+
+While DiffBind provides a convenient, integrated R environment for standard differential analysis and re-centered peak quantification, a manual featureCounts approach was also documented to allow for maximum flexibility. This modular path preserves the original MACS3 peak boundaries and produces a raw count matrix that can be easily integrated into custom statistical pipelines beyond the standard DiffBind/DESeq2 framework.
+
+## Biological Interpretation
 
 The workflow for ATAC-seq varies a lot depending on the aim of the experiment.
 
@@ -107,4 +119,26 @@ If the aim of the experiment is only to assess if a certain treatment produces c
 
 ### Identification of differentially accesible regions (DARs)
 
+To determine if the difference in read counts between conditions is due to biological significance or just random sampling noise, [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) in the preferred tool. In biological samples, the data is typically overdispersed, because the variance grows very quick with the mean count or, in other terms, it follows a **negative binomial distribution**. To correct for this, DESeq2 uses a **shrinkage** method to provide more stable estimates of fold change, especially for peaks with low counts or high variability. This prevents a single noisy replicate from creating a false positive.
+
+It is worth mentioning that DESeq2 uses its own normalization (the median of ratios) method, which accounts for different factors like sequencing depth or composition bias (when a few peaks are accumulating most of the reads in a sample). Consequently, it is important the DESeq2 is given the count matrix from featureCounts, which contains raw (non-normalized reads), and not data that had been normalized before.
+
+The input for DESeq2 is the cleaned count matrix from featureCounts (see above), and a file containing sample information (replicate, condition, etc). This allows for the generation of a **DESeq2 object**, on which the analysis will be run. 
+
+DESeq2 returns a **Log2-fold Change (LFC)** indicating the changes in accessibility for each region (peak) and a **padj (adjusted p-value)**, obtained through Benjamini-Hochberg correction.
+
+## The FRiP Score
+
+The **Fraction of Reads in Peaks (FRiP)** is a key quality control metric for ATAC-seq. It measures the enrichment of the library by calculating the percentage of all mapped reads that fall within the identified peak regions:
+
+*FRiP = Number of read overlapping peaks / Total number of mapped reads*
+
+| FRiP | Quality | Verdict |
+| :--- | :--- | :--- |
+| >0.3 | Excellent | Outstanding enrichment; the peaks are very clear and the background is low |
+| 0.2-0.3 | Good | Standard for a high-quality ATAC-seq experiment |
+| 0.1-0.2 | Acceptable | Useable data, but may require more conservative statistical filtering |
+| <0.1 | Poor | Indicates a noisy library. This can be caused by over-tagmentation, poor cell viability, or low complexity in the library |
+
+The FRiP score is calculated automatically during diffBind analysis. When using the featureCounts method, it can be obtained by taking the sum of the counts in the count matrix and dividing it by the total reads (obtained via samtools [flagstat](https://www.htslib.org/doc/samtools-flagstat.html))
 
