@@ -142,5 +142,5 @@ $$FRiP = \frac{\text{Number of reads overlapping peaks}}{\text{Total number of m
 | 0.1-0.2 | Acceptable | Useable data, but may require more conservative statistical filtering |
 | <0.1 | Poor | Indicates a noisy library. This can be caused by over-tagmentation, poor cell viability, or low complexity in the library |
 
-The FRiP score is calculated automatically during diffBind analysis. When using the featureCounts method, it can be obtained by taking the sum of the counts in the count matrix and dividing it by the total reads (obtained via samtools [flagstat](https://www.htslib.org/doc/samtools-flagstat.html))
+The FRiP score is calculated automatically during diffBind analysis. When using the featureCounts method, it can be obtained by taking the sum of the counts in the count matrix and dividing it by the total reads (obtained via [samtools flagstat](https://www.htslib.org/doc/samtools-flagstat.html))
 
