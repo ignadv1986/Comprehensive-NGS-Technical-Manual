@@ -46,11 +46,53 @@ The remaining reads mapping to mtDNA are removed in the processing steps after m
 TSS enrichment is a standard ATAC-seq quality metric that measures how strongly reads accumulate around transcription start sites. In high-quality ATAC-seq, accessible promoters show a sharp peak of signal exactly at the TSS and a well-defined nucleosome pattern flanking it. Low-quality libraries (e.g., too much background, poor nuclei prep, excessive mitochondrial contamination) show a flat or noisy profile.
 The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile):  reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable backgrpund noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
 
+## Coverage Files
+
+Once the reads have been mapped and filtered for mitochondrial contamination, the next step is generating coverage files. These files translate discrete, aligned fragments into a continuous signal profile (**tracks**) that represents the density of open chromatin across the genome.
+
+The standard coverage format for coverage files in ATAC-seq is BigWig, generated with the [**bamcoverage**](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) function of deepTools. These are compressed, indexed binary files that can be used for visualization in genome browsers like [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [USCS browser](https://genome.ucsc.edu). There are two important things to take into account when generating BigWig files:
+
+- They must be generated from the 9 bp shifted coordinates. This ensures the signal accurately reflects the Tn5 cut site centers, resulting in sharp, high-resolution peaks.
+- Normalization: because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this is using **CPM (counts per million)**: the number of reads at a specific genomic bin is divided by the total number of mapped reads in the library and multiplied by 1,000,000. Another method, **RPKM (reads per kilobase per million)**, is similar to CPM but also adjusts for the size of the bin.
+
 ## Peak Calling
 
 The goal of peak calling in ATAC-seq is to identify regions of the genome significantly enriched for transposition events compared to the random genomic background. Unlike CUT&RUN, which has an extremely "clean" background, ATAC-seq contains a much higher level of ambient genomic noise due to the nature of the Tn5 tagmentation in a complex nuclear environment, which makes SEACR a poor choice when selecting a peak calling tool. The standard for ATAC-seq is [MACS3](https://macs3-project.github.io/MACS/), which uses a sophisticated Poisson distribution to model the aforementioned background and distinguish true accessibility from random noise or tn5 bias.
 
-## Analysis Workflow
+MACS3 returns **narrowPeak** files, 10 column BED files with additional information:
+
+| chrom | chromStart | chromEnd | name   | score | strand | signalValue | pValue | qValue | peak |
+|-------|------------|----------|--------|-------|--------|-------------|--------|--------|------|
+| chr1  | 345000     | 345150   | peak_1 | 1000  | .      | 10.5        | 50.2   | 45.0   | 75   |
+| chr1  | 567800     | 567920   | peak_2 | 850   | .      | 8.2         | 40.1   | 35.6   | 60   |
+| chr2  | 123400     | 123550   | peak_3 | 920   | .      | 9.8         | 48.7   | 42.3   | 80   |
+| chr2  | 789000     | 789120   | peak_4 | 780   | .      | 7.5         | 38.9   | 33.1   | 55   |
+| chr3  | 456700     | 456820   | peak_5 | 670   | .      | 6.9         | 30.4   | 28.0   | 50   |
+
+The last column contains the **summit** of the peak, the exact base pair with the highest signal, which is critical for downstream applications like transcription factor motif discovery.
+
+## Handling of Replicates
+
+While MACS3 allows for multiple BAM files to be provided as input simultaneously, it internally pools these reads into a single dataset. While this increases statistical power to find low-signal peaks, it does not inherently filter for reproducibility. A peak present in only one replicate (due to technical artifact) may still be called. Therefore, a **hybrid consensus workflow**, similar to the one used in CUT&RUN analysis, remains the gold standard to ensure biological relevance.
+
+First, the BAM files from all replicates of each condition are merged and a master peak set is created with MACS3. Simultaneously, peaks are called from each independent replicate. Next, regions present in at least N-1 replicates (e.g., 2 out of 3) are identified with [bedtools multiinter](https://bedtools.readthedocs.io/en/latest/content/tools/multiinter.html). Lastly, a final set is generated by keeping only peaks present in a majority of replicates (e.g., 2 out of 3) with [bedtools intersect](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) in a process called **intersection**. This ensures high reproducibility but may lose smaller, genuine peaks that fall just below the statistical threshold in one replicate.
+
+Once a final consensus BED file per condition is generated, the next step is to quantify the accessibility of these regions for statistical comparison. All condition-specific consensus files are merged into a **single unique BED file** with [bedtools merge](https://bedtools.readthedocs.io/en/latest/content/tools/merge.html), and the reads mapping to the peaks present in this consensus file are quantified. This ensures that if a region is open in the control but closed in the treated group, it is still measured in both.
+
+**Note:** The manual consensus building described above (using bedtools) is essential for custom pipelines or counting with standalone tools like [featureCounts](https://subread.sourceforge.net/featureCounts.html). However, if the downstream analysis will be performed using the R package [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), this manual intersection and merging is unnecessary. DiffBind automates the consensus peak generation internally when provided with a sample sheet of individual BAM and narrowPeak files.
+
+## Read Counting
+
+### Using featureCounts to count reads on consensus peaks
+
+The standard tool used to count reads after the consensus peak BED file generation is the feature of the RSubRead package [featureCounts](https://subread.sourceforge.net/featureCounts.html). While bedtools could do this, featureCounts is specifically optimized for high-performance counting. It is strand-aware, handles paired-end data natively, and produces a clean summary of how many reads were successfully assigned to peaks versus how many are just background. featureCounts takes the filtered, indexed BAM files and the master consensus peak set, and it counts reads on each peak for each sample. Then it returns a **count matrix**, a tab-delimited file with different metrics:
+
+| Geneid | Chr | Start | End | Strand | Length | WT_Rep1 | WT_Rep2 | KO_Rep1 | KO_Rep2 |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Peak_1** | chr1 | 10045 | 10500 | . | 455 | 145 | 132 | 10 | 12 |
+| **Peak_2** | chr1 | 21500 | 21900 | . | 400 | 22 | 18 | 250 | 280 |
+| **Peak_3** | chr2 | 78200 | 78650 | . | 450 | 88 | 92 | 85 | 90 |
+| **Peak_4** | chr10 | 500120 | 500400 | . | 280 | 310 | 295 | 45 | 38 |
 
 The workflow for ATAC-seq varies a lot depending on the aim of the experiment.
 
