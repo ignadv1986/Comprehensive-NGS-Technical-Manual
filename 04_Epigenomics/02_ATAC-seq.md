@@ -127,11 +127,13 @@ The input for DESeq2 is the cleaned count matrix from featureCounts (see above),
 
 DESeq2 returns a **Log2-fold Change (LFC)** indicating the changes in accessibility for each region (peak) and a **padj (adjusted p-value)**, obtained through Benjamini-Hochberg correction.
 
+Once DARs are identified, they are typically annotated to the nearest gene using tools like ChIPseeker or Homer to determine which biological pathways (via Gene Ontology) are being regulated by the changes in chromatin accessibility
+
 ## The FRiP Score
 
 The **Fraction of Reads in Peaks (FRiP)** is a key quality control metric for ATAC-seq. It measures the enrichment of the library by calculating the percentage of all mapped reads that fall within the identified peak regions:
 
-*FRiP = Number of read overlapping peaks / Total number of mapped reads*
+$$FRiP = \frac{\text{Number of reads overlapping peaks}}{\text{Total number of mapped reads}}$$
 
 | FRiP | Quality | Verdict |
 | :--- | :--- | :--- |
