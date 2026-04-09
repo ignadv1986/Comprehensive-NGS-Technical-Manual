@@ -22,9 +22,7 @@ If a bacterial genome of 5 Mb is sequenced, and we obtain 2,000.000 reads of 150
 
 $$\text{Coverage (\%)} = \left( \frac{\text{Number of bases with } \ge 1 \text{ read}}{\text{Total Genome Size}} \right) \times 100$$
 
-The higher the sequencing depth, the lower the possibility that some positions won’t be sequenced or, in other words, the higher the coverage
-
-The higher the sequencing depth, the lower the possibility that some positions won’t be sequenced or, in other words, the higher the coverage.
+The higher the sequencing depth, the lower the possibility that some positions won't be sequenced or, in other words, the higher the coverage.
 
 <div align="center">
 
