@@ -24,13 +24,11 @@ $$\text{Coverage (\%)} = \left( \frac{\text{Number of bases with } \ge 1 \text{ 
 
 The higher the sequencing depth, the lower the possibility that some positions won't be sequenced or, in other words, the higher the coverage.
 
-<div align="center">
-  <img src="../Figures/sequencingdepth_vs_coverage.png" width="700">
-  <br>
+<br>
   <em>Figure: Representation of sequencing depth vs coverage</em>
 </div>
 
-<div style="height: 40px;"></div>
+<br>
 
 <div align="center">
 
@@ -41,6 +39,8 @@ The higher the sequencing depth, the lower the possibility that some positions w
 | 99.99% | ~20x to 30x average |
 
 </div>
+
+<br>
 
 One important term is **uniformity of coverage**. This is a measure of the variability of coverage across the genome. While the overall coverage might be the desired one, this is an average across all positions, so some bases might not be reaching it while others have an inflated coverage, skewing the %. This can be problematic, especially or WGS, where we want flat coverage. If a position shows a much lower coverage, then the detection of mutations with high confidence won’t be possible. For ATAC-seq or CUT&RUN, we actually want bumpy coverage (peaks where the protein binds and valleys everywhere else).
 
