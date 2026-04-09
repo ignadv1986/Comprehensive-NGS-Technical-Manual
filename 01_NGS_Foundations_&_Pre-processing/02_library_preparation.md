@@ -32,7 +32,7 @@ Large DNA molecules dehydrate more easily, so they bind to the beads even at low
 To make sure that only the fragments of the right size are captured, a double-sided selection is normally used. First, a “right-side cut”, where a really low ratio (0.5x) is used, is performed. In this scenario, large pieces of DNA bind to the beads, and the rest stays on the liquid, so the beads can be discarded. Then, more beads are added to bring the total ratio up to, say, 0.8x (“left-side cut”), so that the rest of the DNA, except for small pieces like primer dimers stick to the beads. These are kept, washed with ethanol 80% to remove contaminants, and finally eluted with water or a low-salt buffer. 80% ethanol is used because it’s strong enough to keep the DNA precipitated on the bead, but contains enough water to dissolve the salts and PEG so they can be washed away.
 
 <div align="center">
-  <img src="../Figures/SPRI.png" width="600">
+  <img src="../Figures/SPRI.png" width="900">
   <br>
   <em>Figure: Overview of Solid Phase Reversible Immobilization (SPIR). Adapted from Russel AJ et al., Nature Communications (2018) under CC-BY 4.0.</em>
 </div>
