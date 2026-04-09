@@ -79,7 +79,7 @@ If the "cleaving" enzyme doesn't work perfectly to wash away the terminator, the
 
 The adapters bound to the genomic DNA contain **indexes**: these are short sequences (usually 8 or 10 bases), different for each sample. Thanks to their presence, all samples can be sequenced together, and the sequencer can determine which reads belong to each sample in a process called **demultiplexing**.
 
-Importantly, the sequencer reads the index as a separate, tiny sequencing run called an **index read**. If the index read has low quality, the machine won't know which sample the DNA belongs to, and these reads end up in an **undetermined** folder. High percentages of undetermined reads usually point to library prep errors or issues with the sample sheet.
+Importantly, the sequencer reads the index as a separate, tiny sequencing run called an **index read**. This takes place at the end of R1. If the index read has low quality, the machine won't know which sample the DNA belongs to, and these reads end up in an **undetermined** folder. High percentages of undetermined reads usually point to library prep errors or issues with the sample sheet.
 
 ### Index Hopping
 
