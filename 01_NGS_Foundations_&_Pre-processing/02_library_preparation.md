@@ -19,6 +19,8 @@ The most common high-throughput method involves the use of truncated (stubby) ad
 In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3´overhangs and filling in the 5´, and subsequently 5´phosphorylated. Finally, a single A is added to the 3´end of each fragment (**“A-tailling”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn´t eliminate) adapter dimers. 
 As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation. 
 
+## Size Selection
+
 A crucial step in library prep is the **selection of fragments of the right size**. This is mainly done through the use of Solid Phase Reversible Immobilization (SPRI) beads, like AMPure XP. The “bead mix” consists of three things:
 
 -	Paramagnetic beads: iron cores coated in carboxyl groups (negative charge)
