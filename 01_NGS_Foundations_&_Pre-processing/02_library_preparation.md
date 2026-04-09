@@ -74,7 +74,7 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 
 **PCR duplicates:** Because some DNA fragments can be amplified more efficiently than others (medium GC content, no hairpins, etc.), when we amplify for too long we risk getting an overrepresentation of these fragments in the final sample. These can take more space in the flow cell, preventing detection of other fragments that, even though were present in the original sample, were not amplified as much. This is often called a reduction in library complexity or diversity.
 
-**The Bubble Product (heteroduplex):** In the final stages of the library PCR, primers get depleted (they run out) and there is an overabundance of DNA fragments. Instead of a primer binding to a template, two full-length library fragments denature (separate) and then accidentally anneal (re-bind) to each other. Since the adapters are identical for all fragments, they zip up perfectly. However, the genomic inserts (the middle part) are different. They are not complementary. The result is a DNA molecule that is double-stranded at the ends (the adapters), but single-stranded in the middle, forming a bubble (heteroduplex). These molecules are less dynamic and migrate slower in an electrophoresis, so they give rise to a high molecular weight peak . However, the sequencer denatures the dsDNA, so this will have no consequences on the sequencing itself. This is a problem of overamplification, so reducing the amount of PCR cycles to reduce reactive use is recommended.
+**The Bubble Product (heteroduplex):** In the final stages of the library PCR, primers get depleted (they run out) and there is an overabundance of DNA fragments. Instead of a primer binding to a template, two full-length library fragments denature (separate) and then accidentally anneal (re-bind) to each other. Since the adapters are identical for all fragments, they zip up perfectly. However, the genomic inserts (the middle part) are different. They are not complementary. The result is a DNA molecule that is double-stranded at the ends (the adapters), but single-stranded in the middle, forming a bubble (heteroduplex). These molecules are less dynamic and migrate slower in an electrophoresis, so they give rise to a high molecular weight peak. However, the sequencer denatures the dsDNA, so this will have no consequences on the sequencing itself. This is a problem of overamplification, so reducing the amount of PCR cycles to reduce reactive use is recommended.
 
 **Thing to consider when designing the library PCR:**
 
@@ -84,7 +84,8 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 
 ## Library Quality Control
 
-To ensure library integrity, fragment size and concentration are assessed before sequencing. Fragment size distribution is analyzed with instruments such as the **BioAnalyzer** or the **TapeStation** to ensure that DNA is in the expected size range. For library quantification, while Nanodrop can be used as a quick first check, **Qubit**, a fluorescence based method where only dsDNA is quantified, as opposed to Nanodrop, which detects all nucleic acids, is preferred. This is the case for libraries that have undergone an amplification step. However, in PCR-free protocols, as mentioned before, many fragments do not have both adapters, and therefore they won't be sequenced. Qubit will nevertheless detect these fragments, leading to an inflation in the amount of sequencing-ready DNA present in the sample. Therefore, in these protocols, the concentration must be calculated by **qPCR-based quantification** with KAPA/NEB Library Quant, which uses primers that bind to the P5/P7 adapters.
+To ensure library integrity, fragment size and concentration are assessed before sequencing. Fragment size distribution is analyzed with instruments such as the **BioAnalyzer** or the **TapeStation** to ensure that DNA is in the expected size range.
+For library quantification, while Nanodrop can be used as a quick first check, **Qubit**, a fluorescence based method where only dsDNA is quantified, as opposed to Nanodrop, which detects all nucleic acids, is preferred. This is the case for libraries that have undergone an amplification step. However, in PCR-free protocols, as mentioned before, many fragments do not have both adapters, and therefore they won't be sequenced. Qubit will nevertheless detect these fragments, leading to an inflation in the amount of sequencing-ready DNA present in the sample. Therefore, in these protocols, the concentration must be calculated by **qPCR-based quantification** with KAPA/NEB Library Quant, which uses primers that bind to the P5/P7 adapters.
 
 ### Fragment Size
 
@@ -92,7 +93,15 @@ Both Tapestation and Bioanalyzer are microfluidic electrophoresis instruments, w
 Tapestation takes more samples than Bioanalyzer, and the sample preparation is easier, so it´s usually the preferred option. However, the fragment analyzer has higher throughput and precision than the other two, allowing greater resolution and distinction between small fragments and adapter dimers or other artifacts.
 The result from fragment size analysis is presented as both an **electropherogram** and a **virtual gel**. 
 
-Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. This can be problematic for several reasons:
+Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. 
+
+<div align="center">
+<img src="../Figures/tapestation_profile.png" width="700">
+
+<em>Figure: Example of a high-quality NGS library fragment size analysis</em>
+</div>
+
+The presence of a high concentration of adapter dimers can be problematic for several reasons:
 
 -	Smaller molecules physically diffuse to the flow cell surface and "capture" a grafting oligo much faster than long library fragments (300-500 bp).
 -	Because they are short, the "bridge" is easier to form, and they amplify more efficiently during cluster generation **(cluster side bias)**.
@@ -126,7 +135,7 @@ In most NGS workflows, samples are pooled at a **1:1 molar ratio** to achieve eq
 
 To minimize pipetting error, libraries should be diluted to a standardized intermediate concentration (e.g., 4 nM or 10 nM) before mixing. Utilizing volumes greater than 2 µL significantly improves the precision of the final pool.
 
-The volume of each library (V<sub>lib</sub> ) required for a specific total pool volume (V<sub>pool</sub> ) is calculated using the following formula:
+The volume of each library (V<sub>lib</sub>) required for a specific total pool volume (V<sub>pool</sub> ) is calculated using the following formula:
 
 $$V_{lib} = \frac{Molarity_{target} \times V_{pool}}{Molarity_{initial} \times n}$$
 
