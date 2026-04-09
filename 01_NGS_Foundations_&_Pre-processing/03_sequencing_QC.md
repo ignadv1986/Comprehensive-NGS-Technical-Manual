@@ -69,7 +69,7 @@ where P is the probability of an incorrect base call. Q30, the usually aimed for
 <div align="center">
   <img src="../Figures/sequencing_per_base_quality.png" width="700">
   <br>
-  <em>Figure: Eaxmple of a per base sequence quality score</em>
+  <em>Figure: Example of a per base sequence quality score</em>
 </div>
 
 <br>
@@ -78,17 +78,41 @@ where P is the probability of an incorrect base call. Q30, the usually aimed for
 
 Average Phred score of the bases constituting each read sequence. It shows as a histogram with ideally a unique peak at high Phred scores.
 
+<div align="center">
+  <img src="../Figures/per_base_quality_score.png" width="700">
+  <br>
+  <em>Figure: Example of a per sequence quality score</em>
+</div>
+
+<br>
+
 - **Per Base Sequence Content**
 
 Shows the proportion of each nucleotide for each position in our reads. This proportion should be roughly the same for all nucleotides. We should therefore see straight lines very close to each other for all nucleotides. 
 The presence of wavy lines at the beginning of the reads is usually caused by adapters or random hexamer primer bias in the case of RNA-seq. In ATAC-seq, the Tn5 Transposase has a specific "insertion bias". 
 Differences in the G-C vs. A-T ratio might have biological significance, so worth investigating, while sudden peaks are usually a red flag.
 
+<div align="center">
+  <img src="../Figures/per_base_sequence_content.png" width="700">
+  <br>
+  <em>Figure: Example of a per base sequence content</em>
+</div>
+
+<br>
+
 - **Per Sequence GC Content**
 
 This indicates the percentage of AT-GC bases for all reads, represented as a histogram.
 The GC distribution should form a smooth, bell-shaped curve (approximately normal), matching the GC content of the organism of interest (around 50% in humans).
-If we see two peaks instead of one, that might be a sign of contamination with DNA from a different species. 
+If we see two peaks instead of one, that might be a sign of contamination with DNA from a different species.
+
+<div align="center">
+  <img src="../Figures/per_sequence_GC_content.png" width="700">
+  <br>
+  <em>Figure: Per sequence GC content of a human genome</em>
+</div>
+
+<br>
 
 - **Per Base N Content**
 
