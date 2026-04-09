@@ -14,7 +14,9 @@ Choosing the right flow cell for the experiment can save money and time. High-ou
 
 Once the run is over, the actual sequencing depth achieved can be calculated through the following formula:
 
-$$\text{Coverage (percentage)} = \left( \frac{\text{Number of bases with } \ge 1 \text{ read}}{\text{Total Genome Size}} \right) \times 100$$
+$$
+\mathrm{Coverage\ (\%)} = \frac{\text{bases with } \ge 1 \text{ read}}{\text{genome size}} \times 100
+$$
 
 If a bacterial genome of 5 Mb is sequenced, and we obtain 2,000.000 reads of 150 bp, then the sequencing depth would be 60x
 
