@@ -21,7 +21,7 @@ As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-t
 
 ## Size Selection
 
-A crucial step in library prep is the **selection of fragments of the right size**. This is mainly done through the use of Solid Phase Reversible Immobilization (SPRI) beads, like AMPure XP. The “bead mix” consists of three things:
+A crucial step in library prep is the selection of fragments of the right size. This is mainly done through the use of **Solid Phase Reversible Immobilization (SPRI)** beads, like AMPure XP. The “bead mix” consists of three things:
 
 -	Paramagnetic beads: iron cores coated in carboxyl groups (negative charge)
 -	Polyethylene glycol (PEG)
@@ -30,6 +30,12 @@ A crucial step in library prep is the **selection of fragments of the right size
 The process relies on charge-shielding rather than direct molecular bridging. High concentrations of NaCl provide a dense population of Na+ counter-ions that screen the electrostatic repulsion between the negatively charged DNA backbone and the carboxylated bead surface. This allows the crowding agent (PEG) to thermodynamically drive the DNA out of the aqueous phase, forcing it to collapse onto and entangle with the bead surface. This interaction is purely concentration-dependent; upon the addition of a low-salt elution buffer, the shielding is lost, and the restored electrostatic repulsion facilitates the release of the DNA.
 Large DNA molecules dehydrate more easily, so they bind to the beads even at lower PEG concentrations, while small molecules are more soluble and therefore require higher PEG concentrations to bind the beads. Using different bead volume to sample volume ratios, different DNA sizes can be selected. A lower ratio (0.5x) captures only very large fragments, while a higher ratio (1.8x), captures almost everything.
 To make sure that only the fragments of the right size are captured, a double-sided selection is normally used. First, a “right-side cut”, where a really low ratio (0.5x) is used, is performed. In this scenario, large pieces of DNA bind to the beads, and the rest stays on the liquid, so the beads can be discarded. Then, more beads are added to bring the total ratio up to, say, 0.8x (“left-side cut”), so that the rest of the DNA, except for small pieces like primer dimers stick to the beads. These are kept, washed with ethanol 80% to remove contaminants, and finally eluted with water or a low-salt buffer. 80% ethanol is used because it’s strong enough to keep the DNA precipitated on the bead, but contains enough water to dissolve the salts and PEG so they can be washed away.
+
+<div align="center">
+  <img src="../Figures/SPRI.png" width="600">
+  <br>
+  <em>Figure: Overview of Solid Phase Reversible Immobilization (SPIR). Adapted from Russel AJ et al., Nature Communications (2018) under CC-BY 4.0.</em>
+</div>
 
 When performing the size selection step, two measurements need to be considered:
 
