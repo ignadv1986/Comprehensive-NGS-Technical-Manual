@@ -46,7 +46,13 @@ As explained above, the sequencer identifies bases by exciting fluorophores with
 - **4-channel chemistry** (e.g., MiSeq, HiSeq): Each of the four bases has a unique dye and is captured in four separate images per cycle. While highly accurate, the time required for four imaging steps per cycle limits throughput.
 - **2-channel chemistry** (e.g., NextSeq, NovaSeq): only two dyes are used and the sequencer takes two pictures, one through a red filter and one through a green filter. Each nucleotide bound to one (red for C and green for G), 2 (red and green for T, resulting in yellow signal), or none (A, the sequencer registers no fluorescence in that position and registers it as an A).
 
-Note: 2-channel color mappings vary by instrument. For example, on the NextSeq 500, 'A' is detected in both channels, whereas on the NovaSeq 6000, 'T' is the mixed signal. In all 2-channel systems, 'G' is characterized by the absence of signal (Dark).
+Note: 2-channel color mappings vary by instrument. For example, on the NextSeq 500, 'A' is detected in both channels, whereas on the NovaSeq 6000, 'T' is the mixed signal. In all 2-channel systems, 'G' is characterized by the absence of signal (dark).
+
+<div align="center">
+  <img src="../Figures/optical_chemistry.png" width="650">
+  <br>
+  <em>Figure 2: Comparison of Illumina 4-Channel vs. 2-Channel optical chemistry. Note how 'G' (Guanine) relies on the absence of signal in 2-channel systems.</em>
+</div>
 
 ## Patterned Flow Cells
 
