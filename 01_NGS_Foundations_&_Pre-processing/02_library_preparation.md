@@ -17,7 +17,13 @@ This is the simplest workflow, mandatory for PCR-free protocols (e.g protocols t
 The most common high-throughput method involves the use of truncated (stubby) adapters, known as **TA-ligation with indexed PCR** or **universal adapter ligation**. In this protocol, adapters contain only the initial priming sites, and the library is "completed" during a subsequent indexed PCR step, where primers add the barcodes and the P5/P7 flow-cell binding sequences. If this PCR fails, then the sequencing will also fail, since the fragments won´t contain the P5/P7 needed for the binding.
 
 In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3´overhangs and filling in the 5´, and subsequently 5´phosphorylated. Finally, a single A is added to the 3´end of each fragment (**“A-tailling”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn´t eliminate) adapter dimers. 
-As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation. 
+As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation.
+
+<div align="center">
+  <img src="../Figures/library_prep.png" width="600">
+  <br>
+  <em>Figure: Overview of a library preparation workflow</em>
+</div>
 
 ## Size Selection
 
