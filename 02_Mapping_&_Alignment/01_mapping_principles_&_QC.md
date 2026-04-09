@@ -31,6 +31,14 @@ Importantly, each aligner generates a different indexing, and they are not compa
 ## The Mapping Process
 
 Aligners take short sequences (**seeds**) from the sequencing reads and try to find candidate alignment locations in the index. Once the aligner has "anchored" the read to a specific spot, it attempts to align the remainder of the read to the adjacent genomic coordinates, allowing for a predefined number of mismatches or gaps (indels). This is called the **seed-and-extend method**, and it is essential because, if the aligner tried to find an exact 150-base match in the 3-billion-base human genome, it would almost always fail, due to the presence of point mutations and sequencing errors. The aligner calculates an **alignment score** by rewarding matches and applying "penalties" for mismatches and indels. If a sequences maps to several locations, the aligner chooses the one with the highest alignment score. If multiple locations have the same top score, the read is considered **multi-mapped**, which significantly lowers its Mapping Quality (MAPQ) score (see below).
+
+
+<div align="center">
+  <img src="../Figures/seed_and_extend.png" width="800">
+  <br>
+  <em>Read alignment with seed-and-extend approach. Adapted from Karpulevich et. al. BMC Bioinformatics (2024), used under CC BY 4.0</em>
+</div>
+
 The result of this complex scoring and pairing process is recorded in a **SAM file**.
 
 Sam files are human-readable text files, where each line is tab-delimited, showing:
@@ -78,7 +86,7 @@ As mentioned in the library prep section of this repository, selecting a correct
 <div align="center">
   <img src="../Figures/fragment_size.png" width="800">
   <br>
-  <em>Figure: Fragment size selection logic.</em>
+  <em>Fragment size selection logic.</em>
 </div>
 
 ## Mapping Quality (MAPQ)
