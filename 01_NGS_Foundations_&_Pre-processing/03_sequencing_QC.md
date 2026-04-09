@@ -24,13 +24,25 @@ $$\text{Coverage (\%)} = \left( \frac{\text{Number of bases with } \ge 1 \text{ 
 
 The higher the sequencing depth, the lower the possibility that some positions won't be sequenced or, in other words, the higher the coverage.
 
-<br>
+<div align="center">
+  <img src="../Figures/sequencingdepth_vs_coverage.png" width="700">
+  <br>
   <em>Figure: Representation of sequencing depth vs coverage</em>
 </div>
 
 <br>
 
 <div align="center">
+
+| Coverage | Sequencing Depth |
+| :--- | :--- |
+| 95% | ~3x to 5x average |
+| 99% | ~8x to 10x average |
+| 99.99% | ~20x to 30x average |
+
+</div>
+
+<br>
 
 | Coverage | Sequencing Depth |
 | :--- | :--- |
