@@ -37,9 +37,10 @@ Aligners take short sequences (**seeds**) from the sequencing reads and try to f
   
   <img src="../Figures/seed_and_extend.png" width="800">
   <br>
-  <em>Read alignment with seed-and-extend approach. Adapted from Karpulevich et. al. BMC Bioinformatics (2024), used under CC BY 4.0</em>
-  
+  <em>Read alignment with seed-and-extend approach. Adapted from Karpulevich et. al. BMC Bioinformatics (2024), used under CC BY 4.0</em> 
 </div>
+
+<br>
 
 The result of this complex scoring and pairing process is recorded in a **SAM file**.
 
