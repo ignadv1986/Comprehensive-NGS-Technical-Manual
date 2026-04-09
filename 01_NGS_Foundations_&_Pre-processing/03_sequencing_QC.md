@@ -7,20 +7,20 @@ For example, if a specific nucleotide is sequenced 30 times, the sequencing dept
 
 Before the experiment is performed, the flow cell that will be used needs to be decided based on the aimed sequencing depth and the genome size:
 
-**Total data (Gb) = Genome size (Gb) x Desired sequencing depth (x)**
+$$\text{Total Data (Gb)} = \text{Genome Size (Gb)} \times \text{Desired Depth (} \times \text{)}$$
 
 For example, a full sequencing of a human genome (around 3.2 Gb) at 30x sequencing depth, requires 96 Gb of raw data.
 Choosing the right flow cell for the experiment can save money and time. High-output flow cells are more expensive and take more time to image, but they might not be ideal if the total data required by the experiment isn’t very high.
 
 Once the run is over, the actual sequencing depth achieved can be calculated through the following formula:
 
-**Sequencing depth = Total number of reads x fragment length (bp) / Total genome size (bp)**
+$$\text{Sequencing Depth} = \frac{\text{Total Number of Reads} \times \text{Fragment Length (bp)}}{\text{Total Genome Size (bp)}}$$
 
-If a bacterial genome of 5 Mb is sequenced, and we obtain 2000000 reads of 150 bp, then the sequencing depth would be 60x
+If a bacterial genome of 5 Mb is sequenced, and we obtain 2,000.000 reads of 150 bp, then the sequencing depth would be 60x
 
 **Coverage** or **breadth of coverage** is closely related to sequencing depth but provides a broader perspective. Coverage is the proportion or percentage of a genome that has been sequenced at a certain depth. It gives an idea of how much of the entire genome has been effectively read and is usually expressed as a multiple of the genome's size, expressed as a percentage. For example, “95% coverage” means that 95% of the intended region has been sequenced at least once or a certain amount of times. It is calculated by bioinformatics tools ([bedtools](https://bedtools.readthedocs.io/en/latest/) or [samtools](https://www.htslib.org)) after the mapping step, with the following formula:
 
-**Coverage (%) = (Number of bases with at least one read / Total genome size) x 100**
+$$\text{Coverage (\%)} = \left( \frac{\text{Number of bases with } \ge 1 \text{ read}}{\text{Total Genome Size}} \right) \times 100$$
 
 The higher the sequencing depth, the lower the possibility that some positions won’t be sequenced or, in other words, the higher the coverage
 | Coverage | Sequencing Depth |
@@ -35,7 +35,9 @@ The most common cause of low uniformity of coverage is **PCR bias**. Some region
 
 The uniformity of coverage is usually calculated by tools like **[Picard](https://broadinstitute.github.io/picard/)** or **[Mosdepth](https://github.com/brentp/mosdepth)** with the following formula:
 
-**Coefficient of Variation (CV) = Standard Deviation of Depth / Average Sequencing Depth**. The lower this metric (0.1-0.2), the more uniform the data.
+$$CV = \frac{\sigma}{\mu} = \frac{\text{Standard Deviation of Depth}}{\text{Average Sequencing Depth}}$$
+
+The lower this metric (0.1-0.2), the more uniform the data.
 
 ## Sequencing QC
 
@@ -57,7 +59,7 @@ Average Phred score of the bases constituting each read sequence. It shows as a 
 
 Shows the proportion of each nucleotide for each position in our reads. This proportion should be roughly the same for all nucleotides. We should therefore see straight lines very close to each other for all nucleotides. 
 The presence of wavy lines at the beginning of the reads is usually caused by adapters or random hexamer primer bias in the case of RNA-seq. In ATAC-seq, the Tn5 Transposase has a specific "insertion bias". 
-Differences in G-C vs A-T might have a biological meaning, so worth investigating, while sudden peaks are usually a red flag.
+Differences in the G-C vs. A-T ratio might have biological significance, so worth investigating, while sudden peaks are usually a red flag.
 
 - **Per Sequence GC Content**
 
@@ -69,7 +71,7 @@ If we see two peaks instead of one, that might be a sign of contamination with D
 
 N is referred by the sequencer as bases that could not be properly identified. Obviously, this number should be close to 0 for all reads.
 As little as an increase to 1% in any position is already a bad sign.
-A raise towards the end of the ends might be normal and depending on the size it might be worth trimming.
+A rise towards the end of the ends might be normal and depending on the size it might be worth trimming.
 
 - **Sequence Length Distribution**
  
@@ -86,11 +88,11 @@ A sequence is reported if it makes up >0.1% of total reads. This can happen for 
 
 - **Adapter Content**
 
-Especifically detects the presence of adapters. It should be 0, or otherwise trimming is required.
+Specifically detects the presence of adapters. It should be 0, or otherwise trimming is required.
 
 ## Trimming
 
-As mentioned above, some sequences, such as **adapters, low quality bases, and poly-N tails** can affect downstream mapping and therefore need to be removed. This process is called trimming, and it can be achieved with different tools. The usual strategy is to run and initial round of fastQC to check the raw state of the run, followed by **[fastp](https://github.com/opengene/fastp)** to remove adapters and other non-desired elements and adding a QC report. It is good practice to run the cleaned data again through fastQC to see how the quality has improved.
+As mentioned above, some sequences, such as **adapters, low quality bases, and poly-N tails** can affect downstream mapping and therefore need to be removed. This process is called trimming, and it can be achieved with different tools. The usual strategy is to run an initial round of fastQC to check the raw state of the run, followed by **[fastp](https://github.com/opengene/fastp)** to remove adapters and other non-desired elements and adding a QC report. It is good practice to run the cleaned data again through fastQC to see how the quality has improved.
 When more customization is needed, [**cutadapt**](https://cutadapt.readthedocs.io/en/stable/) is the preferred option, since it supports more complex trimming rules. This would be the case for small RNA-seq experiments and/or when variable length adapters were used. 
 Usually, trimming adapters is enough; the aligner (like BWA or STAR, see below) can handle a few low-quality bases at the ends.
 
