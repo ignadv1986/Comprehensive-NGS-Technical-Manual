@@ -1,6 +1,8 @@
+# RNA-seq Analysis Workflow
+
 In this section, we go through the computational workflow for RNA-seq analysis starting from the generated alignment files. For technical details on the preferred aligners (such as STAR or HISAT2) and the reasoning behind splice-aware mapping, please refer to the [Alignment & Mapping](../02_Mapping_&_Alignment/02_aligners.md) section of this manual.
 
-# Quantification of reads
+## Quantification of reads
 
 The BAM files generated during the alignment contain the coordinates of the detected genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option in the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it takes a GTF annotation file to define the boundaries between exons and genes. **Important note:** if the GTF doesn't match the genome build, the counts will be zero. 
 The 3 critical settings that must be taken into account when using featureCounts are the following:
@@ -13,9 +15,9 @@ The manual for the featureCounts package can be found [here](https://subread.sou
 
 This package outputs a tab-delimited file with the number of reads, where rows are Gene IDs and columns are your individual samples (**count matrix**).
 
-# Differential Expression
+## Differential Expression
 
-## DESeq2
+### DESeq2
 
 For the identification of differentially expressed genes, the R/Bioconductor package [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is the industry standard. It works on a **DESeq2 object**, constructed from a count matrix (usually provided by featureCounts) with the number of reads, with the genes as rows and the samples as columns, and a metadata matrix containing sample information (replicate, condition…).
 
@@ -68,17 +70,17 @@ It outputs a table containing:
 
 DESeq2 results are usually plotted as volcano plots, with the shrunk LFC (see below) in the x-axis, and the -log10(padj) on the y axis. This transformation turns tiny p-values into large positive numbers, placing the most significant genes at the top of the plot
 
-## LFC shrinkage
+### LFC shrinkage
 
 For genes with low counts or high variability, LFC estimates can be unstable and exaggerated in magnitude due to noise. For example, a gene moving from 1 read to 5 reads represents a "5-fold increase" that is likely statistically meaningless. The R/Bioconductor package [apeglm](https://bioconductor.org/packages/release/bioc/html/apeglm.html) shrinks LFCs per gene, instead of using a fixed prior like other methods, to get more stable, interpretable, and realistic estimates of gene expression changes — reducing noise without erasing true biological effects.
 
-# Functional Enrichment
+## Functional Enrichment
 
 The final stage of an RNA-seq pipeline is functional enrichment analysis. While DESeq2 provides a list of Differentially Expressed Genes (DEGs), enrichment analysis identifies which cellular pathways, biological processes, or molecular components are statistically overrepresented within that list.
 
-## Categorization Frameworks
+### Categorization Frameworks
 
-### GO (Gene Ontology)
+#### GO (Gene Ontology)
 
 The most widely used system, it categorizes genes into three structured domains:
 
@@ -86,15 +88,15 @@ The most widely used system, it categorizes genes into three structured domains:
 - **Biological process:** Larger "biological goals" (e.g., "DNA repair" or "signal transduction").
 - **Cellular component:** Where the gene product is active (e.g., "Mitochondrial matrix").
 
-### KEGG (Kyoto Encyclopedia of Genes and Genomes)
+#### KEGG (Kyoto Encyclopedia of Genes and Genomes)
 
 A database that maps genes to specific metabolic and signaling pathways, providing a "map" of how genes interact within a system
 
-## Background Gene Selection
+### Background Gene Selection
 
 When doing functional enrichment, a critical step is choosing the right background genes list. Using the complete genome is not advisable, since not all genes are detected in most experiments and this can inflate the results. It is therefore more correct to use only the genes that were tested for differential expression in the first place.
 
-## Software & Visualization
+### Software & Visualization
 
 The gold standard for functional enrichment analysis is the R/Bioconductor package **[clusterProfiler](https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html)**. It allows for advanced visualization and GSEA (Gene Set Enrichment Analysis).
 
