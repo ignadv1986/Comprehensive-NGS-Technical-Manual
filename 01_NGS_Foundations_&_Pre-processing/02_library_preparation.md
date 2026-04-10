@@ -12,7 +12,7 @@ Next, small pieces of DNA, known as **adapters**, are bound to the DNA. These fr
 - **Priming sites** (SBS priming sites): Located just "inside" the P5/P7. These are the binding sites for the sequencing primers that give rise to read 1 (R1) and read 2 (R2) in paired-end runs.
 - **Index(barcode) sequences:** These are unique 8–10 bp sequences that act as a "digital tag" for the sample, so a different one needs to be used and kept track of for every sample. While a single barcode (generally i7) per sample can be used, currently the **Unique Dual Indexing (UDI)** method, where both i7 and i5 positions contain unique barcodes , is preferred. UDIs virtually eliminate **index hopping**, a phenomenon where reads from high-concentration samples are misassigned to low-concentration samples during demultiplexing. Without these indexes, libraries could not be pooled (see below), and samples would have to be sequenced one by one. The barcodes allow the sequencing software to sort millions of raw reads back into their original sample identities in a process called **demultiplexing**.
 
-<br><br>
+<br>
 
 <div align="center">
   <img src="../Figures/adapter.png" width="900">
@@ -20,7 +20,7 @@ Next, small pieces of DNA, known as **adapters**, are bound to the DNA. These fr
   <em>Sequencing library architecture</em>
 </div>
 
-<br><br>
+<br>
 
 This is the simplest workflow, mandatory for PCR-free protocols (e.g protocols that yield enough DNA that they do not require a PCR amplification step), but also more expensive and requires a different adapter for every single sample (since the index is already on the adapter).
 
@@ -29,7 +29,7 @@ The most common high-throughput method involves the use of truncated (stubby) ad
 In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3´overhangs and filling in the 5´, and subsequently 5´phosphorylated. Finally, a single A is added to the 3´end of each fragment (**“A-tailing”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn´t eliminate) adapter dimers. 
 As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation.
 
-<br><br>
+<br>
 
 <div align="center">
   <img src="../Figures/library_prep.png" width="900">
@@ -37,7 +37,7 @@ As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-t
   <em>Overview of a library preparation workflow</em>
 </div>
 
-<br><br>
+<br>
 
 ## Size Selection
 
@@ -76,6 +76,7 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 -	**Under-amplification:** Leads to a library concentration below the detection limit of the Qubit or TapeStation (<0.5ng/µl), making accurate loading impossible.
 -	**Over-amplification:** Leads to PCR duplicates (reducing unique data) and heteroduplexes (the "bubble product").
 
+<br>
 <div align="center">
 
 | Input DNA | Typical cycle range |
@@ -86,18 +87,20 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 | <1 ng (single-cell, ultra-low) | 18+ cycles |
 
 </div>
+<br>
 
 **PCR Duplicates:** Because some DNA fragments can be amplified more efficiently than others (medium GC content, no hairpins, etc.), when we amplify for too long we risk getting an overrepresentation of these fragments in the final sample. These can take more space in the flow cell, preventing detection of other fragments that, even though were present in the original sample, were not amplified as much. This is often called a reduction in library complexity or diversity.
 
 **The Bubble Product (heteroduplex):** In the final stages of the library PCR, primers get depleted (they run out) and there is an overabundance of DNA fragments. Instead of a primer binding to a template, two full-length library fragments denature (separate) and then accidentally anneal (re-bind) to each other. Since the adapters are identical for all fragments, they zip up perfectly. However, the genomic inserts (the middle part) are different. They are not complementary. The result is a DNA molecule that is double-stranded at the ends (the adapters), but single-stranded in the middle, forming a bubble (heteroduplex). These molecules are less dynamic and migrate slower in an electrophoresis, so they give rise to a high molecular weight peak. However, the sequencer denatures the dsDNA, so this will have no consequences on the sequencing itself. This is a problem of overamplification, so reducing the amount of PCR cycles to reduce reactive use is recommended.
 
+<br>
 <div align="center">
   <img src="../Figures/bubble_product.png" width="900">
   <br>
   <em>Generation of bubble products during library amplification by PCR</em>
 </div>
 
-<br><br>
+<br>
 
 **Things to consider when designing the library PCR:**
 
@@ -119,13 +122,14 @@ The result from fragment size analysis is presented as both an **electropherogra
 
 Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. 
 
+<br>
 <div align="center">
 <img src="../Figures/tapestation_profile.png" width="700">
 
 <em>Example of a high-quality NGS library fragment size analysis</em>
 </div>
 
-<br><br>
+<br>
 
 The presence of a high concentration of adapter dimers can be problematic for several reasons:
 
