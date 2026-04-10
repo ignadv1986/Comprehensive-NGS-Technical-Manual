@@ -46,9 +46,7 @@ When the binding nature of the protein is unknown, the goal is to preserve the e
   
   <img src="../Figures/CUT&RUN_fragment_size.png" width="600">
   <br>
-  <em>"CUT&RUN Sequencing Workflow" by Mannan369 (2018), Wikimedia Commons. 
-Licensed under CC BY-SA 4.0 International (https://creativecommons.org/licenses/by-sa/4.0/).
-Source: https://commons.wikimedia.org/wiki/File:CUT%26RUN_Protocol.tif</em> 
+  <em>Different possibilities of fragment size distribution in a CUT&RUN experiment</em> 
 </div>
 
 <br>
