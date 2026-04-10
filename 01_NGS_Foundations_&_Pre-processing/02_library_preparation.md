@@ -29,11 +29,15 @@ The most common high-throughput method involves the use of truncated (stubby) ad
 In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3´overhangs and filling in the 5´, and subsequently 5´phosphorylated. Finally, a single A is added to the 3´end of each fragment (**“A-tailing”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn´t eliminate) adapter dimers. 
 As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation.
 
+<br><br>
+
 <div align="center">
   <img src="../Figures/library_prep.png" width="900">
   <br>
   <em>Overview of a library preparation workflow</em>
 </div>
+
+<br><br>
 
 ## Size Selection
 
@@ -88,6 +92,8 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 
 **The Bubble Product (heteroduplex):** In the final stages of the library PCR, primers get depleted (they run out) and there is an overabundance of DNA fragments. Instead of a primer binding to a template, two full-length library fragments denature (separate) and then accidentally anneal (re-bind) to each other. Since the adapters are identical for all fragments, they zip up perfectly. However, the genomic inserts (the middle part) are different. They are not complementary. The result is a DNA molecule that is double-stranded at the ends (the adapters), but single-stranded in the middle, forming a bubble (heteroduplex). These molecules are less dynamic and migrate slower in an electrophoresis, so they give rise to a high molecular weight peak. However, the sequencer denatures the dsDNA, so this will have no consequences on the sequencing itself. This is a problem of overamplification, so reducing the amount of PCR cycles to reduce reactive use is recommended.
 
+<br><br>
+
 <div align="center">
   <img src="../Figures/bubble_product.png" width="900">
   <br>
@@ -116,11 +122,15 @@ The result from fragment size analysis is presented as both an **electropherogra
 
 Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. 
 
+<br><br>
+
 <div align="center">
 <img src="../Figures/tapestation_profile.png" width="700">
 
 <em>Example of a high-quality NGS library fragment size analysis</em>
 </div>
+
+<br><br>
 
 The presence of a high concentration of adapter dimers can be problematic for several reasons:
 
