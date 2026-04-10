@@ -122,15 +122,11 @@ The result from fragment size analysis is presented as both an **electropherogra
 
 Ideally, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. 
 
-<br><br>
-
 <div align="center">
 <img src="../Figures/tapestation_profile.png" width="700">
 
 <em>Example of a high-quality NGS library fragment size analysis</em>
 </div>
-
-<br><br>
 
 The presence of a high concentration of adapter dimers can be problematic for several reasons:
 
