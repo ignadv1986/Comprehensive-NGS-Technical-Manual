@@ -2,9 +2,9 @@
 
 ## Early Visualization
 
-Before doing any analysis on the generated BAM files (the preferred tools for this cam be found on [this](../02_Mapping_&_Alignment/02_aligners.md), it is good practice to check the coverage from each replicateon [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [USCS browser](https://genome.ucsc.edu). This serves as a QC control, where enrichment at expected regions, replicate similarity and whole genome background can be assessed.
+Before doing any analysis on the generated BAM files (the preferred tools for this can be found on [this](../02_Mapping_&_Alignment/02_aligners.md), it is good practice to check the coverage from each replication [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [USCS browser](https://genome.ucsc.edu). This serves as a QC control, where enrichment at expected regions, replicate similarity and whole genome background can be assessed.
 
-When raw BAM files are viewed, the IgG control may appear to have peaks as tall as the experimental samples. This is caused by an artifact of auto-scaling within the browser. Because the IgG library contains very few reads, the background noise is zoomed in upon by the software to fill the vertical space of the track. Bigwig generation and spike-in normalization must be completed before the true, scaled relationship between the samples can be observed.
+**Important note:** When raw BAM files are viewed, the IgG control may appear to have peaks as tall as the experimental samples. This is caused by an artifact of auto-scaling within the browser. Because the IgG library contains very few reads, the background noise is zoomed in upon by the software to fill the vertical space of the track. Bigwig generation and spike-in normalization must be completed before the true, scaled relationship between the samples can be observed.
 
 ## Spike-in Normalization & Scaling Factor
 
@@ -12,7 +12,7 @@ Because CUT&RUN has such a low background signal, traditional normalization meth
 
 In CUT&RUN, we normalize technical variations by calculating a **scaling factor** for each sample:
 
-Scaling Factor = max spike-in reads across all samples / sample spike-in reads
+$$\text{Scaling Factor} = \frac{\max(\text{spike-in reads across all samples})}{\text{sample spike-in reads}}$$
 
 ​This normalizes technical variations between samples, since the spike-in  DNA goes through the same processes as the samples themselves. If spike-in fails for a sample (very low counts), scaling may produce extreme inflation and should be excluded.
 
@@ -32,7 +32,7 @@ Following the generation of normalized coverage profiles, the final critical ste
 
 ### BED and narrowPeak files
 
-Peak infomation is stored in tab-delimited files known as **BED**(browser extensible data). They contain the chromosome number and the start and end of the coordinates for the different detected peaks. However, other elements can be attached to them for downstream analysis. Another common format of files used to store peak information is **narrowPeak**. These are basically 10-column BED files, with additional information such as the peak "summit" (the exact point of highest signal), fold-enrichment, and statistical significance (p-values and q-values).
+Peak information is stored in tab-delimited files known as **BED**(browser extensible data). They contain the chromosome number and the start and end of the coordinates for the different detected peaks. However, other elements can be attached to them for downstream analysis. Another common format of files used to store peak information is **narrowPeak**. These are basically 10-column BED files, with additional information such as the peak "summit" (the exact point of highest signal), fold-enrichment, and statistical significance (p-values and q-values).
 
 ### Peak calling tools
 
@@ -76,7 +76,7 @@ When multiple experimental conditions were analyzed, the first step to find diff
 
 ### Region of interest (ROI) visualization
 
-If a signal acroos a specific region of interest needs to be analyzed, first a A BED file of coordinates must be generated. These can be specific genes of interest from Ensembl/NCBI or broad categories such as "all promoters" (±2 kb from the transcription start site (TSS)). Once the BED file is generated, **deepTools computeMatrix** can be used on the BigWig files to map the signal density acroos these regions. The output is visualized via **deepTools plotHeatmap** or **deepTools plotProfile**.
+If a signal across a specific region of interest needs to be analyzed, first a A BED file of coordinates must be generated. These can be specific genes of interest from Ensembl/NCBI or broad categories such as "all promoters" (±2 kb from the transcription start site (TSS)). Once the BED file is generated, **deepTools computeMatrix** can be used on the BigWig files to map the signal density across these regions. The output is visualized via **deepTools plotHeatmap** or **deepTools plotProfile**.
 
 ### Peak annotation & functional analysis
 
