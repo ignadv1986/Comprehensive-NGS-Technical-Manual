@@ -17,7 +17,6 @@ Source: https://commons.wikimedia.org/wiki/File:CUT%26RUN_Protocol.tif</em>
 
 <br>
 
-
 ## Fragment Size
 
 While in other techniques, like RNA-seq, the size of the fragments is controlled during library prep, in CUT&RUN, fragments are generated during the protocol by the MNase. Because the nuclease cleaves specifically where the antibody is bound, the length of the resulting DNA is highly informative of the protein’s identity and its "footprint" on the genome. Generally, it is accepted that fragments <120 bp correspond to those bound by transcription factor, while 150 bp and 300 bp correspond to mono- and di-nucleosomes, respectively, indicating that the protein of interest is a histone or a histone binding protein. Fragments of 500 bp or above are usually considered background. Therefore, the SPRI step of the library prep is highly dependent on what is known about the protein of interest. In all cases, a double-sided size selection is recommended: first, a low ratio (~0.6x) is used to remove the big, uninformative pieces of DNA. The beads are discarded and the supernatant is kept. Depending on the type of protein being studied, the second SPRI, isolation step varies:
@@ -41,7 +40,20 @@ When assessing fragment size with the TapeStation, a clean peak at the target si
 
 When the binding nature of the protein is unknown, the goal is to preserve the entire biological spectrum—from tiny footprints to large nucleosomal structures. This is achieved through a 1.8x-2.0x SPRI isolation step. In this scenario, an adapter dimer peak is often unavoidable at the bench. In such cases, if the dimer signal exceeds the biological signal, alternative purification methods—such as automated gel excision (e.g., Pippin Prep) set to a >140 bp collection window—may be required to salvage the library for sequencing.
 
-There are many tools to calculate the fragment size distribution, but [bedtools](https://bedtools.readthedocs.io/en/latest/) or the [bamPEFragmentSize](https://deeptools.readthedocs.io/en/develop/content/tools/bamPEFragmentSize.html) of deepTools are usually the go-to options.
+<br>
+
+<div align="center">
+  
+  <img src="../Figures/CUT&RUN_fragment_size.png" width="600">
+  <br>
+  <em>"CUT&RUN Sequencing Workflow" by Mannan369 (2018), Wikimedia Commons. 
+Licensed under CC BY-SA 4.0 International (https://creativecommons.org/licenses/by-sa/4.0/).
+Source: https://commons.wikimedia.org/wiki/File:CUT%26RUN_Protocol.tif</em> 
+</div>
+
+<br>
+
+While the TapeStation provides a physical assessment of the library before it hits the flow cell, it is essential to verify the fragment size distribution bioinformatically after sequencing. Tools such as [bedtools](https://bedtools.readthedocs.io/en/latest/) or the [bamPEFragmentSize](https://deeptools.readthedocs.io/en/develop/content/tools/bamPEFragmentSize.html) of deepTools are used on the aligned BAM files to generate a fragment size histogram. This step serves as a final quality control to ensure that the biological signal (e.g., the <120 bp transcription factor footprints or 150 bp nucleosomal peaks) was successfully captured and preserved throughout the sequencing process, and to confirm that the data is not dominated by technical artifacts like adapter dimers.
 
 ## The IgG Control
 
