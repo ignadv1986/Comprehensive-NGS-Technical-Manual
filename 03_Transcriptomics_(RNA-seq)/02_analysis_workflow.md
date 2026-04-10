@@ -19,13 +19,19 @@ For the identification of differentially expressed genes, the R/Bioconductor pac
 
 Example of a count matrix:
 
+<div align="center">
+
 | Gene | Sample1 | Sample2 | Sample3 | Sample4 | Sample5 | Sample6 |
 |------|---------|----------|---------|---------|----------|---------|
 | GeneA | 123 | 98 | 112 | 304 | 350 | 335 |
 | GeneB | 7 | 15 | 4 | 6 | 7 | 12 |
 | GeneC | 300 | 250 | 289 | 150 | 123 | 98 |
 
-Example of a metadata matrix 
+</div>
+
+Example of a metadata matrix:
+
+<div align="center">
 
 | Sample | Condition | Replicate |
 |--------|-----------|-----------|
@@ -35,6 +41,8 @@ Example of a metadata matrix
 | Sample4 | Treated | 1 |
 | Sample5 | Treated | 2 |
 | Sample6 | Treated | 3 |
+
+</div>
 
 When analyzing differential expression, DESeq2 does the following three things:
 
