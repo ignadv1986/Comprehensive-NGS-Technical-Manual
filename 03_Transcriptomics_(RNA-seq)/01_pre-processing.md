@@ -33,6 +33,8 @@ As most NGS protocols, RNA-seq starts with a fragmentation step, to generate sma
 | 6-7 | Acceptable | Recommended ribo-depletion | Standard heat-Mg | Watch for "3' bias" if using Poly-A selection |
 | 2-5 | Highly degraded | Ribosomal depletion mandatory | Skip or heavily reduce | Use DV200 to assess if sample is even sequenceable |
 
+<br>
+
 <div align="center">
   <img src="../Figures/RIN.png" width="700">
   <br>
