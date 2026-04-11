@@ -24,7 +24,7 @@ There are two ways to represent coverage from BAM files: generating **bedGraph**
 
 Both bedGraph and BigWig files are usually generated with the **bamcoverage** function of [deepTools](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html). This tool is preferred because it allows the spike-in scaling factor to be applied during the conversion process, thereby producing already normalized bedGraph/BigWig files.
 
-The choice between generating bedGraph or BigWig files is largely dictated by the requirements of the downstream peak-calling software (see next section), but the generation of BigWig files is always recommended to ensure smooth, high-performance visualization in IGV or other genome browsers. It is possible to generate BigWig files from bedGraph with [bedGraphToBigWig](https://anaconda.org/channels/bioconda/packages/ucsc-bedgraphtobigwig/overview). 
+The choice between generating bedGraph or BigWig files is largely dictated by the requirements of the downstream peak-calling software (see next section), but the generation of BigWig files is always recommended to ensure smooth, high-performance visualization in IGV or other genome browsers. It is possible to generate BigWig files from bedGraph with [bedGraphToBigWig](https://anaconda.org/channels/bioconda/packages/ucsc-bedgraphtobigwig/overview).
 
 ## Peak Calling
 
@@ -46,6 +46,16 @@ Importantly, in CUT&RUN, peak callers use the IgG control to establish a baselin
 As mentioned above, the ideal file format to visualize enrichment is BigWig. Because SEACR provides bedGraph files, converting these to BigWig with the bedGraphToBigWig tool is highly recommended to inspect the data. In the case of MACS3, BigWig files are generated from BAM files with bamcoverage.
 
 It is also good practice to obtain BigWig files from merged replicates (see below). Comparing these tracks to the ones of the individual replicates in a browser allows for a qualitative sanity check to ensure that the merged signal accurately represents the individual replicates and that no unexpected artifacts were introduced during the pooling process.
+
+<br>
+
+<div align="center">
+  <img src="../Figures/CUT&RUN_genome_tracks.png" width="800">
+  <br>
+  <em>Example of coverage visualization from a CUT&RUN experiment in IGV</em>
+</div>
+
+<br>
 
 ## Handling of Replicates
 
@@ -87,6 +97,16 @@ When multiple experimental conditions were analyzed, the first step to find diff
 ### Region of interest (ROI) visualization
 
 If a signal across a specific region of interest needs to be analyzed, first a A BED file of coordinates must be generated. These can be specific genes of interest from Ensembl/NCBI or broad categories such as "all promoters" (±2 kb from the transcription start site (TSS)). Once the BED file is generated, **deepTools computeMatrix** can be used on the BigWig files to map the signal density across these regions. The output is visualized via **deepTools plotHeatmap** or **deepTools plotProfile**.
+
+<br>
+
+<div align="center">
+  <img src="../Figures/ROI_enrichment.png" width="800">
+  <br>
+  <em>Example of enrichment at a regions of interest from a CUT&RUN experiment</em>
+</div>
+
+<br>
 
 ### Peak annotation & functional analysis
 
