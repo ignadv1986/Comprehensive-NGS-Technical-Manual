@@ -73,8 +73,9 @@ DESeq2 results are usually plotted as volcano plots, with the shrunk LFC (see be
 <br>
 
 <div align="center">
-<img src="../Figures/RNA-seq_volcano_plot.png" width="600">
-<em>Example of volcano plots obtained from an RNA-seq experiment analysed through the workflow explained in this repository.</em>
+  <img src="../Figures/RNA-seq_volcano_plot.png" width="700">
+  <br>
+  <em>Example of volcano plots obtained from an RNA-seq experiment analysed through the workflow explained in this repository.</em>
 </div>
 
 <br>
