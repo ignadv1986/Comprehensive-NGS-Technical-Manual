@@ -33,6 +33,25 @@ The higher the sequencing depth, the lower the possibility that some positions w
 
 <br>
 
+## Library Pooling and Demultiplexing
+
+To optimize sequencing capacity, multiple samples are often pooled and sequenced together using index sequences, a process known as multiplexing (see [library preparation](./03_library_preparation.md) section).
+
+From an experimental design perspective, multiplexing determines how sequencing reads are distributed across samples within a run. The number of samples that can be pooled depends on the total sequencing output and the required depth per sample.
+
+Careful planning is required to ensure balanced representation, as uneven pooling can lead to insufficient coverage for some samples while others are over-sequenced.
+
+## Read Configuration
+
+Sequencing experiments must also define the read configuration, including read length and whether sequencing is performed in single-end or paired-end mode.
+
+While these topics are covered elsewhere in this repository, it is important to note here that:
+
+- Longer reads improve alignment accuracy and detection of structural features, while shorter reads reduce cost and increase throughput.
+- Paired-end sequencing provides additional information by sequencing both ends of each fragment, improving mapping accuracy and variant detection, but requires more sequencing capacity, increasing cost.
+
+The optimal configuration depends on the application and must be balanced against cost and data requirements.
+
 ## Flow Cell Choice
 
 Choosing the appropriate flow cell is critical for cost efficiency. Flow cells differ in total data output, and the optimal choice depends on the number of samples, biological replicates, and the required sequencing depth. Smaller flow cells are more suitable for low sample numbers or pilot experiments, as they minimize unused capacity. In contrast, high-output flow cells reduce cost per base but are only cost-effective when fully utilized. Underfilling a high-capacity flow cell can significantly increase the cost per sample, making careful planning essential.
