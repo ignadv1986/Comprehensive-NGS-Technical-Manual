@@ -48,7 +48,7 @@ One important term is **uniformity of coverage**. This is a measure of the varia
 
 The most common cause of low uniformity of coverage is **PCR bias**. Some regions are easier to amplify by the polymerase, including those with lower GC content, leading to an overrepresentation of these fragments.
 
-The uniformity of coverage is usually calculated by tools like **[Picard](https://broadinstitute.github.io/picard/)** or **[Mosdepth](https://github.com/brentp/mosdepth)** with the following formula:
+The uniformity of coverage is usually calculated by tools like [Picard](https://broadinstitute.github.io/picard/) or [Mosdepth](https://github.com/brentp/mosdepth) with the following formula:
 
 $$CV = \frac{\sigma}{\mu} = \frac{\text{Standard Deviation of Depth}}{\text{Average Sequencing Depth}}$$
 
@@ -56,7 +56,7 @@ The lower this metric (0.1-0.2), the more uniform the data.
 
 ## Sequencing QC
 
-The industry standard for visualizing raw data quality is **[FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)**. It provides the following reports:
+The industry standard for visualizing raw data quality is [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/). It provides the following reports:
 
 - **Per Base Sequence Quality**
 
@@ -139,8 +139,8 @@ Specifically detects the presence of adapters. It should be 0, or otherwise trim
 
 ## Trimming
 
-As mentioned above, some sequences, such as **adapters, low quality bases, and poly-N tails** can affect downstream mapping and therefore need to be removed. This process is called trimming, and it can be achieved with different tools. The usual strategy is to run an initial round of fastQC to check the raw state of the run, followed by **[fastp](https://github.com/opengene/fastp)** to remove adapters and other non-desired elements and adding a QC report. It is good practice to run the cleaned data again through fastQC to see how the quality has improved.
-When more customization is needed, [**cutadapt**](https://cutadapt.readthedocs.io/en/stable/) is the preferred option, since it supports more complex trimming rules. This would be the case for small RNA-seq experiments and/or when variable length adapters were used. 
+As mentioned above, some sequences, such as **adapters, low quality bases, and poly-N tails** can affect downstream mapping and therefore need to be removed. This process is called trimming, and it can be achieved with different tools. The usual strategy is to run an initial round of fastQC to check the raw state of the run, followed by [fastp](https://github.com/opengene/fastp) to remove adapters and other non-desired elements and adding a QC report. It is good practice to run the cleaned data again through fastQC to see how the quality has improved.
+When more customization is needed, [cutadapt](https://cutadapt.readthedocs.io/en/stable/) is the preferred option, since it supports more complex trimming rules. This would be the case for small RNA-seq experiments and/or when variable length adapters were used. 
 Usually, trimming adapters is enough; the aligner (like BWA or STAR, see below) can handle a few low-quality bases at the ends.
 
 ## MultiQC
