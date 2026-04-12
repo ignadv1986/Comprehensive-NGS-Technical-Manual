@@ -1,5 +1,7 @@
 # Sequencing Data QC
 
+After sequencing, it is critical to perform quality control (QC) to verify that the data meets the expected coverage and to identify issues that may affect downstream analysis.
+
 ## Sequence Depth VS Coverage
 
 While  specific sequence depth and coverage (see the [experimental design](./02_experimental_design.md) section of this repo for more details on this) are defined during experimental design, it is important to check if they have been achieved once the run is over.
