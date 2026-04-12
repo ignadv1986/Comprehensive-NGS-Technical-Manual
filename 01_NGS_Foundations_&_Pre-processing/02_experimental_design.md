@@ -1,6 +1,14 @@
 # NGS Experimental Design
 
-In addition to standard experimental design factors , such as conditions or number of replicates, NGS experiments require several parameters to be defined prior to library preparation and sequencing, including sequencing depth, replication strategy, read configuration, and total data output. Defining these correctly is essential to ensure efficient use of time and budget, and to avoid under- or over-sequencing.
+In addition to standard experimental design factors , such as experimental conditions and number of replicates, NGS experiments require several parameters to be defined prior to library preparation and sequencing, including sequencing depth, replication strategy, read configuration, and total data output. Defining these correctly is essential to ensure efficient use of time and budget, and to avoid under- or over-sequencing.
+
+## Number of Samples and Replicates
+
+The number of samples and replicates is primarily determined by the biological question and experimental design. However, these factors have a direct impact on sequencing requirements and must be considered when planning data output and flow cell usage.
+
+Biological replicates are essential to capture biological variability and ensure robust downstream analysis. In most cases, increasing the number of biological replicates provides greater statistical power than increasing sequencing depth beyond recommended levels.
+
+From a sequencing perspective, there is a trade-off between the number of samples/replicates and the depth achieved per sample. Given a fixed sequencing capacity, increasing the number of replicates reduces the number of reads allocated to each sample, while unnecessarily increasing sequencing capacity leads to higher experimental costs.
 
 ## Sequencing Depth & Coverage
 
@@ -25,7 +33,9 @@ The higher the sequencing depth, the lower the possibility that some positions w
 
 <br>
 
-Choosing the appropriate flow cell is critical for cost efficiency. Flow cells differ in total data output, and the optimal choice depends on the number of samples and the required sequencing depth. Smaller flow cells are more suitable for low sample numbers or pilot experiments, as they minimize unused capacity. In contrast, high-output flow cells reduce cost per base but are only cost-effective when fully utilized. Underfilling a high-capacity flow cell can significantly increase the cost per sample, making careful planning essential.
+## Flow Cell Choice
+
+Choosing the appropriate flow cell is critical for cost efficiency. Flow cells differ in total data output, and the optimal choice depends on the number of samples, biological replicates, and the required sequencing depth. Smaller flow cells are more suitable for low sample numbers or pilot experiments, as they minimize unused capacity. In contrast, high-output flow cells reduce cost per base but are only cost-effective when fully utilized. Underfilling a high-capacity flow cell can significantly increase the cost per sample, making careful planning essential.
 
 <br>
 
@@ -38,3 +48,4 @@ Choosing the appropriate flow cell is critical for cost efficiency. Flow cells d
 | Large (cohort studies, WGS) | High (≥1 Tb) | Use high-output runs | Lowest cost per Gb if fully utilized |
 
 </div>
+
