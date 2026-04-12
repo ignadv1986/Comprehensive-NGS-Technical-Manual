@@ -27,7 +27,7 @@ The higher the sequencing depth, the lower the possibility that some positions w
 <div align="center">
   <img src="../Figures/sequencingdepth_vs_coverage.png" width="700">
   <br>
-  <em>Figure: Representation of sequencing depth vs coverage</em>
+  <em>Representation of sequencing depth vs coverage</em>
 </div>
 
 <br>
@@ -69,7 +69,7 @@ where P is the probability of an incorrect base call. Q30, the usually aimed for
 <div align="center">
   <img src="../Figures/sequencing_per_base_quality.png" width="700">
   <br>
-  <em>Figure: Example of a per base sequence quality score</em>
+  <em>Example of a per base sequence quality score</em>
 </div>
 
 <br>
@@ -81,7 +81,7 @@ Average Phred score of the bases constituting each read sequence. It shows as a 
 <div align="center">
   <img src="../Figures/per_sequence_quality_score.png" width="700">
   <br>
-  <em>Figure: Example of a per sequence quality score</em>
+  <em>Example of a per sequence quality score</em>
 </div>
 
 <br>
@@ -95,7 +95,7 @@ Differences in the G-C vs. A-T ratio might have biological significance, so wort
 <div align="center">
   <img src="../Figures/per_base_sequence_content.png" width="700">
   <br>
-  <em>Figure: Example of a per base sequence content</em>
+  <em>Example of a per base sequence content</em>
 </div>
 
 <br>
@@ -109,7 +109,7 @@ If we see two peaks instead of one, that might be a sign of contamination with D
 <div align="center">
   <img src="../Figures/per_sequence_GC_content.png" width="700">
   <br>
-  <em>Figure: Per sequence GC content of a human genome</em>
+  <em>Per sequence GC content of a human genome</em>
 </div>
 
 <br>
@@ -143,4 +143,14 @@ As mentioned above, some sequences, such as **adapters, low quality bases, and p
 When more customization is needed, [**cutadapt**](https://cutadapt.readthedocs.io/en/stable/) is the preferred option, since it supports more complex trimming rules. This would be the case for small RNA-seq experiments and/or when variable length adapters were used. 
 Usually, trimming adapters is enough; the aligner (like BWA or STAR, see below) can handle a few low-quality bases at the ends.
 
+## MultiQC
 
+A useful addition to any sequencing QC workflow is [MultiQC](https://seqera.io/multiqc/). This tool aggregates results from multiple QC and analysis programs (such as FastQC, fastp, Picard, or samtools) into a single, comprehensive report. Instead of manually inspecting dozens or hundreds of individual QC files, MultiQC parses all outputs in a directory and generates an interactive HTML report with unified plots and summaries, making it much easier to compare samples and detect batch effects or outliers. It is particularly valuable in large-scale projects, where consistency across samples is critical, and it helps streamline both quality assessment and reporting by providing a clear overview of the entire dataset in one place.
+
+<div align="center">
+  <img src="../Figures/multiQC.png" width="700">
+  <br>
+  <em>Figure: "Top of a typical MultiQC report." MultiQC: summarize analysis results formultiple tools and samples in a single report. Käller et. al, Bioinformatics (2016). Licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)</em>
+</div>
+
+<br>
