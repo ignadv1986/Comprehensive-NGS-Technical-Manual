@@ -4,11 +4,16 @@ Even when sequencing QC and mapping metrics are within expected ranges, RNA-seq 
 
 ## Gene Quantification (featureCounts)
 
-After successful alignment, read counting tools such as featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated “unassigned” fractions and artificially reduced gene counts.
+After successful alignment, read counting tools such as featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated “unassigned” fractions and artificially reduced gene counts, and should therefore be the first thing to be checked.
 
 Additionally, gene quantification using featureCounts can produce unexpected or biased results depending on **parameter selection**. In most cases, issues are not caused by the data itself, but by mismatches between library properties and counting settings.
 
-- **Strand-specific counting:** One of the most common sources of incorrect gene counts is a mismatch between library strandedness and the -s parameter used in featureCounts. If the strandedness setting does not match the library preparation protocol, reads may be incorrectly assigned or discarded.
+### High proportion of unassigned reads
+
+If the correct GTF file was used, but the proportion of unassigned reads is still too high (>25-30%):
+
+- This might be due to an incorrect selection in the strandedness (-s) parameter, e.g., the strand specification (s-0 for unstranded, s-1 for forward stranded, and s-2 for reverse stranded) does not match the library generation.
+- This can also be caused by an incorrect feature type selection (-t) or a mismatch with the one present on the GTF file. The standard in RNA-seq analysis is "-t exon": if the GTF contains "transcript" information instead of "exon", a mismatch will happen and quantification will fail. One of the most common sources of incorrect gene counts is a mismatch between library strandedness and the -s parameter used in featureCounts. If the strandedness setting does not match the library preparation protocol, reads may be incorrectly assigned or discarded.
 
 | Parameter | Possible Selections | Issue | Consequence |
 | :--- | :--- | :--- | :--- |
