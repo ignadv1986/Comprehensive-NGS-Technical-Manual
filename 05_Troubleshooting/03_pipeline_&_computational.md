@@ -69,60 +69,50 @@ If specific regions or the overall dataset show reduced counts, filtering parame
 
 ## Gene Quantification (Salmon)
 
-Even when alignment or quasi-mapping is successful, quantification with Salmon can produce unexpected or biologically inconsistent expression estimates. In most cases, these issues arise from **mismatches between transcriptome reference, library properties, and quantification parameters**, rather than from the sequencing data itself.
+After quantification, Salmon can produce expression estimates that appear inconsistent or biologically implausible even when mapping rates are high. These issues are typically not due to sequencing quality, but rather to **mismatches between the transcriptome reference, library properties, and the assumptions used during quantification**.
 
-A frequent source of error is **inconsistent transcriptome annotation**. Salmon relies entirely on the provided transcriptome index; if it does not correspond to the same genome build or annotation used elsewhere in the pipeline, reads may be assigned incorrectly or ambiguously, leading to biased transcript and gene-level estimates.
+Because Salmon operates at the transcript level using probabilistic assignment, small inconsistencies in reference or library structure can propagate into large differences at the gene level.
 
-Additionally, Salmon performs transcript-level quantification, which introduces complexities such as multi-mapping reads and isoform ambiguity.
+### High proportion of low-confidence or unstable transcripts
 
-- **Library type specification:** Incorrect library type detection or specification is one of the most common causes of biased quantification.
+If a large fraction of transcripts show unstable or unexpectedly low abundance estimates, this often indicates ambiguity in read assignment.
 
-| Parameter | Possible Selections | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| `--libType` | A (auto)<br>ISR / SR / IU / etc. | Library type incorrectly specified or auto-detection fails | Misassignment of reads, strand bias, distorted expression estimates |
+- This can occur when the transcriptome contains many highly similar isoforms, making it difficult to uniquely assign reads.
+- It can also indicate an incomplete or overly simplified transcriptome reference.
 
-- **Transcriptome reference:** Salmon depends entirely on the transcriptome index for mapping and quantification.
+### Unexpected expression in transcripts that should not be active
 
-| Parameter | Possible Selections | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| Index input | Transcript FASTA | Mismatch with genome build or GTF used downstream | Inconsistent gene-level summarization and missing transcripts |
-| Decoy sequences | With/without decoys | Missing decoy-aware index | Increased spurious mapping and inflated expression estimates |
+If transcripts are detected in conditions where they are not biologically expected, this may indicate issues with reference or mapping specificity.
 
-- **Mapping and alignment mode:** Salmon supports both quasi-mapping and alignment-based modes, each with different sensitivities.
+- Incomplete or outdated transcriptome annotations can lead to reads being assigned to incorrect transcript models.
+- High sequence similarity between transcripts can cause probabilistic assignment to favor incorrect isoforms.
 
-| Parameter | Possible Selections | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| Mapping mode | Quasi-mapping / Alignment-based | Inappropriate mode for data quality or complexity | Reduced accuracy in complex transcriptomes |
-| `--validateMappings` | On/off | Disabled selective alignment | Increased false-positive mappings |
+### Systematic strand-related or directional bias
 
-- **Bias correction:** Salmon includes advanced models to correct technical biases. Disabling or misusing them can skew results.
+If expression appears biased toward the wrong strand or inconsistent with library preparation expectations, this suggests a mismatch in library type assumptions.
 
-| Parameter | Possible Selections | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| `--seqBias` | On/off | Sequence-specific bias not corrected | Systematic distortion in expression estimates |
-| `--gcBias` | On/off | GC bias not modeled | Bias toward GC-rich or GC-poor transcripts |
-| `--posBias` | On/off | Positional bias ignored | Inaccurate fragment distribution modeling |
+- Reads may be assigned in the wrong orientation if library structure is incorrectly specified or inferred.
+- This can distort both transcript-level estimates and downstream gene summarization.
 
-- **Fragment and length modeling:** Salmon models fragment length distributions, which are critical for accurate quantification.
+### Inflated or unexpectedly high expression estimates
 
-| Parameter | Possible Selections | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| Fragment length priors | Auto / manual | Incorrect assumptions for fragment size | Biased transcript abundance estimates |
-| Paired-end handling | Implicit | Incorrect pairing or inconsistent input | Misestimation of effective lengths |
+If overall expression appears inflated or disproportionately concentrated in a subset of transcripts, this may indicate mapping ambiguity or missing reference information.
 
-- **Gene-level summarization:** Salmon outputs transcript-level estimates; gene-level counts require aggregation (e.g., tximport).
+- Incomplete transcriptomes can cause reads to map spuriously to similar available transcripts.
+- Lack of decoy-aware indexing can increase incorrect assignments from unannotated regions.
 
-| Step | Tool | Issue | Consequence |
-| :--- | :--- | :--- | :--- |
-| Transcript → gene | tximport / custom mapping | Incorrect or inconsistent transcript-to-gene mapping | Fragmented or incorrect gene-level counts |
+### Quick diagnostic guide
 
-- **Quick diagnostic guide:**
-
-| Symptom | Likely cause | Parameter(s) to check |
+| Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
-| Strong strand bias or unexpected antisense signal | Incorrect library type | `--libType` |
-| Expression detected in unexpected transcripts | Poor transcriptome reference or missing decoys | Index, decoy setup |
-| Inflated expression estimates or noisy background | Disabled selective alignment | `--validateMappings` |
-| Systematic bias across GC content or transcript length | Bias correction disabled | `--seqBias`, `--gcBias`, `--posBias` |
-| Discrepancies between Salmon and featureCounts | Transcript vs gene-level differences or annotation mismatch | Index, tx2gene mapping |
-| Fragment length inconsistencies | Incorrect pairing or fragment modeling | Input format, library type |
+| High fraction of unstable or low-confidence transcripts | Transcriptome ambiguity or incompleteness | Transcriptome reference quality |
+| Expression detected in unexpected transcripts | Incomplete or outdated annotation | Transcriptome version consistency |
+| Strand inconsistencies in expression patterns | Library structure mismatch | Library preparation assumptions |
+| Inflated expression in subsets of transcripts | Mapping ambiguity or missing decoy sequences | Reference completeness, decoy-aware index |
+
+## Differential Expression (DESeq2)
+
+Poor experimental design structure, technical variation, or incorrect model specification can all lead to result misinterpretation during differential exoression analysis. Therefore, they need to be properly taken into account when running DESeq2 after read counting.
+
+### Unexpected separation of samples
+
