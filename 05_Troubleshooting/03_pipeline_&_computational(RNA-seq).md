@@ -116,3 +116,31 @@ Poor experimental design structure, technical variation, or incorrect model spec
 
 ### Unexpected separation of samples
 
+If samples cluster primarily by non-biological variables rather than the intended condition, the differential expression results are likely being driven by technical variation.
+
+- During the experimental design stage, it is strongly recommended to include at least one replicate of each condition in each batch. If each condition is present in only one batch, DESeq2 cannot distinguish technical from biological effects, making differential expression results unreliable.
+- Relevant sample information, such as condition, replicates, and batch, should be included in the metadata table provided alongside the count matrix. Otherwise, DESeq2 may attribute systematic differences between samples to the condition of interest, even when those differences are technical.
+
+### Very few significant genes or unstable results across comparisons
+
+If the analysis yields very few significant genes, or results change substantially with small adjustments, the model may be underpowered or unstable.
+
+- To increase analysis power, the number of replicates per conditions should be appropiate. In addition, replicates should show consistent expression patterns at the count level (e.g., clustering together in PCA or correlation analyses), as high variability within conditions can obscure true differences between groups.
+- The presence of outlier samples can inflate variance estimates and reduce the ability to detect differential expression, and individual samples with extreme values can disproportionately affect results.
+
+### Global shifts in expression across conditions
+
+If one condition shows a systematic increase or decrease in expression across many genes, normalization may be affected.
+
+- While some biological conditions can influence many genes, DESeq2 assumes that the majority of genes are not differentially expressed. When this assumption is violated, normalization can become unreliable.
+- This can occur when a small number of highly expressed genes dominate the library in one condition, shifting the relative abundance of all other genes (composition bias).
+- Although differences in sequencing depth are typically identified during earlier QC steps, extreme imbalances combined with skewed expression profiles can still distort relative expression estimates after normalization.
+
+### Quick diagnostic guide
+
+| Symptom | Likely cause | What to check |
+| :--- | :--- | :--- |
+| Samples cluster by technical factors instead of condition | Technical variation driving signal; missing or confounded batch information | Metadata table (condition, batch), sample distribution across batches |
+| Very few significant genes or unstable results | Low statistical power or high variability between replicates | Number of replicates, sample similarity (PCA, correlation) |
+| Inconsistent or biologically implausible fold changes | Incorrect comparison or incomplete sample annotation | Reference level, contrasts, metadata completeness |
+| Global shifts in expression across conditions | Violation of normalization assumptions due to composition bias | Presence of highly expressed genes, overall expression distribution |
