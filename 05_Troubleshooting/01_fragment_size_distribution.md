@@ -39,15 +39,28 @@ A wide, smeared distribution centered at the target size is problematic because 
 <div align="center">
   <img src="../Figures/broad_fragment_size.png" width="500">
   <br>
-  <em>TapeStation profile showing a typical case of a library containing adapter primer contamination.</em>
+  <em>TapeStation profile showing a typical case of a library with an overly broad fragment size distribution.</em>
 </div>
 
 <br>
 
-When the DNA/RNA has been degraded during the process, the electropherogram shows 
+## High Molecular Weight Peak or Tail
 
-If an **HMW** (high molecular weight) smear is present, this is usually due to a problem with the fragmentation or sonication conditions.
+HMW contamination reduces effective sequencing efficiency by shifting library mass away from the intended fragment range.
 
-The presence of a sharp, dominant peak at 120–130 bp indicates that your SPRI ratio was too high (captured adapter dimers) or that the MNase digestion was insufficient, leaving the adapters with nothing to bind to but themselves.
+- **Under-fragmentation or insufficient enzymatic digestion:** Suboptimal sonicating conditions, or enzymatic digestion conditions can lead to the presence of intact genomic DNA contamination.
+- **Inefficient transposase or nuclease access in chromatin assays:** Overly closed chromatin states due to treatment or cell type choice can difficult enzyme access and reduce fragmentation efficiency, leading to HMW species dominating the signal.
+
+<br>
+
+<div align="center">
+  <img src="../Figures/HMW.png" width="500">
+  <br>
+  <em>TapeStation profile showing a library containing high molecular weight species.</em>
+</div>
+
+<br>
+
+
 
 When the binding nature of the protein is unknown, the goal is to preserve the entire biological spectrum—from tiny footprints to large nucleosomal structures. This is achieved through a 1.8x-2.0x SPRI isolation step. In this scenario, an adapter dimer peak is often unavoidable at the bench. In such cases, if the dimer signal exceeds the biological signal, alternative purification methods—such as automated gel excision (e.g., Pippin Prep) set to a >140 bp collection window—may be required to salvage the library for sequencing.
