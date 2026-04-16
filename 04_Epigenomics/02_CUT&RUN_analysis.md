@@ -9,17 +9,6 @@ Before doing any analysis on the generated BAM files (the preferred tools for th
 - Clear enrichment at known loci (if there is previous data)
 - Fragment size behavior consistent with biology
 
-<br>
-
-<div align="center">
-  <img src="../Figures/BAM_file_peaks.png" width="800">
-  <br>
-  <em>Example of coverage visualization in IGV of BAM files generated in a CUT&RUN experiment</em>
-</div>
-
-<br>
-
-
 **Important note:** When raw BAM files are viewed, the IgG control may appear to have peaks as tall as the experimental samples. This is caused by an artifact of auto-scaling within the browser. Because the IgG library contains very few reads, the background noise is zoomed in upon by the software to fill the vertical space of the track. Bigwig generation and spike-in normalization must be completed before the true, scaled relationship between the samples can be observed.
 
 ## Spike-in Normalization & Scaling Factor
