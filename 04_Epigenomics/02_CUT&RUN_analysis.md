@@ -106,7 +106,7 @@ If a signal across a specific region of interest needs to be analyzed, first a A
 <br>
 
 <div align="center">
-  <img src="../Figures/ROI_enrichment.png" width="800">
+  <img src="../Figures/ROI_enrichment.png" width="500">
   <br>
   <em>Example of enrichment at a regions of interest from a CUT&RUN experiment</em>
 </div>
