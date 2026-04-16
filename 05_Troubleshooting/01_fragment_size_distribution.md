@@ -19,7 +19,7 @@ The presence of adapter dimers can also be a consequence of a too permissive SPR
 <br>
 
 <div align="center">
-  <img src="../Figures/primer_dimer_contamination.png" width="500">
+  <img src="../Figures/adapter_dimer_contamination.png" width="500">
   <br>
   <em>TapeStation profile showing a typical case of a library containing adapter primer contamination.</em>
 </div>
