@@ -25,31 +25,31 @@ Even when the annotation is correct, unexpected results can arise when **countin
 
 If the correct GTF file was used, but the proportion of unassigned reads is still too high (>25-30%):
 
-- This is often due to an incorrect selection in the strandedness (*-s*) parameter, e.g., the strand specification (*s-0* for unstranded, *s-1* for forward stranded, and *s-2* for reverse stranded) does not match the library generation.
-- This can also be caused by an incorrect feature type selection (*-t*) or a mismatch with the one present on the GTF file. The standard in RNA-seq analysis is *-t exon*: if the GTF contains exon information under a different name, a mismatch will happen and reads will not be assigned correctly.
-- Finally a mismatch with attribute type (*-g*). The -t flag works in tandem with the -g flag; if *-t exon* is used, the *-g* flag must point to an attribute that exists within the exon lines (e.g., gene_id).
+- This is often due to an incorrect selection in the strandedness (`-s`) parameter, e.g., the strand specification (`s-0` for unstranded, `s-1` for forward stranded, and `s-2` for reverse stranded) does not match the library generation.
+- This can also be caused by an incorrect feature type selection (`-t`) or a mismatch with the one present on the GTF file. The standard in RNA-seq analysis is `-t exon`: if the GTF contains exon information under a different name, a mismatch will happen and reads will not be assigned correctly.
+- Finally a mismatch with attribute type (`-g`). The -t flag works in tandem with the -g flag; if `-t exon` is used, the `-g` flag must point to an attribute that exists within the exon lines (e.g., gene_id).
 
 ### Gene counts lower than expected across all samples
 
 If overall expression levels appear systematically reduced, this often indicates a structural issue in counting.
 
-- Choosing the wrong feature type (*-t*) leads to underestimation of gene expression. While, as mentioned above, *-t exon* is the standard in most RNA-seq pipelines, different experimental aims require a specific selection. For example, if the goal is to detect unspliced transcripts, *-t gene* should be used instead of *-t exon*.
-- Incorrect attribute type (*-g*) selection can fragment counts across multiple identifiers, leading to gene count underestimation.
+- Choosing the wrong feature type (`-t`) leads to underestimation of gene expression. While, as mentioned above, `-t exon` is the standard in most RNA-seq pipelines, different experimental aims require a specific selection. For example, if the goal is to detect unspliced transcripts, `-t gene` should be used instead of `-t exon`.
+- Incorrect attribute type (`-g`) selection can fragment counts across multiple identifiers, leading to gene count underestimation.
 
 ### Inflated library sizes or unusually high counts 
 
 If total counts per sample are unexpectedly high, especially in paired-end data, counting may be incorrect.
 
-- When analysing data from paired-end sequencing, paired mode (*-p*) should be enabled, or paired reads will be treated as independent single reads, leading to double counting.
-- The parameter *--countReadPairs* also needs to be enabled, to ensure that fragments from paired-end reads are counted as single units.
+- When analysing data from paired-end sequencing, paired mode (`-p`) should be enabled, or paired reads will be treated as independent single reads, leading to double counting.
+- The parameter `--countReadPairs` also needs to be enabled, to ensure that fragments from paired-end reads are counted as single units.
 
 ### Loss of reads in specific regions
 
 If specific regions or the overall dataset show reduced counts, filtering parameters such as the following may be too strict:
 
-- Selecting the wrong fragment length thresholds (*-d*, *-D*) can lead to the loss of valid fragments, but also to the inflation of counts if the lower threshold is too small.
-- Enabling proper pairing requirement (*-B*) can lead to the loss of valid partially mapped fragments
-- While chimeric read exclusion (*-C*) is usually recommended, there are very specific contexts in which doing so might remove potentially biologically relevant reads.
+- Selecting the wrong fragment length thresholds (`-d`, `-D`) can lead to the loss of valid fragments, but also to the inflation of counts if the lower threshold is too small.
+- Enabling proper pairing requirement (`-B`) can lead to the loss of valid partially mapped fragments
+- While chimeric read exclusion (`-C`) is usually recommended, there are very specific contexts in which doing so might remove potentially biologically relevant reads.
 
 ### Quick diagnostic guide
 
