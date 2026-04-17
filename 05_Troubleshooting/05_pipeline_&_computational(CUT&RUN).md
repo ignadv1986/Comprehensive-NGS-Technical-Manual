@@ -89,7 +89,7 @@ If coverage profiles do not match the ones observed on the BAM files and/or they
 
 ## Peak Calling & Interpretation
 
-Even with well-behaved coverage profiles, peak calling remains one of the most critical and error-prone steps in CUT&RUN analysis. This is particularly relevant when using SEACR, which relies on a global thresholding approach rather than complex statistical modeling. Because of this, SEACR has very limited parameterization (primarily *relaxed* vs *stringent* modes), and its behavior is largely dictated by the structure and distribution of the input signal, rather than user-defined thresholds.
+Even with well-behaved coverage profiles, peak calling remains one of the most critical and error-prone steps in CUT&RUN analysis. This is particularly relevant when using SEACR, which relies on a global thresholding approach rather than complex statistical modeling. Because of this, SEACR has very limited parameterization (primarily `relaxed` vs `stringent` modes), and its behavior is largely dictated by the structure and distribution of the input signal, rather than user-defined thresholds.
 
 Importantly, SEACR will always return a set of peaks. The presence of peaks alone does not guarantee biological relevance, and must always be interpreted in the context of signal quality and reproducibility.
 
