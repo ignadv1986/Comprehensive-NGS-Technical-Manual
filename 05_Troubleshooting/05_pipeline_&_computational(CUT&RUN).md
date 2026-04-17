@@ -65,7 +65,7 @@ Usually caused by a wrong normalization, this is one of the most common issues o
 
 - **Excessive removal of reads:** strict MAPQ thresholds or duplicate removal (using the `--ignoreDuplicates` parameter of bamcoverage) can eliminate real CUT&RUN signal.
 - **Improper bin size selection:** while the default bin size used by bamcoverage is 50 bp, this can be modified with the `--binSize` parameter. A lower bin size will increase resolution, but will make the transformation more computationally demanding, and viceversa.
-- **Use of read extension:** CUT&RUN does not require fragment extension; applying it with *--extendReads* artificially broadens peaks and reduces apparent enrichment.
+- **Use of read extension:** CUT&RUN does not require fragment extension; applying it with `--extendReads` artificially broadens peaks and reduces apparent enrichment.
 
 ### Unexpected enrichment patterns
 
@@ -97,20 +97,20 @@ Importantly, SEACR will always return a set of peaks. The presence of peaks alon
 
 If peak calling returns a very large number of peaks despite reasonable-looking coverage tracks:
 
-- **Overly permissive thresholds:** Running SEACR in *relaxed* mode can classify background fluctuations as peaks.
+- **Overly permissive thresholds:** Running SEACR in `relaxed` mode can classify background fluctuations as peaks.
 - **Sensitivity to low-level noise:** Even small variations in low-background CUT&RUN data can be interpreted as enrichment by threshold-based methods.
 
 ### Low number of detected peaks
 
 If SEACR returns very few peaks, even when enrichment is visible in coverage tracks:
 
-- **Too stringent filtering of peaks:** While the *stringent* mode helps preventing unspecific peaks detection, it also filters out real, low-signal peaks, so it should be used carefully.
+- **Too stringent filtering of peaks:** While the `stringent` mode helps preventing unspecific peaks detection, it also filters out real, low-signal peaks, so it should be used carefully.
 - **Low contrast between peaks and background:** If enrichment is shallow relative to background, SEACR may fail to distinguish peaks.
 
 ### Peaks detected in control (IgG) samples
 
 - **Structured background signal:** Open chromatin regions can produce consistent low-level signal, even in controls.
-- **Threshold sensitivity:** In *relaxed* mode, these regions may exceed the detection threshold.
+- **Threshold sensitivity:** In `relaxed` mode, these regions may exceed the detection threshold.
 
 This does not necessarily indicate a failure of the experiment, but highlights the importance of comparing against controls during interpretation.
 
