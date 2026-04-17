@@ -50,7 +50,7 @@ If enrichment exists but lacks sharp peaks:
 If strong signal appears outside known regulatory elements:
 
 - **Genome build:** The genome build used for visualization must match the one used in the mapping step, or the peaks will seem to appear in unexpected regions.
-- **Incorrect filtering:** if not removed. Reads may accumulate in repetitive or blacklist regions if not removed. These regions can produce convincing but non-reproducible peaks.
+- **Incorrect filtering:** If not removed, reads may accumulate in repetitive or blacklist regions if not removed. These regions can produce convincing but non-reproducible peaks.
 
 ## Coverage File Generation
 
