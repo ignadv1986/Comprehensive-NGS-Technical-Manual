@@ -64,7 +64,7 @@ Usually caused by a wrong normalization, this is one of the most common issues o
 ### No signal in coverage tracks
 
 - **Excessive removal of reads:** strict MAPQ thresholds or duplicate removal (using the *--ignoreDuplicates* parameter of bamcoverage) can eliminate real CUT&RUN signal.
-- **Improper bin size selection:** while the default bin size used by bamcoverage is 50 bp, this can be modified with the *--binSize* parameter. A lower bin size will increase resolution, but will make the transformation more computationally demanding, and viceversa.
+- **Improper bin size selection:** while the default bin size used by bamcoverage is 50 bp, this can be modified with the `--binSize` parameter. A lower bin size will increase resolution, but will make the transformation more computationally demanding, and viceversa.
 - **Use of read extension:** CUT&RUN does not require fragment extension; applying it with *--extendReads* artificially broadens peaks and reduces apparent enrichment.
 
 ### Unexpected enrichment patterns
@@ -72,7 +72,7 @@ Usually caused by a wrong normalization, this is one of the most common issues o
 If coverage profiles do not match the ones observed on the BAM files and/or they look biologically implausible:
 
 - **Over-smoothing of signal:** Caused by large bin sizes or inappropriate parameters, leading to broad, ChIP-seq-like profiles instead of sharp CUT&RUN peaks.
-- **Mis-centering of reads:** While centering reads (*--centerReads*) can improve apparent peak sharpness in transcription factor CUT&RUN experiments, it assumes relatively uniform fragment sizes. If applied to heterogeneous fragment populations (e.g., mixed nucleosomal and sub-nucleosomal fragments), it can distort peak shape and shift apparent binding sites. For this reason, centering is best restricted to analyses focusing on short fragments, and should be avoided in general or histone mark workflows.
+- **Mis-centering of reads:** While centering reads (`--centerReads`) can improve apparent peak sharpness in transcription factor CUT&RUN experiments, it assumes relatively uniform fragment sizes. If applied to heterogeneous fragment populations (e.g., mixed nucleosomal and sub-nucleosomal fragments), it can distort peak shape and shift apparent binding sites. For this reason, centering is best restricted to analyses focusing on short fragments, and should be avoided in general or histone mark workflows.
 - **Fragment size considerations:** Including all fragment sizes without filtering can obscure the distinction between TF binding (short fragments) and nucleosomal signal.
 
 ### Quick diagnostics guide
