@@ -11,6 +11,15 @@ A flat or weak TSS enrichment profile can be a consequence of the following:
 - **Tn5 shift non applied:** As explained in the [ATAC-seq analysis](../04_Epigenomics/04_ATAC-seq_analysis.md), the transposases causes a 9 bp shif in the reads that needs to be considered during alignment. Failing to do so could lead to a misalignment of cut sites.
 - **BAM filtering:** BAM files from different samples need to be properly filtered (especially by removing reads mapping to chrM) to prevent accumulation of background reads that might mask enrichment at TSS.
 
+### Quick diagnostics guide
+
+| Symptom | Likely cause | What to check |
+| :--- | :--- | :--- |
+| Flat or low TSS enrichment profile | Missing Tn5 shift correction | Alignment parameters, read shifting (+4 / -5 offset) |
+| Broad, poorly centered TSS signal | Inaccurate read positioning | Whether Tn5 offset was correctly applied |
+| Weak enrichment despite good sequencing depth | Excess background reads | chrM reads, duplicate reads, filtering strategy |
+| High variability between samples | Inconsistent preprocessing | Uniformity of BAM filtering across samples |
+
 ## Early Visualization in Genome Browsers
 
 After BAM file processing and in parallel to TSS enrichment score inspection, it is good practice to study the signal in a genome browser such as IGV before proceeding to peak calling and downstream analysis.
@@ -52,6 +61,16 @@ If strong signal appears outside known regulatory elements:
 - **Genome build:** The genome build used for visualization must match the one used in the mapping step, or the peaks will seem to appear in unexpected regions.
 - **Incorrect filtering:** If not removed, reads may accumulate in repetitive or blacklist regions. These regions can produce convincing but non-reproducible peaks.
 
+### Quick diagnostics guide
+
+| Symptom | Likely cause | What to check |
+| :--- | :--- | :--- |
+| Uniform signal across genome (low contrast) | Background contamination or over-tagmentation | BAM filtering, chrM removal, fragment distribution |
+| Lack of enrichment at promoters or known loci | Missing Tn5 shift or biological absence of accessibility | Alignment shift, replicate consistency |
+| Signal present but poorly defined | Suboptimal processing or mixed fragment signal | Fragment size distribution, BAM quality |
+| High signal in heterochromatic regions | Poor filtering or alignment artifacts | MAPQ filtering, blacklist regions |
+| Inconsistent patterns between replicates | Technical variability | Replicate concordance, library quality |
+
 ## Coverage File Generation
 
 After BAM processing, normalized coverage tracks (usually BigWig files generated with deepTools bamCoverage) should be inspected before peak calling. These tracks provide a direct view of chromatin accessibility and often reveal issues that are not apparent from alignment or QC metrics alone.
@@ -62,7 +81,7 @@ If coverage appears broadly distributed with little contrast between regions:
 
 - **Incomplete filtering of reads:** Incomplete BAM filtering increases baseline signal and masks true accessibility.
 - **Over-tagmentation:** Excessive enzymatic activity can generate widespread low-level accessibility signal.
-- **Scaling issues:** Lack of proper normalization with CPM or RPKM may make high-depth samples appear uniformly elevated.
+- **Scaling issues:** Lack of proper normalization with CPM or RPKM may make high-depth samples appear uniformly elevated. This behavior is controlled by the `--normalizeUsing` parameter in bamCoverage, and inconsistent settings across samples can introduce artificial differences in signal intensity.
 
 ### Signal intensity differs strongly between samples
 
@@ -83,7 +102,7 @@ If expected accessible regions show weak or no signal:
 If enrichment exists but lacks sharp boundaries:
 
 - **Missing Tn5 correction:** Signal is spread around true cut sites, blurring the signal.
-- **Incorrect bin size:** Large bins oversmooth signal; very small bins introduce noise. The default for deepTools bamCoverage is 50 bp, but sometimes this can prevent detection of narrow peak information. 1-10 bp ranges can be used to detect these peaks.
+- **Incorrect bin size:** Large bins oversmooth signal; very small bins introduce noise. The default for deepTools bamCoverage is 50 bp, but sometimes this can prevent detection of narrow peak information. Bin size can be modified in bamCoverage with `--binSize` and 1-10 bp ranges can be used to detect these peaks 
 - **Fragment handling issues:** Treating paired-end data as single-end reduces resolution
 
 ### Enrichment in unexpected regions
@@ -93,6 +112,21 @@ If strong signal appears outside known regulatory elements:
 - **Genome build mismatch:** Coverage does not align with annotation or browser reference
 - **Incomplete filtering:** Reads accumulating in blacklist or repetitive regions
 - **Multimapping reads retained:** Artificial signal in low-complexity regions
+
+### Quick diagnostics guide
+
+| Symptom | Likely cause | What to check |
+| :--- | :--- | :--- |
+| Uniform signal across genome (low contrast) | Incomplete filtering or over-tagmentation | BAM filtering (chrM, duplicates), fragment size distribution |
+| Uniformly elevated signal in one sample | Missing or incorrect normalization | CPM/RPKM normalization, library size |
+| Strong differences in signal intensity between samples | Inconsistent normalization or chrM contamination | Normalization method consistency, mitochondrial read fraction |
+| Weak or no enrichment at promoters / regulatory regions | Low biological accessibility or missing Tn5 correction | Replicate consistency, Tn5 shift application |
+| Signal present but blurred or poorly defined | Missing Tn5 correction or large bin size | Read shifting, `--binSize` parameter |
+| Peaks overly broad | Oversmoothing or improper fragment handling | Bin size, paired-end vs single-end treatment |
+| Noisy or fragmented signal | Very small bin size or low coverage | `--binSize`, sequencing depth |
+| Enrichment in unexpected regions | Genome mismatch or poor filtering | Genome build, blacklist removal |
+| Strong signal in repetitive regions | Multimapping reads retained | Alignment settings, MAPQ filtering |
+| Coverage does not match BAM visualization | Incorrect bamCoverage parameters | Consistency between BAM processing and coverage generation |
 
 ## Peak Calling
 
