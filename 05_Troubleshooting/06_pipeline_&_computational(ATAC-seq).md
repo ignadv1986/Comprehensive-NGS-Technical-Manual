@@ -56,6 +56,14 @@ If strong signal appears outside known regulatory elements:
 
 After BAM processing, normalized coverage tracks (usually BigWig files generated with deepTools bamCoverage) should be inspected before peak calling. These tracks provide a direct view of chromatin accessibility and often reveal issues that are not apparent from alignment or QC metrics alone.
 
+### Uniform signal across the whole genome
+
+If coverage appears broadly distributed with little contrast between regions:
+
+- **Incomplete filtering of reads:** Incomplete BAM filtering increases baseline signal and masks true accessibility
+- **Over-tagmentation:** Excessive enzymatic activity can generate widespread low-level accessibility signal
+- **Scaling issues:** Lack of proper normalization with CPM or RPKM may make high-depth samples appear uniformly elevated
+
 A correct coverage track should show clear enrichment at promoters and regulatory regions, low background signal, and consistent profiles across replicates.
 
 Peak Calling (MACS3 in ATAC-seq)
