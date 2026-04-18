@@ -101,9 +101,9 @@ If expected accessible regions show weak or no signal:
 
 If enrichment exists but lacks sharp boundaries:
 
-- **Missing Tn5 correction:** Signal is spread around true cut sites, blurring the signal.
 - **Incorrect bin size:** Large bins oversmooth signal; very small bins introduce noise. The default for deepTools bamCoverage is 50 bp, but sometimes this can prevent detection of narrow peak information. Bin size can be modified in bamCoverage with `--binSize` and 1-10 bp ranges can be used to detect these peaks 
-- **Fragment handling issues:** Treating paired-end data as single-end reduces resolution
+- **Fragment handling issues:** Treating paired-end data as single-end reduces resolution.
+- **Missing Tn5 correction:** Signal may appear slightly blurred around regulatory regions, but this effect is often subtle at the coverage level and easier to detect in TSS enrichment profiles or peak definition.
 
 ### Enrichment in unexpected regions
 
@@ -134,5 +134,8 @@ After alignment and preprocessing, MACS3 peak calling may still produce biologic
 
 A reliable peak set should show strong overlap with promoter regions, sharp peak boundaries, and consistency across replicates. Additionally, it should ressemble what can be seen in the previously generated coverage files.
 
+### Broad or poorly defined peaks
+
+- **Missing Tn5 shift correction:** Without the standard +4/-5bp adjustment, the signal from the forward and reverse strands remains physically separated by the 9bp duplication created during transposition. This causes the peak caller to see two slightly offset sub-populations of reads rather than a single, unified insertion site. Consequently, MACS3 may "smear" the signal, resulting in artificially increased peak widths and a loss of the sharp, "pointy" summits characteristic of high-quality ATAC-seq data. This lack of precision can obscure fine-scale genomic features, such as transcription factor footprints, and dilute the statistical significance of narrow regulatory elements.
 
 
