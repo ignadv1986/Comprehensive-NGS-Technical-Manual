@@ -69,7 +69,7 @@ As seen in their respective library preparation sections, the expected fragment 
 
 In assays where structured fragment distributions are expected, the absence or weakening of intermediate peaks may indicate disruption of biological signal. Potential causes include:
 
-- **Over-aggressive size selection removing informative fragments:** Because the range of biologically relevant fragment sizes is bigger in ATAC-seq (and also in CUT&RUN if the protein of interest acts both as a TF and a histone binder), a tightly controlled SPRI clean-up step is required. More details on such conditions are included in the library preparation sections of [CUT&RUN](../04_Epigenomics/01_CUT&RUN_sample_prep.md) and [ATAC-seq](../04_Epigenomics/03_ATAC-seq_sample_prep.md).
+- **Over-aggressive size selection removing informative fragments:** Because the range of biologically relevant fragment sizes is bigger in ATAC-seq (and also in CUT&RUN if the protein of interest acts both as a TF and a histone binder), a tightly controlled SPRI clean-up step is required. More details on such conditions are included in the library preparation sections of [CUT&RUN](../04_Epigenomics/02_CUT&RUN_sample_prep.md) and [ATAC-seq](../04_Epigenomics/04_ATAC-seq_sample_prep.md).
 - **Excessive enzymatic digestion:** Poorly controlled incubation with Tn5 or MNase can lead to excessive degradation and loss of valuable, informative fragments.
 - **Low cell input:** Using an insufficient number of cells can lead to poor representation of chromatin states.
 
