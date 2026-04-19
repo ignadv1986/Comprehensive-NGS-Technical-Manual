@@ -24,7 +24,7 @@ ChIP-seq became the gold standard for studying transcription factor binding, his
 
 Together, these factors mean that ChIP-seq data requires significant sequencing depth and careful normalization to distinguish true signal from noise.
 
-CUT&RUN was developed specifically to address these limitations. By tethering MNase to an antibody-bound protein and cleaving DNA in situ, without fixation or bulk chromatin extraction, it produces a much cleaner signal with far less input material and sequencing depth.
+CUT&RUN was developed specifically to address these limitations. By tethering MNase to an antibody-bound protein and cleaving DNA *in situ*, without fixation or bulk chromatin extraction, it produces a much cleaner signal with far less input material and sequencing depth.
 
 <br>
 
@@ -46,5 +46,5 @@ CUT&RUN was developed specifically to address these limitations. By tethering MN
 
 For these reasons, this repository focuses on CUT&RUN as the method of choice for protein-DNA interaction mapping. ChIP-seq remains widely used, particularly in large-scale projects and settings where existing validated antibodies and pipelines are already established.
 
-The downstream computational analysis (more detail on this can be found inside the [CUT&RUN analysis](./03_CUT&RUN_analysis.md) section of this work) overlaps substantially between the two techniques: annotation with ChIPseeker and motif enrichment with HOMER or MEME are directly applicable to ChIP-seq data. However, peak calling strategy diverges: ChIP-seq, like ATAC-seq, relies on MACS3, which is designed to model the relatively high and variable background produced by sonication and immunoprecipitation. CUT&RUN's exceptionally low background makes it better suited to SEACR for transcription factor targets, where its threshold-based approach takes advantage of the clean signal-to-noise ratio that ChIP-seq cannot reliably achieve. MACS3 remains the preferred option for broader histone mark targets in CUT&RUN, where peak profiles more closely resemble those seen in ChIP-seq data.
+The downstream computational analysis (more detail on this can be found inside the [CUT&RUN analysis](./03_CUT&RUN_analysis.md) section of this work) overlaps substantially between the two techniques: annotation with ChIPseeker and motif enrichment with HOMER or MEME are directly applicable to ChIP-seq data. However, the peak calling strategy diverges: ChIP-seq, like ATAC-seq, relies on MACS3, which is designed to model the relatively high and variable background produced by sonication and immunoprecipitation. CUT&RUN's exceptionally low background makes it better suited to SEACR for transcription factor targets, where its threshold-based approach takes advantage of the clean signal-to-noise ratio that ChIP-seq cannot reliably achieve. MACS3 remains the preferred option for broader histone mark targets in CUT&RUN, where peak profiles more closely resemble those seen in ChIP-seq data.
 
