@@ -56,6 +56,8 @@ The optimal configuration depends on the application and must be balanced agains
 
 Choosing the appropriate flow cell is critical for cost efficiency. Flow cells differ in total data output, and the optimal choice depends on the number of samples, biological replicates, and the required sequencing depth. Smaller flow cells are more suitable for low sample numbers or pilot experiments, as they minimize unused capacity. In contrast, high-output flow cells reduce cost per base but are only cost-effective when fully utilized. Underfilling a high-capacity flow cell can significantly increase the cost per sample, making careful planning essential.
 
+Flow cell selection is instrument-specific and should be determined in consultation with the sequencing facility or Illumina documentation, based on the total data output required.
+
 <br>
 
 <div align="center">
