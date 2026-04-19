@@ -187,63 +187,76 @@ After peak calling, ATAC-seq analysis typically proceeds by quantifying reads ov
 Unexpected or inconsistent count distributions at this stage are most often due to peak definition and counting configuration, rather than alignment issues.
 
 ### Inconsistent counts across samples despite similar signal
+
 If samples with similar coverage profiles produce very different count values:
-Inconsistent peak set usage:
-All samples must be quantified against the same set of genomic regions. Using sample-specific peaks leads to non-comparable counts.
-Improper peak merging strategy:
-Overly broad or poorly defined consensus peaks can dilute signal, while overly narrow peaks may miss relevant fragments.
-Systematically low counts across all peaks
+
+- **Inconsistent peak set usage:** All samples must be quantified against the same set of genomic regions (see the [ATAC-seq analysis](../04_Epigenomics/04. ATAC-seq_analysis.md) section of this repository for more information on consensus peak definition). Using sample-specific peaks leads to non-comparable counts.
+- **Improper peak merging strategy:** Overly broad or poorly defined consensus peaks can dilute signal, while overly narrow peaks may miss relevant fragments.
+
+### Systematically low counts across all peaks
+
 If counts appear lower than expected:
-Fragment counting not enabled in paired-end data:
-If paired-end reads are not handled correctly, fragments may be undercounted or inconsistently represented.
-Stringent overlap requirements:
-Requiring full overlap or strict assignment can exclude valid fragments that partially overlap peak regions.
-Inflated counts or unusually high signal in peaks
+
+- **Fragment counting not enabled in paired-end data:** If paired-end reads are not handled correctly (`-p`, `--countReadPairs`), fragments may be undercounted or inconsistently represented.
+- **Stringent overlap requirements:** Requiring full overlap or strict assignment can exclude valid fragments that partially overlap peak regions. This can be modified with the `minOverlap`, `fracOverlap` and `fracOverlapFeature` commands in featureCounts.
+  
+### Inflated counts or unusually high signal in peaks
+
 If counts appear unexpectedly high:
-Paired-end reads counted as independent reads:
-If fragment-based counting is not enforced, each mate may be counted separately.
-Overly broad peak regions:
-Large peaks accumulate more reads, inflating counts and reducing resolution between regions.
-Loss of signal in specific peaks
+
+- **Paired-end reads counted as independent reads:** If fragment-based counting is not enforced (`-p`, `--countReadPairs`), each mate may be counted separately.
+- **Overly broad peak regions:** Large peaks accumulate more reads, inflating counts and reducing resolution between regions.
+
+### Loss of signal in specific peaks
+
 If expected accessible regions show weak or missing counts:
-Poorly defined consensus peaks:
-Peaks that do not accurately capture the true accessible region may miss signal during counting.
-Inconsistent preprocessing:
-Differences in duplicate removal or filtering across samples can affect read assignment.
-Quick diagnostics guide
+
+- **Poorly defined consensus peaks:** Peaks that do not accurately capture the true accessible region may miss signal during counting.
+- **Inconsistent preprocessing:** Differences in duplicate removal or filtering across samples can affect read assignment.
+- **Overly strict assignment rules:** Valid fragments may be exclude if overlap settings are too strict.
+
+### Quick diagnostics guide
+
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
 | Counts differ strongly between similar samples | Inconsistent peak sets | Consensus peak definition |
-| Low counts across peaks | Fragment counting or strict overlap rules | Paired-end handling, assignment settings |
-| Inflated counts in peaks | Double counting or broad peaks | Paired-end mode, peak width |
-| Missing signal in expected regions | Poor peak definition | Peak set quality, preprocessing consistency |
-Differential Accessibility (DESeq2)
+| Low counts across peaks | Fragment counting or strict overlap rules | `-p`, `--countReadPairs`, overlap parameters (`--minOverlap`, `--fracOverlap`) |
+| Inflated counts in peaks | Double counting or broad peaks | Paired-end settings (`-p`, `--countReadPairs`), peak width |
+| Missing signal in expected regions | Poor peak definition or strict assignment | Peak quality, overlap parameters (`--minOverlap`, `--largestOverlap`), preprocessing consistency |
+
+## Differential Accessibility (DESeq2)
+
 Once peak counts are generated, DESeq2 is used to identify regions with differential accessibility between conditions. At this stage, issues are rarely caused by sequencing or alignment, but rather by experimental design, normalization assumptions, and properties of the peak set.
-Unexpected separation of samples
+
+### Unexpected separation of samples
 If samples cluster by technical variables rather than biological condition:
-Batch effects not modeled:
-Batch or technical variables must be included in the design formula when present.
-Confounded experimental design:
-If conditions are not distributed across batches, technical and biological effects cannot be separated.
-Very few significant regions or unstable results
+
+- **Batch effects not modeled:** Batch or technical variables must be included in the design formula when present.
+- **Confounded experimental design:** If conditions are not distributed across batches, technical and biological effects cannot be separated.
+
+### Very few significant regions or unstable results
+
 If few regions are detected or results change easily:
-Low replicate number or high variability:
-ATAC-seq is particularly sensitive to variability in accessibility across replicates.
-Inconsistent peak set:
-Poorly defined or noisy peaks reduce statistical power.
-Global shifts in accessibility
+
+-**Low replicate number or high variability:** ATAC-seq is particularly sensitive to variability in accessibility across replicates.
+- **Inconsistent peak set:** Poorly defined or noisy peaks reduce statistical power.
+
+### Global shifts in accessibility
+
 If one condition appears globally more or less accessible:
-Violation of normalization assumptions:
-DESeq2 assumes most regions are not differentially accessible. Large-scale chromatin changes can break this assumption.
-Composition bias:
-A subset of highly accessible regions dominating one condition can skew normalization.
-Strong differences driven by a subset of peaks
+
+- **Violation of normalization assumptions:** DESeq2 assumes most regions are not differentially accessible. Large-scale chromatin changes can break this assumption.
+- **Composition bias:** A subset of highly accessible regions dominating one condition can skew normalization.
+
+### Strong differences driven by a subset of peaks
+
 If results are dominated by a small number of regions:
-Outlier peaks:
-Extremely high-count regions can disproportionately influence normalization and dispersion estimates.
-Technical artifacts in peak set:
-Peaks overlapping problematic regions (e.g., repeats, blacklist regions) may bias results.
-Quick diagnostics guide
+
+- **Outlier peaks:** Extremely high-count regions can disproportionately influence normalization and dispersion estimates.
+- **Technical artifacts in peak set:** Peaks overlapping problematic regions (e.g., repeats, blacklist regions) may bias results.
+
+### Quick diagnostics guide
+
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
 | Samples cluster by batch instead of condition | Technical variation not modeled | Design formula, metadata |
