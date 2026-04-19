@@ -4,9 +4,10 @@ Even when alignment rates and fragment size profiles look reasonable, CUT&RUN re
 
 ## Early Visualization in Genome Browsers
 
-As mentioned in the [CUT&RUN analysis](../04_Epigenomics/02_CUT&RUN_analysis.md) section of this repository, after BAM file generation it is good practice to inspect the generated BAM files in a genome browser like IGV. A good CUT&RUN profile whould show sharp, discrete enrichment sites, with low background between them, and fragment size consistent with biology. Additionally, if binding sites for the protein of interest are known, enrichment at these sites should also be checked.
+As mentioned in the [CUT&RUN analysis](../04_Epigenomics/02_CUT&RUN_analysis.md) section of this repository, after BAM file generation it is good practice to inspect the generated BAM files in a genome browser like IGV. A good CUT&RUN profile would show sharp, discrete enrichment sites, with low background between them, and fragment size consistent with biology. Additionally, if binding sites for the protein of interest are known, enrichment at these sites should also be checked.
 
 **Note:** In practice, many analyses proceed directly to coverage files (BigWig) for visualization, as they are faster to load and easier to compare across samples. However, BigWig tracks represent a processed signal and can obscure read-level artifacts.
+
 When peak calling or downstream analysis produces unexpected results, it is often necessary to return to the BAM files to diagnose the issue. Artifacts such as PCR duplicates, misaligned reads, or improper fragment handling can generate convincing but biologically meaningless signal that is not easily identifiable in coverage tracks.
 Early inspection of BAM files therefore helps identify these issues before they propagate through peak calling and downstream analysis, reducing the risk of interpreting artifactual “ghost peaks” as real biological signal.
 
@@ -14,14 +15,14 @@ Early inspection of BAM files therefore helps identify these issues before they 
 
 A high, uniform background in a CUT&RUN experiment can be caused by different factors:
 
-- **Background contamination:** Even when not perfectly targeted, MNase tethered to antibody can still nick DNA in nearby accessible regions, especially in open chromatin regions such as promoters and nucleosome-depleted regions. In adition, ambient/carryover DNA can also contribute to an increase in the background signal.
-- **Over-digestion:** The MNase activity needs to be tightly controlled during the experiment (time of activity, concentration, etc.), or it will diffuse off-target and start cleaving in a non-localized manner. While some of this background will be removed during the SPRI clean-up step, fragments of the selected size will remain, even if they didn´t originate from the correct cleaving sites.
+- **Background contamination:** Even when not perfectly targeted, MNase tethered to antibody can still nick DNA in nearby accessible regions, especially in open chromatin regions such as promoters and nucleosome-depleted regions. In addition, ambient/carryover DNA can also contribute to an increase in the background signal.
+- **Over-digestion:** The MNase activity needs to be tightly controlled during the experiment (time of activity, concentration, etc.), or it will diffuse off-target and start cleaving in a non-localized manner. While some of this background will be removed during the SPRI clean-up step, fragments of the selected size will remain, even if they didn't originate from the correct cleaving sites.
 
 ### No visible enrichment
 
 If no peaks are present when inspecting the BAM files in the genome browser, there can be both technical and biological reasons: - **Antibody choice:** Even when showing specificity in other assays, not all antibodies are suitable for CUT&RUN experiments. It is therefore recommendable to run a pilot experiment to check if the antibody is suited for this purpose, or to use an antibody previously documented to work for CUT&RUN. If the antibody fails to bind the protein of interest, the MNase won't be tethered to specific genomic regions and no enrichment will be visible.
 
-- **Presence of protein of interest:** If the target protein is not expressed or is expressed at very low levels, the antibody won't have enouch targets to bind and no enrichment will be observed.
+- **Presence of protein of interest:** If the target protein is not expressed or is expressed at very low levels, the antibody won't have enough targets to bind and no enrichment will be observed.
 - **The protein of interest is not a chromatin binding factor:** If the aim of the CUT&RUN experiment is to determine if the protein of interest can bind to chromatin, then a negative result would also show no enrichment. However, the interpretation in this scenario is difficult, since the technical factors cited above cannot be ruled out.
 
 ### Peak shape does not match the expected outcome
