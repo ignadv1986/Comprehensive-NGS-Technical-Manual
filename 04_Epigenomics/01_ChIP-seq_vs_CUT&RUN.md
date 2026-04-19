@@ -28,17 +28,18 @@ CUT&RUN was developed specifically to address these limitations. By tethering MN
 
 <br>
 
-<div align="center"> 
-| Parameter | ChIP-seq | CUT&RUN |
-| :--- | :--- | :--- |
-| **Cell input** | Typically 1–20 million cells | As few as 100–1,000 cells |
-| **Cross-linking** | Required (formaldehyde); introduces artifacts | Not required; native chromatin context preserved |
-| **Background noise** | High; requires deep sequencing to overcome | Very low; high signal-to-noise by design |
-| **Resolution** | Limited by sonication fragment size (~200–500 bp) | High; MNase cleavage occurs at the exact binding site |
-| **Antibody requirements** | Must work under denaturing/cross-linked conditions | Must work on native, unfixed protein |
-| **Protocol duration** | 2–3 days minimum | Can be completed in 1 day |
-| **Sequencing depth required** | High (20–40M reads typical) | Low (3–10M reads often sufficient) |
-| **Artifacts** | Sonication bias, cross-linking noise, antibody pull-down non-specificity | Over-digestion, antibody incompatibility with native epitopes |
+<div align="center">
+  
+  | Parameter | ChIP-seq | CUT&RUN |
+  | :--- | :--- | :--- |
+  | **Cell input** | Typically 1–20 million cells | As few as 100–1,000 cells |
+  | **Cross-linking** | Required (formaldehyde); introduces artifacts | Not required; native chromatin context preserved |
+  | **Background noise** | High; requires deep sequencing to overcome | Very low; high signal-to-noise by design |
+  | **Resolution** | Limited by sonication fragment size (~200–500 bp) | High; MNase cleavage occurs at the exact binding site |
+  | **Antibody requirements** | Must work under denaturing/cross-linked conditions | Must work on native, unfixed protein |
+  | **Protocol duration** | 2–3 days minimum | Can be completed in 1 day |
+  | **Sequencing depth required** | High (20–40M reads typical) | Low (3–10M reads often sufficient) |
+  | **Artifacts** | Sonication bias, cross-linking noise, antibody pull-down non-specificity | Over-digestion, antibody incompatibility with native epitopes |
 </div>
 
 <br>
