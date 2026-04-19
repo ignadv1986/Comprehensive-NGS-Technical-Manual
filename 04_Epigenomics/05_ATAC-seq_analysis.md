@@ -4,9 +4,9 @@ Unless otherwise specified, this workflow assumes paired-end ATAC-seq, which is 
 
 ## Alignment Strategy
 
-As mentioned in the mapping section of this repository, both [bowtie2](https://github.com/benlangmead/bowtie2) and [BWA-MEME2](https://github.com/kaist-ina/BWA-MEME) are valid options for mapping when analyzing ATAC-seq data, with the second being preferred for two main reasons:
+As mentioned in the mapping section of this repository, both [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and [BWA-MEM2](https://github.com/bwa-mem2/bwa-mem2) are valid options for mapping when analyzing ATAC-seq data, with the second being preferred for two main reasons:
 
-- It can soft-clip the ends of reads if they contain a bit of adapter sequence that wasn't fully trimmed, whereas Bowtie2 might reject the entire read as an "unmapped" fragment. This maximizes the recovery of short, nucleosome-free fragments.
+- It can soft-clip the ends of reads if they contain a bit of adapter sequence that wasn't fully trimmed, whereas bowtie2 might reject the entire read as an "unmapped" fragment. This maximizes the recovery of short, nucleosome-free fragments.
 - In low-input ATAC-seq, Tn5 can occasionally create chimeric fragments. BWA-MEM2 handles these complex alignments better, preventing false-positive peaks.
 
 ## Post-alignment QC
@@ -15,13 +15,13 @@ As mentioned in the mapping section of this repository, both [bowtie2](https://g
 
 As mentioned before in this repository, a major hurdle in ATAC-seq is the high affinity of the Tn5 transposase for mitochondrial DNA. Because mtDNA is not protected by histones, it acts as a "sink" for the transposase, leading to a disproportionately high number of reads mapping to the mitochondrial genome (chrM).
 
-Mitochondrial reads represent a significant waste of sequencing depth. For example, if a sample has 50% mtDNA, the effective depth for analyzing informative sequences is halved. It is therefore critical that the cell lysis and washes steps during sample preparation are properly performed, to reduce the presence of mtDNA as much as possible.
+Mitochondrial reads represent a significant waste of sequencing depth. For example, if a sample has 50% mtDNA, the effective depth for analyzing informative sequences is halved. It is therefore critical that the cell lysis and wash steps during sample preparation are properly performed, to reduce the presence of mtDNA as much as possible.
 
 The remaining reads mapping to mtDNA are removed in the processing steps after mapping using [samtools](https://www.htslib.org) or [Picard](https://broadinstitute.github.io/picard/). If they are not removed, the massive signal from the mitochondrial genome will alter the scaling of the genome browser tracks, making the nuclear peaks look like tiny bumps in comparison.
 
 ### The Tn5 shift
 
-As mentioned in the [ATAC-seq sample prep](./03_ATAC-seq_sample_prep.md) section of this repository, the mechanism of the Tn5 enzyme leads to a 9 bp shift in the reads: + strand are shifted +4 bp and those on the – strand are shifted –5 bp. Importantly, standard aligners like BWA or Bowtie2 do not handle this. While such a small distance might seem negligible, depending on the experiment this shift needs to be addressed.
+As mentioned in the [ATAC-seq sample prep](./04_ATAC-seq_sample_prep.md) section of this repository, the mechanism of the Tn5 enzyme leads to a 9 bp shift in the reads: + strand are shifted +4 bp and those on the – strand are shifted –5 bp. Importantly, standard aligners like BWA or Bowtie2 do not handle this. While such a small distance might seem negligible, depending on the experiment this shift needs to be addressed.
 
 A common approach is to use [alignmentSieve](https://deeptools.readthedocs.io/en/latest/content/tools/alignmentSieve.html) from the deepTools suite with the `--ATACshift` flag to shift the read in the BAM files and generate the coverage files from these. This leads to a better representation of the peaks when looking at the resultant BigWig files in a genome browser.
 
@@ -29,20 +29,20 @@ When calling peaks from paired-end reads, the standard pipeline is to call peaks
 
 For applications requiring base-pair resolution, such as TF footprinting or motif analysis, Tn5 shift correction is essential to recover precise cut-site positions. In these cases, shifted reads generated with `alignmentSieve --ATACshift` are used to construct cut-site–level signal tracks, which provide the high-resolution input required to detect local patterns of cut depletion and enrichment associated with protein-DNA interactions. MACS3 peaks are typically used as a complementary step to define regions of open chromatin in which footprinting analysis is performed, rather than as a direct indicator of TF binding or protection sites. Importantly, MACS3 identifies accessible regions based on fragment enrichment and **does not resolve base-pair level binding events**. Footprinting is then performed using dedicated tools such as TOBIAS, HINT-ATAC (Regulatory Genomics Toolbox), or CENTIPEDE, which model cut-site distributions within accessible regions to infer transcription factor occupancy from local protection patterns rather than peak boundaries.
 
-**Note:** Shifting the reads leads to a change in the genomic coordinates of the fragments, so the resultant BAM files must be re-sorted and indexed for downstream processing.
+**Note:** Shifting the reads leads to a change in the genomic coordinates of the fragments, so the resulting BAM files must be re-sorted and indexed for downstream processing.
 
 ### TSS enrichment score
 
 TSS enrichment is a standard ATAC-seq quality metric that measures how strongly reads accumulate around transcription start sites. In high-quality ATAC-seq, accessible promoters show a sharp peak of signal exactly at the TSS and a well-defined nucleosome pattern flanking it. Low-quality libraries (e.g., too much background, poor nuclei prep, excessive mitochondrial contamination) show a flat or noisy profile.
-The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile):  reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable background noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
+The TSS enrichment is calculated after mtDNA reads removal, with methods like [ATACseqQC](https://bioconductor.org/packages/release/bioc/html/ATACseqQC.html) or [deepTools](https://deeptools.readthedocs.io/en/latest/) (computeMatrix + plotProfile): reads are aggregated across thousands of annotated TSSs (±2 kb window), signal is normalized to the background flanking regions and the final TSS enrichment score is obtained with the formula (signal at TSS) / (signal in background). A score > 10 is usually considered as an excellent ATAC-seq experiment, while 6-10 contains some acceptable background noise and a score below 5 suggests over-digestion, poor nuclei prep, or low library complexity.
 
 <br>
 
 <div align="center">
-  
-  <img src="../Figures/TSS_enrichment_score.png" width="600">
-  <br>
-  <em>TSS enrichment score comparison of a low-quality vs a high quality ATAC-seq library.</em>
+ 
+ <img src="../Figures/TSS_enrichment_score.png" width="600">
+ <br>
+ <em>TSS enrichment score comparison of a low-quality vs a high quality ATAC-seq library.</em>
 </div>
 
 <br>
@@ -68,13 +68,13 @@ MACS3 returns **narrowPeak** files, 10 column BED files with additional informat
 
 <div align="center">
 
-| chrom | chromStart | chromEnd | name   | score | strand | signalValue | pValue | qValue | peak |
-|-------|------------|----------|--------|-------|--------|-------------|--------|--------|------|
-| chr1  | 345000     | 345150   | peak_1 | 1000  | .      | 10.5        | 50.2   | 45.0   | 75   |
-| chr1  | 567800     | 567920   | peak_2 | 850   | .      | 8.2         | 40.1   | 35.6   | 60   |
-| chr2  | 123400     | 123550   | peak_3 | 920   | .      | 9.8         | 48.7   | 42.3   | 80   |
-| chr2  | 789000     | 789120   | peak_4 | 780   | .      | 7.5         | 38.9   | 33.1   | 55   |
-| chr3  | 456700     | 456820   | peak_5 | 670   | .      | 6.9         | 30.4   | 28.0   | 50   |
+| chrom | chromStart | chromEnd | name | score | strand | signalValue | pValue | qValue | peak |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| chr1 | 345000 | 345150 | peak_1 | 1000 | . | 10.5 | 50.2 | 45.0 | 75 |
+| chr1 | 567800 | 567920 | peak_2 | 850 | . | 8.2 | 40.1 | 35.6 | 60 |
+| chr2 | 123400 | 123550 | peak_3 | 920 | . | 9.8 | 48.7 | 42.3 | 80 |
+| chr2 | 789000 | 789120 | peak_4 | 780 | . | 7.5 | 38.9 | 33.1 | 55 |
+| chr3 | 456700 | 456820 | peak_5 | 670 | . | 6.9 | 30.4 | 28.0 | 50 |
 
 </div>
 
@@ -95,7 +95,7 @@ Once a final consensus BED file per condition is generated, the next step is to 
 The standard tool used to count reads after the consensus peak BED file generation is the feature of the RSubRead package [featureCounts](https://subread.sourceforge.net/featureCounts.html). While bedtools could do this, featureCounts is specifically optimized for high-performance counting. It is strand-aware, handles paired-end data natively, and produces a clean summary of how many reads were successfully assigned to peaks versus how many are just background. featureCounts takes the filtered, indexed BAM files and the master consensus peak set, and it counts reads on each peak for each sample. Then it returns a **count matrix**, a tab-delimited file with different metrics:
 
 <div align="center">
-  
+ 
 | Geneid | Chr | Start | End | Strand | Length | WT_Rep1 | WT_Rep2 | KO_Rep1 | KO_Rep2 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Peak_1** | chr1 | 10045 | 10500 | . | 455 | 145 | 132 | 10 | 12 |
@@ -130,15 +130,15 @@ If the aim of the experiment is only to assess if a certain treatment produces c
 
 ### Identification of differentially accessible regions (DARs)
 
-To determine if the difference in read counts between conditions is due to biological significance or just random sampling noise, [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) in the preferred tool. In biological samples, the data is typically overdispersed, because the variance grows very quick with the mean count or, in other terms, it follows a **negative binomial distribution**. To correct for this, DESeq2 uses a **shrinkage** method to provide more stable estimates of fold change, especially for peaks with low counts or high variability. This prevents a single noisy replicate from creating a false positive.
+To determine if the difference in read counts between conditions is due to biological significance or just random sampling noise, [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is the preferred tool. In biological samples, the data is typically overdispersed, because the variance grows very quick with the mean count or, in other terms, it follows a **negative binomial distribution**. To correct for this, DESeq2 uses a **shrinkage** method to provide more stable estimates of fold change, especially for peaks with low counts or high variability. This prevents a single noisy replicate from creating a false positive.
 
-It is worth mentioning that DESeq2 uses its own normalization (the median of ratios) method, which accounts for different factors like sequencing depth or composition bias (when a few peaks are accumulating most of the reads in a sample). Consequently, it is important the DESeq2 is given the count matrix from featureCounts, which contains raw (non-normalized reads), and not data that had been normalized before.
+It is worth mentioning that DESeq2 uses its own normalization (the median of ratios) method, which accounts for different factors like sequencing depth or composition bias (when a few peaks are accumulating most of the reads in a sample). Consequently, it is important that DESeq2 is given the count matrix from featureCounts, which contains raw (non-normalized reads), and not data that had been normalized before.
 
 The input for DESeq2 is the cleaned count matrix from featureCounts (see above), and a file containing sample information (replicate, condition, etc). This allows for the generation of a **DESeq2 object**, on which the analysis will be run. 
 
 DESeq2 returns a **Log2-fold Change (LFC)** indicating the changes in accessibility for each region (peak) and a **padj (adjusted p-value)**, obtained through Benjamini-Hochberg correction.
 
-Once DARs are identified, they are typically annotated to the nearest gene using tools like ChIPseeker or Homer to determine which biological pathways (via Gene Ontology) are being regulated by the changes in chromatin accessibility
+Once DARs are identified, they are typically annotated to the nearest gene using tools like ChIPseeker or Homer to determine which biological pathways (via Gene Ontology) are being regulated by the changes in chromatin accessibility.
 
 ## The FRiP Score
 
@@ -147,7 +147,7 @@ The **Fraction of Reads in Peaks (FRiP)** is a key quality control metric for AT
 $$FRiP = \frac{\text{Number of reads overlapping peaks}}{\text{Total number of mapped reads}}$$
 
 <div align="center">
-  
+ 
 | FRiP | Quality | Verdict |
 | :--- | :--- | :--- |
 | >0.3 | Excellent | Outstanding enrichment; the peaks are very clear and the background is low |
