@@ -39,6 +39,8 @@ As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-t
 
 <br>
 
+In some experimental designs, a known quantity of exogenous DNA or RNA, known as **spike-in control** is added to the sample at this stage as a reference control. This spike-in strategy is covered in detail in the context of [CUT&RUN](../04_Epigenomics/01_CUT&RUN_sample_prep.md), where it is most commonly applied.
+
 ## Size Selection
 
 A crucial step in library prep is the selection of fragments of the right size. This is mainly done through the use of **Solid Phase Reversible Immobilization (SPRI)** beads, like AMPure XP. The “bead mix” consists of three things:
