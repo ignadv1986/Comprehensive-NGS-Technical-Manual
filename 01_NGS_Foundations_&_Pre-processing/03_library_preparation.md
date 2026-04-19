@@ -39,7 +39,7 @@ As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-t
 
 <br>
 
-In some experimental designs, a known quantity of exogenous DNA or RNA, known as **spike-in control** is added to the sample at this stage as a reference control. This spike-in strategy is covered in detail in the context of [CUT&RUN](../04_Epigenomics/01_CUT&RUN_sample_prep.md), where it is most commonly applied.
+In some experimental designs, a known quantity of exogenous DNA or RNA, known as **spike-in control** is added to the sample at this stage as a reference control. This spike-in strategy is covered in detail in the context of [CUT&RUN](../04_Epigenomics/02_CUT&RUN_sample_prep.md), where it is most commonly applied.
 
 ## Size Selection
 
