@@ -24,10 +24,10 @@ Next, small pieces of DNA, known as **adapters**, are bound to the DNA. These fr
 
 This is the simplest workflow, mandatory for PCR-free protocols (e.g protocols that yield enough DNA that they do not require a PCR amplification step), but also more expensive and requires a different adapter for every single sample (since the index is already on the adapter).
 
-The most common high-throughput method involves the use of truncated (stubby) adapters, known as **TA-ligation with indexed PCR** or **universal adapter ligation**. In this protocol, adapters contain only the initial priming sites, and the library is "completed" during a subsequent indexed PCR step, where primers add the barcodes and the P5/P7 flow-cell binding sequences. If this PCR fails, then the sequencing will also fail, since the fragments won´t contain the P5/P7 needed for the binding.
+The most common high-throughput method involves the use of truncated (stubby) adapters, known as **TA-ligation with indexed PCR** or **universal adapter ligation**. In this protocol, adapters contain only the initial priming sites, and the library is "completed" during a subsequent indexed PCR step, where primers add the barcodes and the P5/P7 flow-cell binding sequences. If this PCR fails, then the sequencing will also fail, since the fragments won't contain the P5/P7 needed for the binding.
 
-In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3´overhangs and filling in the 5´, and subsequently 5´phosphorylated. Finally, a single A is added to the 3´end of each fragment (**“A-tailing”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn´t eliminate) adapter dimers. 
-As we will see later, ATAC-seq uses tagmentation, so there´s no end-repair, A-tailing, or ligation.
+In order for the adapters to bind to the DNA, a previous step of **end repair** is required, where all fragment ends are converted to blunt, by removing the 3'overhangs and filling in the 5', and subsequently 5'phosphorylated. Finally, a single A is added to the 3'end of each fragment (**“A-tailing”**). Adapters, which contain a a complementary single 3′-T overhang, can now be added and bound to the fragments by a DNA ligase. T-A ligation is much more efficient than blunt-end, prevents the fragments from binding each other, which would create chimeras, and reduces (although doesn't eliminate) adapter dimers. 
+As we will see later, ATAC-seq uses tagmentation, so there's no end-repair, A-tailing, or ligation.
 
 <br>
 
@@ -49,7 +49,7 @@ A crucial step in library prep is the selection of fragments of the right size. 
 -	Polyethylene glycol (PEG)
 -	NaCl
   
-The process relies on charge-shielding rather than direct molecular bridging. High concentrations of NaCl provide a dense population of Na$^+$ counter-ions that screen the electrostatic repulsion between the negatively charged DNA backbone and the carboxylated bead surface. This allows the crowding agent (PEG) to thermodynamically drive the DNA out of the aqueous phase, forcing it to collapse onto and entangle with the bead surface. This interaction is purely concentration-dependent; upon the addition of a low-salt elution buffer, the shielding is lost, and the restored electrostatic repulsion facilitates the release of the DNA.
+The process relies on charge-shielding rather than direct molecular bridging. High concentrations of NaCl provide a dense population of Na<sup>+</sup> counter-ions that screen the electrostatic repulsion between the negatively charged DNA backbone and the carboxylated bead surface. This allows the crowding agent (PEG) to thermodynamically drive the DNA out of the aqueous phase, forcing it to collapse onto and entangle with the bead surface. This interaction is purely concentration-dependent; upon the addition of a low-salt elution buffer, the shielding is lost, and the restored electrostatic repulsion facilitates the release of the DNA.
 Large DNA molecules dehydrate more easily, so they bind to the beads even at lower PEG concentrations, while small molecules are more soluble and therefore require higher PEG concentrations to bind the beads. Using different bead volume to sample volume ratios, different DNA sizes can be selected. A lower ratio (0.5x) captures only very large fragments, while a higher ratio (1.8x), captures almost everything.
 To make sure that only the fragments of the right size are captured, a double-sided selection is normally used. First, a “right-side cut”, where a really low ratio (0.5x) is used, is performed. In this scenario, large pieces of DNA bind to the beads, and the rest stays on the liquid, so the beads can be discarded. Then, more beads are added to bring the total ratio up to, say, 0.8x (“left-side cut”), so that the rest of the DNA, except for small pieces like adapter dimers stick to the beads. These are kept, washed with ethanol 80% to remove contaminants, and finally eluted with water or a low-salt buffer. 80% ethanol is used because it’s strong enough to keep the DNA precipitated on the bead, but contains enough water to dissolve the salts and PEG so they can be washed away. Importantly, it must be freshly prepared, as it is hygroscopic and absorbs water from the air, which can lead to DNA loss during the wash steps.
 
@@ -106,7 +106,7 @@ The goal of library PCR is to add the remaining adapter sequences (if using inde
 
 **Things to consider when designing the library PCR:**
 
--	**Use high-fidelity polymerases** (KAPA HiFi, Q5 (NEB), or Phusion): Less error-rates and GC bias than taq polymerases, and proof-reading activity (exonuclease 3´-> 5´).
+-	**Use high-fidelity polymerases** (KAPA HiFi, Q5 (NEB), or Phusion): Less error-rates and GC bias than taq polymerases, and proof-reading activity (exonuclease 3'-> 5').
 -	**Hot-Start technology:** Prevents non-specific amplification at room temperature before the thermocycler starts. This is crucial for reducing primer dimers.
 -	**Final concentration:** A well-designed PCR should aim for a final library concentration of >10 nM. This provides enough material for multiple sequencing runs and long-term storage.
 
@@ -119,7 +119,7 @@ Once it is established that the library prep yielded enough material, its integr
 ### Fragment Size
 
 Both Tapestation and Bioanalyzer are microfluidic electrophoresis instruments, while the fragment analyzer uses capillary electrophoresis. For all of them, the principle is the same: samples are loaded together with a fluorescent dye and a molecular size marker and fragments are subjected to an electric field so that they separate by size. The instruments detects the fluorescent signal vs time and transforms it into bp using the provided ladder.
-Tapestation takes more samples than Bioanalyzer, and the sample preparation is easier, so it´s usually the preferred option. However, the fragment analyzer has higher throughput and precision than the other two, allowing greater resolution and distinction between small fragments and adapter dimers or other artifacts.
+Tapestation takes more samples than Bioanalyzer, and the sample preparation is easier, so it's usually the preferred option. However, the fragment analyzer has higher throughput and precision than the other two, allowing greater resolution and distinction between small fragments and adapter dimers or other artifacts.
 The result from fragment size analysis is presented as both an **electropherogram** and a **virtual gel**. 
 
 Ideally, in a typical sequencing library, the tapestation returns a main peak with the desired fragment size, that varies in width depending on the quality of the library. A smaller peak (around 120-140 bp for full adapters, or 60-80 for truncated ones) is usually seen corresponding to adapter dimers. Because full adapters are longer, then the likelihood of forming dimers is higher. 
