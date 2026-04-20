@@ -4,19 +4,6 @@ RNA-seq (RNA Sequencing) is the standard method for analyzing the **transcriptom
 
 The primary goal of RNA-seq is typically **Differential Expression Analysis**: identifying changes in gene expression between two conditions.
 
-## RNA Enrichment Strategies
-
-Total RNA is dominated by **ribosomal RNA (rRNA)**, which accounts for >90% of the molecules in a cell but provides almost no useful biological information for most studies, so an enrichment step where the RNA of interest is selected is required. The goal of the RNA-seq experiment determines the enrichment strategy; in the most common approaches, the analysis focuses on fully-mature mRNA. In this scenario, mRNAs are enriched through the use of **oligo(dT)-coated magnetic beads**, taking advantage of the fact that most mature eukaryotic mRNAs are polyadenylated, but rRNAs are not.
-
-However, sometimes the analysis needs to include **non-polyadenylated RNAs**, such as prokaryotic RNA, histone RNA, and some long non-coding RNAs (lncRNAs). In these cases, the use of oligo(dT) would result in the loss of not only the rRNA, but also of the RNA of interest, so a **depletion** strategy is used instead: biotinylated DNA probes that are perfectly complementary to the 18S, 28S, 5S, and 5.8S ribosomal RNA sequences are added. These probes bind to the rRNA, and then Streptavidin beads are used to pull the rRNA-probe complexes out of the solution.
-Additionally, in degraded or FFPE samples the poly-A tail is often separated from the rest of the gene, so a ribo-depletion step is also required. If oligo(dT) are used, they will bind to the fragmented poly-A tails, and the NanoDrop would show a normal concentration of RNA, but the library will have almost no data. Therefore, while more expensive, ribo-depletion is more robust method when handling low-quality samples.
-
-**Note:** Even with standard library prep, checking for overrepresented sequences (like rRNA) and filtering them with tools such as SortMeRNA or BBduk in case they appear as overrepresented sequences in the fastQ step is a good safeguard to improve mapping efficiency and quantification accuracy.
-
-## RNA fragmentation
-
-As most NGS protocols, RNA-seq starts with a fragmentation step, to generate smaller fragments that can be processed by the sequencer after cDNA generation. The goal for most Illumina libraries is a fragment size of ~200–300 bp However, because RNA is single-stranded and much more fragile than DNA, sonication is not recommended. It generates local heat and cavitation that can damage the RNA, and it might contain traces of RNase. The go-to method for RNA is **chemical fragmentation**, based on a combination of heat (94°C) and a buffer containing bivalent metal ions (like Zn or Mg). At high temperatures, the metal ions act as Lewis acids. They coordinate with the oxygen atoms in the phosphodiester backbone of the RNA, making the backbone susceptible to hydrolysis (breaking the bond using a water molecule).
-
 ## RNA Quality Check: RNA Integrity Number (RIN)
 
 Before any library preparation begins, the quality of the total RNA extracted from the cells must be assessed. The gold standard for this is the **RIN (RNA Integrity Number)**.
@@ -26,12 +13,6 @@ The RIN is a standardized numerical value from 1 (completely degraded) to 10 (pe
 - **The 28S and 18S peaks:** In eukaryotes, these are the two largest ribosomal RNA species. In a healthy cell, the 28S:18S ratio should be approximately 2.0. As RNA degrades, these peaks shrink.
 - **The degradation window:** This is the area between the 5S/small RNA peak and the 18S peak. As the long rRNA molecules break into smaller pieces, this valley starts to fill up with noise.
 - **The Pre-Region:** High-quality RNA has a very clean baseline before the 18S peak. High signal here indicates significant fragmentation.
-
-| RIN | Quality | Strategy | Fragmentation | Note |
-|-----|---------|----------|---------------|------|
-| 8-10 | Excellent | Poly-A/Ribo-depletion | Standard heat-Mg | Ideal for high-coverage mRNA-seq |
-| 6-7 | Acceptable | Recommended ribo-depletion | Standard heat-Mg | Watch for "3' bias" if using Poly-A selection |
-| 2-5 | Highly degraded | Ribosomal depletion mandatory | Skip or heavily reduce | Use DV200 to assess if sample is even sequenceable |
 
 <br>
 
@@ -43,7 +24,38 @@ The RIN is a standardized numerical value from 1 (completely degraded) to 10 (pe
 
 <br>
 
-DV200: percentage of RNA fragments that are longer than 200 nucleotides. If the DV200 is >30%, the sample is usually "salvageable" for a specialized Ribo-depletion library.
+## RNA Enrichment Strategies
+
+Depending on the aim of the experiment and, critically, on the quality (RIN) of the extracted RNA, different enrichment strategies should be employed.
+
+Total RNA is dominated by **ribosomal RNA (rRNA)**, which accounts for >90% of the molecules in a cell but provides almost no useful biological information for most studies, so an enrichment step where the RNA of interest is selected is required. The goal of the RNA-seq experiment determines the enrichment strategy; in the most common approaches, the analysis focuses on fully-mature mRNA. In this scenario, mRNAs are enriched through the use of **oligo(dT)-coated magnetic beads**, taking advantage of the fact that most mature eukaryotic mRNAs are polyadenylated, but rRNAs are not.
+
+However, sometimes the analysis needs to include **non-polyadenylated RNAs**, such as prokaryotic RNA, histone RNA, and some long non-coding RNAs (lncRNAs). In these cases, the use of oligo(dT) would result in the loss of not only the rRNA, but also of the RNA of interest, so a **depletion** strategy is used instead: biotinylated DNA probes that are perfectly complementary to the 18S, 28S, 5S, and 5.8S ribosomal RNA sequences are added. These probes bind to the rRNA, and then Streptavidin beads are used to pull the rRNA-probe complexes out of the solution.
+
+Additionally, in degraded or FFPE samples the poly-A tail is often separated from the rest of the gene, so a ribo-depletion step is also required. If oligo(dT) are used, they will bind to the fragmented poly-A tails, and the NanoDrop would show a normal concentration of RNA, but the library will have almost no data. Therefore, while more expensive, ribo-depletion is more robust method when handling low-quality samples.
+
+Even with ribo-depletion and a low RIN, a 3' bias in coverage is expected — reads will be enriched toward the 3' end of transcripts because degradation proceeds from the 5' end. This should be flagged during QC and taken into account during interpretation, particularly for differential expression analysis where even coverage across transcript bodies is assumed.
+
+<div align="center">
+  
+| RIN | Sample type | RNA species needed | Recommended strategy
+| :--- | :--- | :--- | :--- |
+| 8-10 | Fresh/frozen | Polyadenylated mRNA | Poly-A selection |
+| 8-10 | Fresh/frozen | Includes non-polyadenylated | RNARibo-depletion |
+| 6-7 | Fresh/frozen | Polyadenylated mRNA only | Poly-A selection acceptable; watch for 3' bias |
+| 6-7 | Any | Any | Ribo-depletion recommended for robustness |
+| 2-5 | Any | Any | Ribo-depletion mandatory; assess DV200 first |
+| Any | FFPE | Any | Ribo-depletion mandatory |
+</div>
+
+**DV200:** percentage of RNA fragments that are longer than 200 nucleotides. If the DV200 is >30%, the sample is usually "salvageable" for a specialized Ribo-depletion library.
+2–5AnyAnyRibo-depletion mandatory; assess DV200 firstAnyAnyRibo-depletion mandatory
+
+**Note:** Even with standard library prep, checking for overrepresented sequences (like rRNA) and filtering them with tools such as SortMeRNA or BBduk in case they appear as overrepresented sequences in the fastQ step is a good safeguard to improve mapping efficiency and quantification accuracy.
+
+## RNA fragmentation
+
+As most NGS protocols, RNA-seq starts with a fragmentation step, to generate smaller fragments that can be processed by the sequencer after cDNA generation. The goal for most Illumina libraries is a fragment size of ~200–300 bp However, because RNA is single-stranded and much more fragile than DNA, sonication is not recommended. It generates local heat and cavitation that can damage the RNA, and it might contain traces of RNase. The go-to method for RNA is **chemical fragmentation**, based on a combination of heat (94°C) and a buffer containing bivalent metal ions (like Zn or Mg). At high temperatures, the metal ions act as Lewis acids. They coordinate with the oxygen atoms in the phosphodiester backbone of the RNA, making the backbone susceptible to hydrolysis (breaking the bond using a water molecule).
 
 ## cDNA Generation
 
