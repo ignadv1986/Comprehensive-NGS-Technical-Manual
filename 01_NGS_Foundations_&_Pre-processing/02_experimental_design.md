@@ -55,9 +55,18 @@ The higher the sequencing depth, the lower the possibility that some positions w
 
 To optimize sequencing capacity, multiple samples are often pooled and sequenced together using unique index sequences, a process known as multiplexing (see [library preparation](./03_library_preparation.md) section).
 
-From an experimental design perspective, multiplexing determines how sequencing reads are distributed across samples within a run. The number of samples that can be pooled depends on the total sequencing output and the required depth per sample.
+When multiple samples need to be sequenced together, the total data output must be distributed accurately across the pool. Given a fixed sequencing capacity, the number of reads allocated per sample decreases as more samples are added. Careful planning is therefore required to ensure that each sample reaches its minimum required depth.
 
-Careful planning is required to ensure balanced representation, as uneven pooling can lead to insufficient coverage for some samples while others are over-sequenced.
+The starting point is always the per-sample data requirement:
+
+$$\text{Total Data (Gb)} = \text{Genome Size (Gb)} \times \text{Desired Depth (} \times \text{)}$$
+
+Following the example cited above, for a human WGS experiment at 30x, this is approximately 96 Gb per sample. If 24 samples need to be sequenced at this depth, the total data requirement is approximately 2.3 Tb. This immediately defines the minimum sequencing capacity needed, and whether that fits within a single run or requires multiple runs is a question for the sequencing facility — but the biological and financial implications of the number are clear regardless of instrument.
+
+From a pooling perspective, two failure modes need to be avoided:
+
+- **Under-filling a high-capacity run** wastes sequencing capacity and increases the cost per sample without any biological benefit. If only 6 of a possible 24 samples are ready, it is usually more cost-effective to either wait for the remaining samples or use a lower-output run configuration.
+- **Over-pooling samples with unequal molarity** leads to uneven read distribution, where some samples are over-sequenced and others fall below the required depth. This is why the normalization calculation before pooling is critical
 
 ## Read Configuration
 
