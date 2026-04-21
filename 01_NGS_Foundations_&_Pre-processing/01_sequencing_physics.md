@@ -1,4 +1,4 @@
-# Understanding the sequencing process
+# Understanding the Sequencing Process
 
 ## NGS VS Sanger Sequencing
   
