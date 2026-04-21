@@ -25,7 +25,7 @@ This is a living document and will be updated over time.
 | :--- | :--- |
 | [01_mapping_principles_&_QC.md](./02_Mapping_%26_Alignment/01_mapping_principles_%26_QC.md) | Reference genomes, genome indexing, seed-and-extend alignment, SAM/BAM format, MAPQ, and mapping QC |
 | [02_aligners.md](./02_Mapping_%26_Alignment/02_aligners.md) | STAR, HISAT2, BWA-MEM2, Bowtie2, Salmon, and kallisto — when and why to use each |
-| [03_post-alignment_processing.md](./02_Mapping_%26_Alignment/03_post-alignment_processing.md) | BAM sorting, duplicate marking, blacklist filtering, spike-in normalization, and final indexing |
+| [03_post-alignment_processing.md](./02_Mapping_%26_Alignment/03_post-alignment_processing.md) | BAM sorting, duplicate marking, blacklist filtering, and final indexing |
 
 ### 03 — Transcriptomics (RNA-seq)
 
