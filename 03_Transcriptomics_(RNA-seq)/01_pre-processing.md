@@ -10,8 +10,6 @@ While spike-in normalization is not required for every RNA-seq experiment, it be
 
 In RNA-seq, spike-in is added in the form of synthetic RNA molecules (most commonly the ERCC (External RNA Controls Consortium) spike-in mix). These are added directly to the RNA sample before library preparation begins, ensuring they undergo the same retrotranscription, fragmentation, adapter ligation, and amplification steps as the endogenous RNA.
 
-For details on how spike-in reads are used for normalization in the analysis, see the [RNA-seq analysis](./02_analysis_workflow.md) section.
-
 ## RNA Quality Check: RNA Integrity Number (RIN)
 
 Before any library preparation begins, the quality of the total RNA extracted from the cells must be assessed. The gold standard for this is the **RIN (RNA Integrity Number)**.
