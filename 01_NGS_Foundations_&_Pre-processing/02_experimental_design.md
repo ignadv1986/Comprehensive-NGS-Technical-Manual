@@ -56,7 +56,7 @@ The higher the sequencing depth, the lower the possibility that some positions w
 
 ## Library Pooling and Demultiplexing
 
-To optimize sequencing capacity, multiple samples are often pooled and sequenced together using unique index sequences, a process known as multiplexing (see [library preparation](./03_library_preparation.md) section).
+To optimize sequencing capacity, multiple samples are often pooled and sequenced together using unique index sequences, a process known as multiplexing (see the [library preparation](./03_library_preparation.md) section of this repository).
 
 When multiple samples need to be sequenced together, the total data output must be distributed accurately across the pool. Given a fixed sequencing capacity, the number of reads allocated per sample decreases as more samples are added. Careful planning is therefore required to ensure that each sample reaches its minimum required depth.
 
