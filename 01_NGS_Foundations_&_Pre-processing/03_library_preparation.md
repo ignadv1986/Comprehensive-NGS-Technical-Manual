@@ -60,7 +60,7 @@ To make sure that only the fragments of the right size are captured, a double-si
 <div align="center">
   <img src="../Figures/SPRI.png" width="900">
   <br>
-  <em>Overview of Solid Phase Reversible Immobilization (SPRI). Adapted from Russel AJ et al., Nature Communications (2018) under CC-BY 4.0.</em>
+  <em>Overview of Solid Phase Reversible Immobilization (SPRI). Adapted from Russel AJ et al., Nature Communications (2018) under CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.en).</em>
 </div>
 
 <br>
