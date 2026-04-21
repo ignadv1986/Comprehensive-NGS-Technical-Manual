@@ -53,14 +53,14 @@ Paired-end sequencing, although more expensive, provides much higher confidence 
 As explained above, the sequencer identifies bases by exciting fluorophores with a laser and capturing an image. To increase sequencing speed and reduce the cost of the hardware, Illumina evolved the imaging chemistry from four colors down to two:
 
 - **4-channel chemistry** (e.g., MiSeq, HiSeq): Each of the four bases has a unique dye and is captured in four separate images per cycle. While highly accurate, the time required for four imaging steps per cycle limits throughput.
-- **2-channel chemistry** (e.g., NextSeq, NovaSeq): only two dyes are used and the sequencer takes two pictures, one through a red filter and one through a green filter. Each nucleotide bound to one (red for C and green for A), 2 (red and green for T, resulting in yellow signal), or none (G, the sequencer registers no fluorescence in that position and registers it as a G).
+- **2-channel chemistry** (e.g., NextSeq, NovaSeq): only two dyes are used and the sequencer takes two pictures, one through a red filter and one through a green filter. Each nucleotide is bound to one (red for C and green for A), 2 (red and green for T, resulting in yellow signal), or none (G, the sequencer registers no fluorescence in that position and registers it as a G).
 
-Note: 2-channel color mappings vary by instrument. For example, on the NextSeq 500, 'A' is detected in both channels, whereas on the NovaSeq 6000, 'T' is the mixed signal. In all 2-channel systems, 'G' is characterized by the absence of signal (dark).
+**Note:** 2-channel color mappings vary by instrument. For example, on the NextSeq 500, A is detected in both channels, whereas on the NovaSeq 6000, T is the mixed signal. In all 2-channel systems, G is characterized by the absence of signal (dark).
 
 <div align="center">
   <img src="../Figures/optical_chemistry.png" width="650">
   <br>
-  <em>Comparison of Illumina 4-Channel vs. 2-Channel optical chemistry. Note how 'G' (Guanine) relies on the absence of signal in 2-channel systems.</em>
+  <em>Comparison of Illumina 4-Channel vs. 2-Channel optical chemistry. Note how G relies on the absence of signal in 2-channel systems.</em>
 </div>
 
 ## Long-read Sequencing
@@ -81,15 +81,21 @@ Modern high-throughput machines (NovaSeq) use **patterned flow cells** where bil
 
 ### Phasing and Pre-phasing
 
-If the cleaving step doesn't work perfectly to wash away the terminator, the next base won't be able to bind, so this read will be one nucleotide behind. On the other hand, two nucleotides can accidentally be incorporated in one cycle because the terminator was missing or broken, so now this read will be one nucleotide ahead. These are called **phasing** and **pre-phasing**, respectively. As the run goes on (e.g., cycle 100, 150), these "out of sync" strands accumulate. This is why Quality Scores (Q30) always drop toward the end of a read (see the [sequencing QC](./04_sequencing_QC.md) section of this repository). When they drop too early, it is usually because of a chemistry or hardware issue (clogged fluidics or old reagents), and the expiry date of the reagents or the pump performance need to be checked.
+If the cleaving step doesn't work perfectly to wash away the terminator, the next base won't be able to bind, so this read will be one nucleotide behind. On the other hand, two nucleotides can accidentally be incorporated in one cycle because the terminator was missing or broken, so now this read will be one nucleotide ahead. These are called **phasing** and **pre-phasing**, respectively. As the run goes on, these "out of sync" strands accumulate. This is why Quality Scores (Q30) always drop toward the end of a read (see the [sequencing QC](./04_sequencing_QC.md) section of this repository). When they drop too early, it is usually because of a chemistry or hardware issue (clogged fluidics or old reagents), and the expiry date of the reagents or the pump performance need to be checked.
 
 ### Low Quality Index Read
 
-The adapters bound to the genomic DNA contain **indexes**: these are short sequences (usually 8 or 10 bases), different for each sample. Thanks to their presence, all samples can be sequenced together, and the sequencer can determine which reads belong to each sample in a process called **demultiplexing**.
+The adapters bound to the genomic DNA contain **indexes**: these are short sequences (usually 8 or 10 bases), different for each sample (see below). Thanks to their presence, all samples can be sequenced together, and the sequencer can determine which reads belong to each sample in a process called **demultiplexing**.
 
 Importantly, the sequencer reads the index as a separate, tiny sequencing run called an **index read**. This takes place at the end of R1. If the index read has low quality, the machine won't know which sample the DNA belongs to, and these reads end up in an **undetermined** folder. High percentages of undetermined reads usually point to library prep errors or issues with the sample sheet.
 
-### Index Hopping
+### Index Hopping and Unique Dual Indexes (UDIs)
 
-Because ExAmp is a high-energy chemical reaction and wells are so close together, any leftover free adapters in the library can accidentally prime a reaction in a neighboring well. This index hopping can lead to crosstalk where reads are assigned to the wrong sample. This is why modern protocols require **Unique Dual Indexes (UDIs)**, a digital safety net for the high-speed chemistry. As we will see on the next section of this repository, proper library cleanup to remove free adapters is the best defense against this phenomenon.
+The traditional approach to sample indexing is **combinatorial dual indexing (CDI)**, where each library is tagged with a combination of two short sequences: an i7 index on one end and an i5 index on the other. In CDI, the same individual index sequences are reused across many samples. For example, sample A might carry i7-1 + i5-3, and sample B might carry i7-2 + i5-3). Unique sample identity is therefore inferred from the **combination** of the two indexes rather than from each sequence individually.
+
+Because ExAmp is a high-energy chemical reaction and wells are so close together, any leftover free adapters in the library can accidentally prime a reaction in a neighboring well. Taking the combinations above as an example, when a free adapter carrying i7-1 hops into a well seeded with a library from sample B, the resulting cluster will be read as i7-1 + i5-3 — a combination that legitimately belongs to sample A. This phenomenon is termed **index hopping**, and it leads to crosstalk where reads are silently misassigned to the wrong sample.
+
+To overcome this index hopping, modern protocols require **Unique Dual Indexes (UDIs)**, a digital safety net for the high-speed chemistry. Unlike combinatorial dual indexes — where individual i7 and i5 sequences are reused across samples — UDIs assign a completely unique index pair to every sample in the pool, with no single index sequence appearing more than once. This means that if a free adapter does hop to a neighboring well and primes an illegitimate cluster, the resulting i7+i5 combination will not match any entry in the sample sheet. The demultiplexer flags it as unknown and discards it, rather than silently assigning it to the wrong sample. Unlike in CDI, where the same hop would produce a valid combination indistinguishable from a legitimate read, the nonsense combination generated under UDIs is caught and removed before it can propagate downstream.
+
+Importantly, as we will see on the next section of this repository, proper library cleanup to remove free adapters is the best defense against this phenomenon, and UDIs are the safeguard for what cleanup leaves behind.
 
