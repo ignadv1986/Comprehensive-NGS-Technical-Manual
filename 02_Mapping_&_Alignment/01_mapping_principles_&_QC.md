@@ -65,7 +65,7 @@ Sam files are human-readable text files, where each line is tab-delimited, showi
 |---------|---------|--------------------|
 | M	| Alignment Match	| The bases align (can be a match or a mismatch) |
 | I	| Insertion	| The read has extra bases that the reference doesn't |
-| D	| Deletion	| The reference has bases that the read is missing |
+| D	| Deletion | The reference has bases that the read is missing |
 | S	| Soft-clipping	| These bases are at the ends and didn't match, so the aligner ignored them |
 
 </div>
