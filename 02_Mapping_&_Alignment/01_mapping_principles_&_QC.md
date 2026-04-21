@@ -41,7 +41,9 @@ Aligners take short sequences (**seeds**) from the sequencing reads and try to f
 <div align="center">
   
   <img src="../Figures/seed_and_extend.png" width="800">
+  
   <br>
+  
   <em>Read alignment with seed-and-extend approach. Adapted from Karpulevich et. al. BMC Bioinformatics (2024), used under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.en)</em> 
 </div>
 
@@ -63,10 +65,10 @@ Sam files are human-readable text files, where each line is tab-delimited, showi
 
 | Letter	| Meaning	| What it looks like |
 |---------|---------|--------------------|
-| M	| Alignment Match	| The bases align (can be a match or a mismatch) |
-| I	| Insertion	| The read has extra bases that the reference doesn't |
-| D	| Deletion | The reference has bases that the read is missing |
-| S	| Soft-clipping	| These bases are at the ends and didn't match, so the aligner ignored them |
+| M | Alignment Match	| The bases align (can be a match or a mismatch) |
+| I | Insertion	| The read has extra bases that the reference doesn't |
+| D | Deletion | The reference has bases that the read is missing |
+| S | Soft-clipping	| These bases are at the ends and didn't match, so the aligner ignored them |
 
 </div>
 
