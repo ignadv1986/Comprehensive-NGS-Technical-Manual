@@ -16,7 +16,7 @@ This is a living document and will be updated over time.
 | :--- | :--- |
 | [01_sequencing_physics.md](./01_NGS_Foundations_%26_Pre-processing/01_sequencing_physics.md) | Sequencing by synthesis, bridge amplification, optical chemistry, patterned flow cells, and common run-level failure modes |
 | [02_experimental_design.md](./01_NGS_Foundations_%26_Pre-processing/02_experimental_design.md) | Sequencing depth, coverage, read configuration, multiplexing strategy, and practical design trade-offs |
-| [03_library_preparation.md](./01_NGS_Foundations_%26_Pre-processing/03_library_preparation.md) | End repair, adapter ligation, SPRI size selection, PCR amplification, quantification, and pooling |
+| [03_library_preparation.md](./01_NGS_Foundations_%26_Pre-processing/03_library_preparation.md) | End repair, adapter ligation, SPRI size selection, spike-in normalization, PCR amplification, quantification, and pooling |
 | [04_sequencing_QC.md](./01_NGS_Foundations_%26_Pre-processing/04_sequencing_QC.md) | FastQC metrics, Phred scores, trimming strategy, and MultiQC |
 
 ### 02 — Mapping & Alignment
