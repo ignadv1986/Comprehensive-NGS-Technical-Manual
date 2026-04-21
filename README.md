@@ -57,6 +57,14 @@ This is a living document and will be updated over time.
 
 ---
 
+## Data & Figures
+
+The example outputs used throughout this repository were derived from data published in:
+
+Ingham et al. (2025) CRAMP1-dependent histone H1 biogenesis is essential for topoisomerase II inhibitor tolerance. *Mol Cell*, 85(13), 2487-2502. doi: 10.1016/j.molcel.2025.04.006. [Mol Cell](https://www.cell.com/molecular-cell/fulltext/S1097-2765(25)00309-0?_returnURL=https%3A%2F%2Flinkinghub.elsevier.com%2Fretrieve%2Fpii%2FS1097276525003090%3Fshowall%3Dtrue) | [PubMed](https://pubmed.ncbi.nlm.nih.gov/40516529/)
+
+---
+
 ## License
 
 This work is licensed under the [MIT License](./LICENSE). You are free to use, share, and adapt the material with attribution.
