@@ -35,7 +35,7 @@ Once the cluster is formed, it contains a mixture of both forward and reverse st
 <div align="center">
   <img src="../Figures/bridge_amplification.png" width="500">
   <br>
-  <em>The process of bridge amplification. Image by Abizar (CC BY-SA 3.0).</em>
+  <em>"DNA Sequencing Bridge Amplification". Image by Abizar via https://en.wikipedia.org/wiki/File:DNA_Sequencing_Bridge_Amplification.png. CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/).</em>
 </div>
 
 ### Reading the Fragments
