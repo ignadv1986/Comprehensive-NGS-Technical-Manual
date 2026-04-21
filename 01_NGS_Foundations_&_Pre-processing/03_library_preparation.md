@@ -74,6 +74,26 @@ The relationship between the fragment size and the **read length**, a setting th
 
 Lastly, in some protocols the library is amplified with a PCR step, to increase the concentration of DNA (see next section). In **PCR-free NGS protocols**, like whole genome-sequencing (WGS), we start with a much higher initial concentration of DNA (like 1 µg), so there is already enough material to be sequenced after adapter ligation. This has some advantages: PCR polymerases naturally "dislike" areas with high GC content (promoters) or high AT content. PCR-free sequencing provides the most even coverage across the entire genome because you remove the enzyme preference entirely. Additionally, PCR can sometimes introduce small insertions or deletions. On the downside, PCR-free NGS protocols contain molecules with both, only one, or no adapters. This is because such adapters are used for library amplification in libraries that have a PCR step, so virtually all fragments will contain both adapters. However, in PCR-free protocols, the adapters are not used for amplification and there is no way to guarantee that all fragments will bind to both adapters.
 
+## Spike-in Control
+
+A spike-in refers to a **known quantity of external (exogenous) DNA or RNA** that is added (“spiked in”) in a known concentration to a sample before processing. Spike-in acts as an internal control or reference, allowing to distinguish biological differences from technical noise. Because **it is subjected to the same procedures as the material of interest**, it can be used as a normalization step at the end of the process.
+
+Standard normalization approaches assume that samples are broadly comparable, but some experimental conditions violate this assumption: treatments that cause global transcriptome shifts, cell types with different amounts of genetic material, or protocols where the amount of starting material varies between samples. In these cases, spike-in provides an orthogonal reference that does not rely on any assumption about the biological material itself.
+
+The underlying logic is straightforward: a ratio of spike-in reads in each sample versus a reference (either a control sample or the average across all samples) is calculated. If a sample has fewer endogenous reads but the same spike-in reads as the reference, the difference is biological. If both are reduced proportionally, the difference is technical. This requires that reads are aligned to both the genome of interest and the spike-in genome.
+
+Because spike-in is added at a concentration designed to constitute only 1–5% of the final library, it is typically invisible on TapeStation or Bioanalyzer traces. If a spike-in signal is visible, the spike-in-to-target ratio is too high — this will require significantly greater sequencing depth to recover sufficient target reads for downstream analysis.
+
+<br>
+
+<div align="center">
+  <img src="../Figures/spike-in.png" width="700">
+  <br>
+  <em>Workflow and Logic of Spike-in Normalization</em>
+</div>
+
+<br>
+
 ## Library Amplification by PCR
 
 The goal of library PCR is to add the remaining adapter sequences (if using indexed primers) and to amplify the library to a measurable concentration (typically 2–10 nM for loading). When deciding on the number of PCR cycles, two scenarios need to be avoided:
