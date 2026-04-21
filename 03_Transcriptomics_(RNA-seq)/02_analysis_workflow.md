@@ -1,10 +1,11 @@
 # RNA-seq Analysis Workflow
 
-In this section, we go through the computational workflow for RNA-seq analysis starting from the generated alignment files. For technical details on the preferred aligners (such as STAR or HISAT2) and the reasoning behind splice-aware mapping, please refer to the [Alignment & Mapping](../02_Mapping_&_Alignment/02_aligners.md) section of this manual.
+This section covers the computational workflow for RNA-seq analysis starting from the generated alignment files. For technical details on the preferred aligners (such as STAR or HISAT2) and the reasoning behind splice-aware mapping, please refer to the [types of aligners](../02_Mapping_&_Alignment/02_aligners.md) section of this manual.
 
 ## Quantification of reads
 
-The BAM files generated during the alignment contain the coordinates of the detected genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option is the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it uses a GTF annotation file to define the boundaries between exons and genes. **Important note:** if the GTF doesn't match the genome build, the counts will be zero. 
+The BAM files generated during the alignment contain the coordinates of the detected genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option is the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it uses a GTF annotation file to define the boundaries between exons and genes. Importantly, this GTF file must match the genome build version used in the alignment.
+
 The 3 critical settings that must be taken into account when using featureCounts are the following:
 
 - **Strandness** (unstranded, forward stranded, or reverse stranded (standard dUTP/Illumina workflow): Picking the wrong one will lead to a massive decrease in the count number.
@@ -13,13 +14,13 @@ The 3 critical settings that must be taken into account when using featureCounts
 
 The manual for the featureCounts package can be found [here](https://subread.sourceforge.net/SubreadUsersGuide.pdf).
 
-This package outputs a tab-delimited file with the number of reads, where rows are Gene IDs and columns are your individual samples (**count matrix**).
+This package outputs a tab-delimited file with the number of reads, where rows are Gene IDs and columns are the individual samples (**count matrix**).
 
 ## Differential Expression
 
 ### DESeq2
 
-For the identification of differentially expressed genes, the R/Bioconductor package [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is the industry standard. It works on a **DESeq2 object**, constructed from a count matrix (usually provided by featureCounts) with the number of reads, with the genes as rows and the samples as columns, and a metadata matrix containing sample information (replicate, condition…).
+For the identification of differentially expressed genes, the R/Bioconductor package [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) is the industry standard. It works on a **DESeq2 object**, constructed from a count matrix (usually provided by featureCounts) that contains the number of reads, with the genes as rows and the samples as columns, and a metadata matrix containing sample information (replicate, condition, etc.).
 
 Example of a count matrix:
 
@@ -58,11 +59,11 @@ Example of a metadata matrix:
 
 When analyzing differential expression, DESeq2 does the following three things:
 
-- **Normalization:** It calculates a scaling factor for each sample. It doesn't just divide by the total number of reads (which is what TPM or RPKM does); it uses a median-of-ratios method. This ensures that a single, massively over-expressed gene doesn't skew the normalization for every other gene in the sample.
+- **Normalization:** It calculates a scaling factor for each sample. It doesn't just divide by the total number of reads (which is what TPM or RPKM do); it uses a median-of-ratios method. This ensures that a single, massively over-expressed gene doesn't skew the normalization for every other gene in the sample.
 - **Dispersion estimation:** RNA-seq data is overdispersed, meaning the variance grows faster than the mean. DESeq2 uses a **Negative Binomial distribution** to model this biological noise, shrinking the dispersion estimates of individual genes toward a global trend to make the analysis more robust against outliers.
 - **Statistical testing:** It performs a statistical test (**Wald test**)to determine if the change in expression between the conditions is greater than what would be expected by random chance.
 
-It outputs a table containing:
+After performing the analysis, DESeq2 outputs a table containing:
 
 - **basemean:** The average expression across all samples.
 - **log2FoldChange (LFC):** The magnitude of the change (e.g., a value of 1 means a 2-fold increase; a value of -1 represents a 2-fold decrease).
@@ -70,11 +71,11 @@ It outputs a table containing:
 
 ### LFC shrinkage
 
-For genes with low counts or high variability, LFC estimates can be unstable and exaggerated in magnitude due to noise. For example, a gene moving from 1 read to 5 reads represents a "5-fold increase" that is likely statistically meaningless. The R/Bioconductor package [apeglm](https://bioconductor.org/packages/release/bioc/html/apeglm.html) shrinks LFCs per gene, instead of using a fixed prior like other methods, to get more stable, interpretable, and realistic estimates of gene expression changes — reducing noise without erasing true biological effects.
+For genes with low counts or high variability, LFC estimates can be unstable and exaggerated in magnitude due to noise. For example, a gene moving from 1 read to 5 reads represents a 5-fold increase that is likely statistically meaningless. The R/Bioconductor package [apeglm](https://bioconductor.org/packages/release/bioc/html/apeglm.html) shrinks LFCs per gene, instead of using a fixed prior like other methods, to get more stable, interpretable, and realistic estimates of gene expression changes — reducing noise without erasing true biological effects.
 
 ### Visualization
 
-DESeq2 results are usually plotted as volcano plots, with the shrunk LFC (see below) in the x-axis, and the -log10(padj) on the y axis. This transformation turns tiny p-values into large positive numbers, placing the most significant genes at the top of the plot.
+DESeq2 results are usually plotted as volcano plots, with the shrunk LFC in the x-axis, and the -log10(padj) on the y axis. This transformation turns tiny p-values into large positive numbers, placing the most significant genes at the top of the plot.
 
 <br>
 
@@ -86,7 +87,7 @@ DESeq2 results are usually plotted as volcano plots, with the shrunk LFC (see be
 
 <br>
 
-While shrunk LFC is essential for determining the magnitude of change, it is not suitable for distance-based visualizations like **heatmaps** or **Principal Component Analysis (PCA)**. In raw RNA-seq data, the variance of a gene's counts naturally increases with its mean expression. If a heatmap is plotted using raw or log-normalized counts, the "noisiest" genes or those with the highest absolute expression will dominate the clustering, even if their relative biological change is minimal. To account for this, **Variance Stabilizing Transformation (VST)** or **Regularized Log (rlog)** are used, transforming the count data to a log-like scale where the variance is approximately constant across the mean.
+While shrunk LFC is essential for determining the magnitude of change, it is not suitable for distance-based visualizations like **heatmaps** or **Principal Component Analysis (PCA)**. In raw RNA-seq data, the variance of a gene's counts naturally increases with its mean expression. If a heatmap is plotted using raw or log-normalized counts, the noisiest genes or those with the highest absolute expression will dominate the clustering, even if their relative biological change is minimal. To account for this, **Variance Stabilizing Transformation (VST)** or **Regularized Log (rlog)** are used, transforming the count data to a log-like scale where the variance is approximately constant across the mean.
 
 <div align="center">
   <img src="../Figures/RNA-seq_heatmap.png" width="700">
