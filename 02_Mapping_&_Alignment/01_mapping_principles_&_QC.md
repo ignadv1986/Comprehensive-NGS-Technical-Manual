@@ -10,7 +10,7 @@ The most widely used versions of human reference genome are GRCh37 and GRCh38, w
 
 •	GENCODE is a specific annotation project that focuses on producing high-quality, manually curated gene models — initially for human and mouse genomes.
 
-GENCODE and Ensembl are now technically the same for human and mouse. Since 2018, Ensembl uses the GENCODE gene set as its default, but the latter includes a lot of "long non-coding RNAs" (lncRNAs) and pseudogenes that standard RefSeq might ignore. This is why RNA-seq scientists almost always prefer GENCODE/Ensembl over UCSC/RefSeq.
+GENCODE and Ensembl are now technically the same for human and mouse. Since 2018, Ensembl uses the GENCODE gene set as its default, but the latter includes a lot of long non-coding RNAs (lncRNAs) and pseudogenes that standard RefSeq might ignore. This is why is preferred GENCODE/Ensembl over UCSC/RefSeq for RNA-seq.
 
 <br>
 
@@ -29,12 +29,15 @@ GENCODE and Ensembl are now technically the same for human and mouse. Since 2018
 
 ## Genome Indexing
 
-Without an index, the aligner would have to read the entire 3.2 billion base pairs of the human genome for every single read in the FASTQ files. With 400 million reads, the analysis would take years. **Indexing** reduces this to minutes or hours. This involved turning the reference FASTA file into a fast-searchable database (index) of short, overlapping subsequences, known as **k-mers** (sequences of length *k*). 
-Importantly, each aligner generates a different indexing, and they are not compatible. However, generating an index is a very computationally heavy task, so it is good practice to download an indexed genome ([Illumina iGenomes](https://support.illumina.com/sequencing/sequencing_software/igenome.html), [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), or Ensembl/UCSC FTP) that can be used with the chosen aligner. 
+If the aligner had to read the entire 3.2 billion base pairs of the human genome for every single read in the FASTQ files, the analysis would be incredibly slow and computationally infeasible. To overcome this, reference FASTA files are converted into a rapidly searchable database (an index) made up of short, overlapping subsequences known as **k-mers** (sequences of length *k*). This process is called **indexing**.
+
+One important practical consideration is that each aligner generates a different index format, and they are not compatible. Since generating an index is computationally expensive, it is good practice to download a pre-built one ([Illumina iGenomes](https://support.illumina.com/sequencing/sequencing_software/igenome.html), [AWS iGenomes](https://ewels.github.io/AWS-iGenomes/), or Ensembl/UCSC FTP) that can be used with the chosen aligner. 
 
 ## The Mapping Process
 
-Aligners take short sequences (**seeds**) from the sequencing reads and try to find candidate alignment locations in the index. Once the aligner has "anchored" the read to a specific spot, it attempts to align the remainder of the read to the adjacent genomic coordinates, allowing for a predefined number of mismatches or gaps (indels). This is called the **seed-and-extend method**, and it is essential because, if the aligner tried to find an exact 150-base match in the 3-billion-base human genome, it would almost always fail, due to the presence of point mutations and sequencing errors. The aligner calculates an **alignment score** by rewarding matches and applying "penalties" for mismatches and indels. If a sequences maps to several locations, the aligner chooses the one with the highest alignment score. If multiple locations have the same top score, the read is considered **multi-mapped**, which significantly lowers its Mapping Quality (MAPQ) score (see below).
+Aligners take short sequences (**seeds**) from the sequencing reads and try to find candidate alignment locations in the index. Once the aligner has "anchored" the read to a specific spot, it attempts to align the remainder of the read to the adjacent genomic coordinates, allowing for a predefined number of mismatches or gaps (indels). This is called the **seed-and-extend method** and it is essential because, if the aligner tried to find an exact 150-base match in the 3-billion-base human genome, it would almost always fail, due to the presence of point mutations and sequencing errors.
+
+The aligner calculates an **alignment score** by rewarding matches and applying penalties for mismatches and indels. If a sequences maps to several locations, the aligner chooses the one with the highest alignment score but, if multiple locations have the same top score, the read is considered **multi-mapped**, which significantly lowers its Mapping Quality (MAPQ) score (see below).
 
 <br>
 
@@ -76,7 +79,20 @@ Sam files are human-readable text files, where each line is tab-delimited, showi
 
 **Note:** The presence of many S (Soft-clipping) in a BAM file usually means that the adapter trimming (with fastp or cutadapt) didn't work perfectly. The aligner is doing the work by hiding the adapters so the read can still map.
 
-Due to the immense size of sequencing data, SAM files are typically converted into **BAM** (Binary Alignment Map) files. BAM files are compressed, non-human-readable versions of SAM files that allow for much faster data processing and significantly reduced storage footprints. For most downstream analyses, BAM files must be sorted by genomic coordinate and indexed (creating a .bai file) to allow software to quickly access specific regions of the genome.
+<br>
+
+<div align="center">
+  
+  <img src="../Figures/SAM_file.png" width="800">
+  
+  <br><br>
+  
+  <em>Read alignment with seed-and-extend approach. Adapted from Karpulevich et. al. BMC Bioinformatics (2024), used under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.en)</em>
+</div>
+
+<br>
+
+Due to the immense size of sequencing data, SAM files are typically converted into **BAM** (Binary Alignment Map) files. BAM files are compressed, non-human-readable versions of SAM files that allow for much faster data processing and significantly reduced storage footprints. For most downstream analyses, BAM files must be **sorted** by genomic coordinate and **indexed** (creating a corresponding .bai file) to allow software to quickly access specific regions of the genome.
 
 ## Mapping Paired-end Reads
 
