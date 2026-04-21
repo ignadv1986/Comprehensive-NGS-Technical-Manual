@@ -75,7 +75,7 @@ While PCR amplification exponentially enriches for fragments with dual adapters,
 
 ## Spike-in Control
 
-Spike-in normalization is standard practice in CUT&RUN and is strongly recommended for any experiment involving comparisons across conditions or cell types (for a general introduction, see the [library preparation](../01 — NGS Foundations & Pre-processing/03_library_preparation.md) section).
+Spike-in normalization is standard practice in CUT&RUN and is strongly recommended for any experiment involving comparisons across conditions or cell types (for a general introduction, see the [library preparation](../01_NGS_Foundations_&_Pre-processing/03_library_preparation.md) section).
 
 In CUT&RUN, two spike-in strategies are commonly used. The first relies on E. coli DNA that is naturally carried over as a contaminant of the pA-MNase preparation — because every sample is treated with the same batch of pA-MNase, a consistent amount of E. coli DNA co-purifies with the target fragments, providing a convenient built-in reference that requires no additional material. The second approach uses exogenous spike-in chromatin, typically from yeast, which is added at a defined concentration before the protocol begins and provides a more controlled and quantifiable reference.
 
