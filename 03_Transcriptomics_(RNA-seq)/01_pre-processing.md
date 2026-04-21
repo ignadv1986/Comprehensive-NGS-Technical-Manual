@@ -4,6 +4,14 @@ RNA-seq (RNA Sequencing) is the standard method for analyzing the **transcriptom
 
 The primary goal of RNA-seq is typically **Differential Expression Analysis**: identifying changes in gene expression between two conditions.
 
+## Spike-in Control
+
+While spike-in normalization is not required for every RNA-seq experiment, it becomes essential when the biological condition being studied may cause global transcriptome shifts. For example, when using treatments that change overall transcription, or for comparisons between cell types with very different amounts of RNA (for a general introduction, see the [library preparation](../01_NGS_Foundations_&_Pre-processing/03_library_preparation.md) section). In these cases, standard normalization tools like DESeq2 are insufficient, as they assume that the overall transcriptome composition is comparable across samples and that only a subset of genes differ between conditions.
+
+In RNA-seq, spike-in is added in the form of synthetic RNA molecules (most commonly the ERCC (External RNA Controls Consortium) spike-in mix). These are added directly to the RNA sample before library preparation begins, ensuring they undergo the same retrotranscription, fragmentation, adapter ligation, and amplification steps as the endogenous RNA.
+
+For details on how spike-in reads are used for normalization in the analysis, see the [RNA-seq analysis](./02_analysis_workflow.md) section.
+
 ## RNA Quality Check: RNA Integrity Number (RIN)
 
 Before any library preparation begins, the quality of the total RNA extracted from the cells must be assessed. The gold standard for this is the **RIN (RNA Integrity Number)**.
