@@ -51,7 +51,7 @@ These metrics help identify technical issues that are not captured by overall qu
 
 ### Per Base N Content
 
-The per base N content of the reads should stay close to 0, with a small increase toward the 3' end in some databases. A **globally high N content** is usually due to low signal intensity during specific sequencing cycles, which can be verified in run-level sequencing metrics. A per base N content above 1% is generally considered problematic for downstream analysis.
+The per base N content of the reads should stay close to 0, with a small increase toward the 3' end in some samples. A **globally high N content** is usually due to low signal intensity during specific sequencing cycles, which can be verified in run-level sequencing metrics. A per base N content above 1% is generally considered problematic for downstream analysis.
 
 ### Sequence Length Distribution
 
