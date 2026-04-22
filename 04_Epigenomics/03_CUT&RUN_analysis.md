@@ -29,24 +29,24 @@ There are two ways to represent coverage from BAM files: generating **bedGraph**
 
 Both bedGraph and BigWig files are usually generated with the **bamcoverage** function of [deepTools](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html). This tool is preferred because it allows the spike-in scaling factor to be applied during the conversion process, thereby producing already normalized bedGraph/BigWig files.
 
-The choice between generating bedGraph or BigWig files is largely dictated by the requirements of the downstream peak-calling software (see next section), but the generation of BigWig files is always recommended to ensure smooth, high-performance visualization in IGV or other genome browsers. It is possible to generate BigWig files from bedGraph with [bedGraphToBigWig](https://anaconda.org/channels/bioconda/packages/ucsc-bedgraphtobigwig/overview).
+The choice between generating bedGraph or BigWig files is largely dictated by the requirements of the downstream peak-calling software (see next section), but the generation of BigWig files is always recommended to ensure smooth, high-performance visualization in IGV or other genome browsers. It is possible (and essential if the data wants to be visualized before peak calling, see below) to generate BigWig files from bedGraph with [bedGraphToBigWig](https://anaconda.org/channels/bioconda/packages/ucsc-bedgraphtobigwig/overview).
 
 ## Peak Calling
 
 Following the generation of normalized coverage profiles, the final critical step in the CUT&RUN pipeline is peak calling. This process uses statistical models to identify genomic regions where the density of mapped fragments is significantly higher than the background noise (**peaks**), indicating a **true protein-DNA binding event** or histone modification. The goal of this step is to produce a BED or narrowPeak file containing the coordinates of these high-confidence binding sites for downstream functional analysis.
 
-### BED and narrowPeak files
+### BED and narrowPeak Files
 
-Peak information is stored in tab-delimited files known as **BED**(browser extensible data). They contain the chromosome number and the start and end of the coordinates for the different detected peaks. However, other elements can be attached to them for downstream analysis. Another common format of files used to store peak information is **narrowPeak**. These are basically 10-column BED files, with additional information such as the peak "summit" (the exact point of highest signal), fold-enrichment, and statistical significance (p-values and q-values).
+Peak information is stored in tab-delimited files known as **BED**(browser extensible data). They contain the chromosome number and the start and end of the coordinates for the different detected peaks. However, other elements can be attached to them for downstream analysis. Another common format of files used to store peak information is **narrowPeak**. These are basically 10-column BED files, with additional information such as the **peak summit** (the exact point of highest signal), fold-enrichment, and statistical significance (p-values and q-values).
 
-### Peak calling tools
+### Peak calling Tools
 
-The two main tools used for peak-calling are [MACS3](https://macs3-project.github.io/MACS/) and [SEACR](https://github.com/FredHutch/SEACR). While both can be used for CUT&RUN analysis, **SEACR** (Simple Enrichment Analysis of CUT&RUN) was specifically created for this purpose. In contrast to ChIP-seq, CUT&RUN's extremely low-background signal, with clear and spiked peaks, makes it perfect for an analysis with a threshold-based algorithm like the one SEACR uses, instead of statistical background models. Importantly, SEACR requires input in the form of bedGraph files and returns BED files, which can later be converted to narrowPeak format, while MACS3 uses BAM files as input and returns narrowPeak files. It is worth mentioning that SEACR can be run in “relaxed” or “stringent” modes, with the latter usually being the preferred option due to the low background typical of CUT&RUN experiments.
-**MACS3**, on the other hand is better for the detection of broad histone marks and other “wider” peaks, and is therefore the go-to option when analyzing ChIP-seq data, but also useful in specific CUT&RUN experiments. It takes BAM files as input and returns narrowPeak files, so bedGraph generation is normally skipped in a MACS3-based workflow. 
+The two main tools used for peak-calling are [MACS3](https://macs3-project.github.io/MACS/) and [SEACR](https://github.com/FredHutch/SEACR). While both can be used for CUT&RUN analysis, **SEACR** (Simple Enrichment Analysis of CUT&RUN) was specifically created for this purpose. In contrast to ChIP-seq, CUT&RUN's extremely low-background signal, with clear and spiked peaks, makes it perfect for an analysis with a threshold-based algorithm like the one SEACR uses, instead of statistical background models. Importantly, SEACR requires input in the form of bedGraph files and returns BED files, which can later be converted to narrowPeak format, while MACS3 uses BAM files as input and returns narrowPeak files. It is worth mentioning that SEACR can be run in `relaxed` or `stringent` modes, with the latter usually being the preferred option due to the low background typical of CUT&RUN experiments.
+**MACS3**, on the other hand is better for the detection of broad histone marks and other wider peaks, and is therefore the go-to option when analyzing ChIP-seq data, but also useful in specific CUT&RUN experiments. It takes BAM files as input and returns narrowPeak files, so bedGraph generation is normally skipped in a MACS3-based workflow. 
 
-Importantly, in CUT&RUN, peak callers use the IgG control to establish a baseline. By comparing the experimental sample to the IgG, the algorithm can distinguish between true biological enrichment and technical artifacts or "open chromatin" noise.
+Importantly, in CUT&RUN, peak callers use the IgG control to establish a baseline. By comparing the experimental sample to the IgG, the algorithm can distinguish between true biological enrichment and technical artifacts or open chromatin noise.
 
-### Visualization in genome browsers
+### Visualization in Genome Browsers
 
 As mentioned above, the ideal file format to visualize enrichment is BigWig. Because SEACR provides bedGraph files, converting these to BigWig with the bedGraphToBigWig tool is highly recommended to inspect the data. In the case of MACS3, BigWig files are generated from BAM files with bamcoverage.
 
@@ -75,7 +75,7 @@ To capture the benefits of both sensitivity and reproducibility, a common approa
 - Peaks are called in independent replicates. Only those present in at least 2 out of 3 replicates are identified (using [bedtools multiinter](https://bedtools.readthedocs.io/en/latest/content/tools/multiinter.html)).
 - The reproducible peaks from step 2 are intersected with the master set from step 1 (using [bedtools intersect](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) to build the **final consensus peak set**.
 
-Why is intersection necessary? When files are merged, subtle differences in the signal shape of individual replicates can cause shifts in peak boundaries. Intersecting ensures that the reported peak width is consistent with the individual replicates (which is likely more accurate) while confirming the peak's presence in the higher-depth merged file. Furthermore, merging can create artifacts where weak signals from multiple replicates combine to "trick" SEACR into calling a peak that wasn't reproducible; intersection effectively prevents these artifacts from being included in the final data.
+Why is intersection necessary? When files are merged, subtle differences in the signal shape of individual replicates can cause shifts in peak boundaries. Intersecting ensures that the reported peak width is consistent with the individual replicates (which is likely more accurate) while confirming the peak's presence in the higher-depth merged file. Furthermore, merging can create artifacts where weak signals from multiple replicates combine to *trick* SEACR into calling a peak that wasn't reproducible; intersection effectively prevents these artifacts from being included in the final data.
 
 <br>
 
@@ -87,7 +87,7 @@ Why is intersection necessary? When files are merged, subtle differences in the 
 
 <br>
 
-### Read counting on consensus peaks
+### Read Counting on Consensus Peaks
 
 After identifying the consensus peaks, the next step is to count the reads on those peaks across all replicates for all conditions. First, all consensus peaks files are merged into a **single unique consensus BED file** that will contain the peaks detected in all conditions with [bedtools merge](https://bedtools.readthedocs.io/en/latest/content/tools/merge.html). A matrix is then built with these BED and the BigWig files using [multiBigWigSummary](https://deeptools.readthedocs.io/en/develop/content/tools/multiBigwigSummary.html). Alternatively, if BAM is the preferred format, bedtools coverage or deepTools multicov would be the go-to option. This matrix serves as the foundation for downstream statistical testing and differential enrichment analysis.
 
@@ -95,11 +95,11 @@ After identifying the consensus peaks, the next step is to count the reads on th
 
 Once a consensus peak set has been generated and quantified, the focus shifts from data processing to biological discovery. This involves characterizing the peaks based on their genomic location, associated genes, and DNA sequence properties. 
 
-### Comparison of conditions
+### Comparison of Conditions
 
 When multiple experimental conditions were analyzed, the first step to find differences between said conditions is to look for peaks that are exclusive to a specific condition, or peaks that are absent in one but not in the rest. This is achieved with **bedtools intersect**.
 
-### Region of interest (ROI) visualization
+### Region of Interest (ROI) Visualization
 
 If a signal across a specific region of interest needs to be analyzed, first a BED file of coordinates must be generated. These can be specific genes of interest from Ensembl/NCBI or broad categories such as "all promoters" (±2 kb from the transcription start site (TSS)). [deepTools computeMatrix](https://deeptools.readthedocs.io/en/develop/content/tools/computeMatrix.html) takes this BED file and maps the signal density across the regions contained in it, taking BigWig files as input. The output is visualized via [deepTools plotHeatmap](https://deeptools.readthedocs.io/en/develop/content/tools/plotHeatmap.html) or [deepTools plotProfile](https://deeptools.readthedocs.io/en/develop/content/tools/plotProfile.html).
 
@@ -113,13 +113,13 @@ If a signal across a specific region of interest needs to be analyzed, first a B
 
 <br>
 
-### Peak annotation & functional analysis
+### Peak Annotation & Functional Analysis
 
-After identifying peaks, these can be annotated to genomic features, such as promoters, enhancers or intergenic regions with the R/Bioconductor package **[ChIP-Seeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html)**.
+After identifying peaks, these can be annotated to genomic features, such as promoters, enhancers or intergenic regions with the R/Bioconductor package [ChIP-Seeker](https://bioconductor.org/packages/release/bioc/html/ChIPseeker.html).
 
 This allows for functional enrichment analysis (GO Terms/KEGG Pathways) to see if the identified peaks are associated with specific biological processes.
 
-### Motif enrichment analysis
+### Motif Enrichment Analysis
 
 Finally, the enrichment of specific motifs, such as known transcription factor binding sites can be analyzed. The table below summarizes the main tools used for motif enrichment and their goals:
 
