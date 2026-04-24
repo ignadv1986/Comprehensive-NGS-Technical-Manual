@@ -59,7 +59,7 @@ If specific regions or the overall dataset show reduced counts, filtering parame
 
 | Symptom | Likely cause | Parameter(s) to check |
 | :--- | :--- | :--- |
-| High proportion of unassigned reads despite good mapping | Incorrect strand specification | `-s` |
+| High proportion of unassigned reads | Incorrect strand specification | `-s` |
 | Gene counts lower than expected across all samples | Mismatch between annotation and feature definition | `-t`, `-g` |
 | Unexpectedly high library sizes / inflated counts | Paired-end reads counted incorrectly as single reads | `-p`, `--countReadPairs` |
 | Loss of reads in specific regions or globally reduced counts | Overly strict fragment filtering | `-d`, `-D`, `-B`, `-C` |
