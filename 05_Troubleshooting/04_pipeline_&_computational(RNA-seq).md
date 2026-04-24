@@ -4,7 +4,7 @@ Even when sequencing QC and mapping metrics are within expected ranges, RNA-seq 
 
 ## Gene Quantification (featureCounts)
 
-After successful alignment, read counting tools such as featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated “unassigned” fractions and artificially reduced gene counts, and should therefore be the first thing to be checked.
+After successful alignment, read counting tools such as featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated unassigned fractions and artificially reduced gene counts, and should therefore be the first thing to be checked.
 
 <br>
 
