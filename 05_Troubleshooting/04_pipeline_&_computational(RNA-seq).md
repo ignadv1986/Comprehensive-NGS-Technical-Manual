@@ -17,7 +17,7 @@ After successful alignment, read counting tools such as featureCounts may produc
 
 <br>
 
-In particular, the presence and consisten annotation of selected feature type (e.g., exon) and attribute (e.g., gene_id) in the GTF file should be verified.
+In particular, the presence and consistent annotation of selected feature type (e.g., exon) and attribute (e.g., gene_id) in the GTF file should be verified.
 
 Even when the annotation is correct, unexpected results can arise when **counting assumptions** do not match the properties of the sequencing library.
 
@@ -85,7 +85,7 @@ If Salmon reports a low overall mapping rate (typically visible in the salmon_qu
 
 If overall expression appears inflated or disproportionately concentrated in a subset of transcripts, this may indicate mapping ambiguity or missing reference information.
 
-- **Incomplete transcriptomes** can cause reads to map spuriously to similar available transcripts.
+- **Incomplete transcriptomes** can cause reads to map spuriously to similar available transcripts. To avoid this, the transcriptome FASTA used to build the Salmon index should be sourced from a well-maintained reference such as Ensembl or GENCODE, and should match the genome build and annotation version used in all upstream steps.
 - Typically caused by **multi-mapping reads being distributed across similar isoforms**. Salmon's algorithm will assign fractional counts to all compatible transcripts, so highly similar isoforms will each receive a share of ambiguous reads. Therefore isoform-level estimates are less reliable than gene-level ones. To collapse these transcripts to gene level, tools like [tximeta](https://bioconductor.org/packages/release/bioc/html/tximeta.html) or [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) are often employed before differential expression analysis.
 
 ### Gene-level counts discordant with featureCounts results
@@ -111,7 +111,7 @@ Salmon's **TPM output should never be fed directly into DESeq2**. DESeq2 require
 
 ## Differential Expression (DESeq2)
 
-Poor experimental design structure, technical variation, or incorrect model specification can all lead to result misinterpretation during differential exoression analysis. Therefore, they need to be properly taken into account when running DESeq2 after read counting.
+Poor experimental design structure, technical variation, or incorrect model specification can all lead to result misinterpretation during differential expression analysis. Therefore, they need to be properly taken into account when running DESeq2 after read counting.
 
 ### Unexpected separation of samples
 
@@ -124,7 +124,7 @@ If samples cluster primarily by non-biological variables rather than the intende
 
 If the analysis yields very few significant genes, or results change substantially with small adjustments, the model may be underpowered or unstable.
 
-- To increase analysis power, the number of replicates per conditions should be appropiate. In addition, replicates should show consistent expression patterns at the count level (e.g., clustering together in PCA or correlation analyses), as high variability within conditions can obscure true differences between groups.
+- To increase analysis power, the number of replicates per conditions should be appropriate. In addition, replicates should show consistent expression patterns at the count level (e.g., clustering together in PCA or correlation analyses), as high variability within conditions can obscure true differences between groups.
 - The presence of outlier samples can inflate variance estimates and reduce the ability to detect differential expression, and individual samples with extreme values can disproportionately affect results.
 
 ### Global shifts in expression across conditions
