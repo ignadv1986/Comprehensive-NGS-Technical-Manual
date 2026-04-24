@@ -27,7 +27,7 @@ If the correct GTF file was used, but the proportion of unassigned reads is stil
 
 - This is often due to an **incorrect selection in the strandedness (`-s`) parameter**, e.g., the strand specification (`s-0` for unstranded, `s-1` for forward stranded, and `s-2` for reverse stranded) does not match the library generation.
 - This can also be caused by an **incorrect feature type selection (`-t`)** or a mismatch with the one present on the GTF file. The standard in RNA-seq analysis is `-t exon`: if the GTF contains exon information under a different name, a mismatch will happen and reads will not be assigned correctly.
-- Finally a **mismatch with attribute type (`-g`)**. The -t flag works in tandem with the -g flag; if `-t exon` is used, the `-g` flag must point to an attribute that exists within the exon lines (e.g., gene_id).
+- Finally, a **mismatch with attribute type (`-g`)** can also increase the number of unassigned reads. The -t flag works in tandem with the -g flag; if `-t exon` is used, the `-g` flag must point to an attribute that exists within the exon lines (e.g., gene_id).
 
 ### Gene counts lower than expected across all samples
 
