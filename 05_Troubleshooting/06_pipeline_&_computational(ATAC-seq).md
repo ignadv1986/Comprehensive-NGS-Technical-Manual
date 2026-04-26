@@ -12,11 +12,11 @@ A flat or weak TSS enrichment profile can be a consequence of the following:
 
 - **BAM filtering:** BAM files from different samples need to be properly filtered (especially by removing reads mapping to chrM) to prevent accumulation of background reads that might mask enrichment at TSS.
 - **Over-Digitization:** If the Tn5 concentration is too high for the number of nuclei, it will force its way into the edges of nucleosomes, leading to a broad plateau instead of a sharp spike in the TSS enrichment plot.
-- **Low Non-Redundant Fraction (NFR):** If the TSS score is low and the duplication rate is high (low NRF), that is a signal of an under-sampled library. This often happens if the transposition was successful but the DNA recovery (PCR/clean-up) was poor, leading to a small amount of reads being repetaedly sequenced. Because the TSS score relies on a ratio of signal-to-background, a lack of unique diverse reads can actually make the TSS signal look artificially weak or statistically insignificant.
+- **Low Non-Redundant Fraction (NFR):** If the TSS score is low and the duplication rate is high (low NRF), that is a signal of an under-sampled library. This often happens if the transposition was successful but the DNA recovery (PCR/clean-up) was poor, leading to a small amount of reads being repeteadly sequenced. Because the TSS score relies on a ratio of signal-to-background, a lack of unique diverse reads can actually make the TSS signal look artificially weak or statistically insignificant.
 
 ### Quick diagnostics guide
 
-| Symptom | Likely Cause | What to Check|
+| Symptom | Likely cause | What to check|
 | :--- | :--- | :--- |
 | Flat or low TSS enrichment profile | BAM filtering issues | Check for presence of chrM reads, PCR duplicates, or suboptimal filtering strategy in the final BAM |
 | Broad plateau instead of sharp spike | Over-transposition (Over-digitization) | Check Tn5-to-nuclei ratio. Excessive enzyme forces cuts into nucleosome edges, blurring the TSS signal |
@@ -48,7 +48,7 @@ If signal appears broadly distributed with little contrast:
 If promoters or known accessible loci show little to no signal:
 
 - **Insufficient signal-to-noise ratio:** Poor library complexity or high background can obscure real accessibility.
-- **Biologically real low accesibility:** The signal may truly be low in this condition, but it should be consistently low across all replicates if that is the case.
+- **Biologically real low accessibility:** The signal may truly be low in this condition, but it should be consistently low across all replicates if that is the case.
 - **Lack of Tn5 offset correction:** This can slightly diffuse signal around cut sites, but on its own rarely explains a complete absence of enrichment.
 
 ### Signal present but poorly defined
@@ -67,7 +67,7 @@ If strong signal appears outside known regulatory elements:
 - **Incorrect filtering:** If not removed, reads may accumulate in repetitive or blacklist regions. These regions can produce convincing but non-reproducible peaks.
 - **Multimapping reads retained:** Low-complexity regions may show artificial enrichment if not properly filtered.
 
-### Quick diagnostics guide
+### Quick diagnostic guide
 
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
@@ -100,7 +100,7 @@ If one sample appears globally stronger or weaker than others:
 
 If expected accessible regions show weak or no signal:
 
-- **Biologically real ow accesibility:** Biologically true low accesibility can occur due to specific treatments or vary between cell lines, but it should be consistent across replicates.
+- **Biologically real low accessibility:** Biologically true low accesibility can occur due to specific treatments or vary between cell lines, but it should be consistent across replicates.
 - **Missing Tn5 correction:** Signal becomes blurred and less concentrated at true cut sites, sometimes (but very rarely) making it difficult to detect enrichment at such sites.
 
 ### Signal present but poorly defined (blurred or wide peaks)
@@ -120,7 +120,7 @@ If strong signal appears outside known regulatory elements:
 - **Incomplete filtering:** Reads accumulating in blacklist or repetitive regions
 - **Multimapping reads retained:** Artificial signal in low-complexity regions
 
-### Quick diagnostics guide
+### Quick diagnostic guide
 
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
@@ -142,7 +142,7 @@ After alignment and preprocessing, MACS3 peak calling may still produce biologic
 For ATAC-seq pipelines aimed at differential accessibility analysis, it is strongly recommended to run MACS3 in paired-end mode (`-f BAMPE`).
 In this mode, MACS3 uses the full fragment span inferred from read pairs rather than modeling fragment size from single-end reads. This better reflects the biology of ATAC-seq data and typically results in more accurate and stable peak calls.
 
-When inspecting the narrowPeak files generated in the peak calling step, a reliable peak set should show strong overlap with promoter regions, sharp peak boundaries, and consistency across replicates. Additionally, it should ressemble what can be seen in the coverage files.
+When inspecting the narrowPeak files generated in the peak calling step, a reliable peak set should show strong overlap with promoter regions, sharp peak boundaries, and consistency across replicates. Additionally, it should resemble what can be seen in the coverage files.
 
 ### Peak set does not match coverage signal
 
@@ -171,7 +171,7 @@ If replicate peak sets differ substantially despite similar coverage profiles:
 - **Inconsistent parameter usage:** Differences in `--qvalue`, duplicate handling, or fragment interpretation (BAM vs BAMPE) can produce divergent peak sets.
 - **Threshold sensitivity:** Peaks close to the cutoff may appear in one replicate but not another, especially in moderate or noisy datasets.
 
-### Quick diagnostics guide 
+### Quick diagnostic guide 
 
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
@@ -215,7 +215,7 @@ If expected accessible regions show weak or missing counts:
 - **Inconsistent preprocessing:** Differences in duplicate removal or filtering across samples can affect read assignment.
 - **Overly strict assignment rules:** Valid fragments may be exclude if overlap settings are too strict.
 
-### Quick diagnostics guide
+### Quick diagnostic guide
 
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
@@ -255,14 +255,14 @@ If results are dominated by a small number of regions:
 - **Outlier peaks:** Extremely high-count regions can disproportionately influence normalization and dispersion estimates.
 - **Technical artifacts in peak set:** Peaks overlapping problematic regions (e.g., repeats, blacklist regions) may bias results.
 
-### Quick diagnostics guide
+### Quick diagnostic guide
 
 | Symptom | Likely cause | What to check |
 | :--- | :--- | :--- |
 | Samples cluster by batch instead of condition | Technical variation not modeled | Design formula, metadata |
 | Few significant regions | Low power or noisy peak set | Replicates, peak quality |
 | Global accessibility shifts | Normalization assumption violation | Count distribution, dominant peaks |
-| Results driven by few regions | Outlier peaks or artifacts | Peak inspection, filtering 
+| Results driven by few regions | Outlier peaks or artifacts | Peak inspection, filtering |
 
 
 
