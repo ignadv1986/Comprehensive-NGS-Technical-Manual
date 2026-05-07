@@ -43,7 +43,7 @@ The main attributes given by these tools are NumReads and Transcripts Per Millio
 |-------|---------|-----------|
 | Standard RNA-seq (Eukaryotes) | STAR | It is splice-aware and handles introns via "N" operations in the CIGAR string |
 | WGS/Variant Calling | BWA-MEM2 | It handles longer reads and indels more robustly |
-| ATAC / CUT&RUN | Bowtie2 | Higher speed and specific end-to-end alignment |
+| ATAC-seq / CUT&RUN | Bowtie2 | Higher speed and specific end-to-end alignment |
 | Prokaryotic RNA-seq | Bowtie2 | There are no introns in bacterial genomes |
 
 </div>
