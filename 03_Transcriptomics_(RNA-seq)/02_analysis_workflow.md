@@ -2,7 +2,7 @@
 
 This section covers the computational workflow for RNA-seq analysis starting from the generated alignment files. For technical details on the preferred aligners (such as STAR or HISAT2) and the reasoning behind splice-aware mapping, please refer to the [types of aligners](../02_Mapping_&_Alignment/02_aligners.md) section of this manual.
 
-## Quantification of reads
+## Quantification of Reads
 
 The BAM files generated during the alignment contain the coordinates of the detected genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option is the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it uses a GTF annotation file to define the boundaries between exons and genes. Importantly, this GTF file must match the genome build version used in the alignment.
 
