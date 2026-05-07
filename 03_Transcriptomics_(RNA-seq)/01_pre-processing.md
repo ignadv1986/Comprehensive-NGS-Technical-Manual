@@ -1,12 +1,12 @@
 # RNA-seq
 
-RNA-seq (RNA Sequencing) is the standard method for analyzing the **transcriptome**—the complete set of RNA transcripts in a cell or population of cells at a specific moment. Unlike the genome, which is relatively static, the transcriptome is highly dynamic, changing in response to environmental factors, drugs, or disease states.
+RNA-seq (RNA Sequencing) is the standard method for analyzing the **transcriptome**, i.e. the complete set of RNA transcripts in a cell or population of cells at a specific moment. Unlike the genome, which is relatively static, the transcriptome is highly dynamic, changing in response to environmental factors, drugs, or disease states.
 
 The primary goal of RNA-seq is typically **Differential Expression Analysis**: identifying changes in gene expression between two conditions.
 
 ## Spike-in Control
 
-While spike-in normalization is not required for every RNA-seq experiment, it becomes essential when the biological condition being studied may cause global transcriptome shifts. For example, when using treatments that change overall transcription, or for comparisons between cell types with very different amounts of RNA (for a general introduction, see the [library preparation](../01_NGS_Foundations_&_Pre-processing/03_library_preparation.md) section). In these cases, standard normalization tools like DESeq2 are insufficient, as they assume that the overall transcriptome composition is comparable across samples and that only a subset of genes differ between conditions.
+While spike-in normalization is not required for every RNA-seq experiment, it becomes essential when the biological condition being studied may cause global transcriptome shifts, for example, when using treatments that change overall transcription, or for comparisons between cell types with very different amounts of RNA (for a general introduction, see the [library preparation](../01_NGS_Foundations_&_Pre-processing/03_library_preparation.md) section). In these cases, standard normalization tools like DESeq2 are insufficient, as they assume that the overall transcriptome composition is comparable across samples and that only a subset of genes differ between conditions.
 
 In RNA-seq, spike-in is added in the form of synthetic RNA molecules (most commonly the ERCC (External RNA Controls Consortium) spike-in mix). These are added directly to the RNA sample before library preparation begins, ensuring they undergo the same retrotranscription, fragmentation, adapter ligation, and amplification steps as the endogenous RNA.
 
@@ -36,7 +36,7 @@ Depending on the aim of the experiment and, critically, on the quality (RIN) of 
 
 Total RNA is dominated by **ribosomal RNA (rRNA)**, which accounts for >90% of the molecules in a cell but provides almost no useful biological information for most studies, so an enrichment step where the RNA of interest is selected is required. The goal of the RNA-seq experiment determines the enrichment strategy; in the most common approaches, the analysis focuses on fully-mature mRNA. In this scenario, mRNAs are enriched through the use of **oligo(dT)-coated magnetic beads**, taking advantage of the fact that most mature eukaryotic mRNAs are polyadenylated, but rRNAs are not.
 
-However, sometimes the analysis needs to include **non-polyadenylated RNAs**, such as prokaryotic RNAs, histone RNAs, and some long non-coding RNAs (lncRNAs). In these cases, the use of oligo(dT) would result in the loss of not only the rRNA, but also of the RNA of interest, so a **depletion** strategy is used instead: biotinylated DNA probes that are perfectly complementary to the 18S, 28S, 5S, and 5.8S ribosomal RNA sequences are added. These probes bind to the rRNA, and then Streptavidin beads are used to pull the rRNA-probe complexes out of the solution.
+Sometimes, however, the analysis needs to include **non-polyadenylated RNAs**, such as prokaryotic RNAs, histone RNAs, and some long non-coding RNAs (lncRNAs). In these cases, the use of oligo(dT) would result in the loss of not only the rRNA, but also the RNA of interest, so a **depletion** strategy is used instead: biotinylated DNA probes that are perfectly complementary to the 18S, 28S, 5S, and 5.8S ribosomal RNA sequences are added. These probes bind to the rRNA, and then Streptavidin beads are used to pull the rRNA-probe complexes out of the solution.
 
 Additionally, in degraded or FFPE samples the poly-A tail is often separated from the rest of the gene, so a ribo-depletion step is also required. If oligo(dT) are used, they will bind to the fragmented poly-A tails, and the NanoDrop would show a normal concentration of RNA, but the library will have almost no data. Therefore, while more expensive, ribo-depletion is a more robust method when handling low-quality samples.
 
@@ -48,9 +48,9 @@ Even with ribo-depletion and a low RIN, a 3' bias in coverage is expected — re
   
 | RIN | Sample type | RNA species needed | Recommended strategy
 | :--- | :--- | :--- | :--- |
-| 8-10 | Fresh/frozen | Polyadenylated mRNA | Poly-A selection |
-| 8-10 | Fresh/frozen | Includes non-polyadenylated | RNARibo-depletion |
-| 6-7 | Fresh/frozen | Polyadenylated mRNA only | Poly-A selection acceptable; watch for 3' bias |
+| 8-10 | Fresh / frozen | Polyadenylated mRNA | Poly-A selection |
+| 8-10 | Fresh / frozen | Includes non-polyadenylated | RNA Ribo-depletion |
+| 6-7 | Fresh / frozen | Polyadenylated mRNA only | Poly-A selection acceptable; watch for 3' bias |
 | 6-7 | Any | Any | Ribo-depletion recommended for robustness |
 | 2-5 | Any | Any | Ribo-depletion mandatory; assess DV200 first |
 | Any | FFPE | Any | Ribo-depletion mandatory |
@@ -58,9 +58,9 @@ Even with ribo-depletion and a low RIN, a 3' bias in coverage is expected — re
 
 <br>
 
-**DV200:** percentage of RNA fragments that are longer than 200 nucleotides. If the DV200 is >30%, the sample is usually salvageable for a specialized Ribo-depletion library.
+**DV200:** percentage of RNA fragments that are longer than 200 nucleotides. If the DV200 is >30%, the sample is usually salvageable for a specialized ribo-depletion library.
 
-**Note:** Even with standard library prep, checking for overrepresented sequences (like rRNA) and filtering them with tools such as SortMeRNA or BBduk in case they appear as overrepresented sequences in the fastQ step is a good safeguard to improve mapping efficiency and quantification accuracy.
+**Note:** Even with standard library prep, checking for overrepresented sequences (like rRNA) and filtering them with tools such as SortMeRNA or BBduk in case they appear as overrepresented sequences in the FastQC step is a good safeguard to improve mapping efficiency and quantification accuracy.
 
 ## RNA fragmentation
 
@@ -72,7 +72,7 @@ The most critical challenge of RNA-seq is that Illumina sequencers (and most oth
 
 Second-strand cDNA synthesis can follow different strategies depending on the library preparation protocol. In the classic Gubler–Hoffman method, both **RNase H** and **DNA Polymerase I** are used together: RNase H partially degrades the RNA strand in the RNA:DNA hybrid, leaving short RNA fragments that act as primers, and DNA Polymerase I then extends these fragments while using its 5'→3' exonuclease activity to remove RNA ahead of synthesis (a process known as nick translation). However, many modern protocols bypass RNase H entirely by using strand-displacing DNA polymerases and alternative priming strategies, allowing second-strand synthesis without relying on RNA fragments. Crucially, dUTP is incorporated in place of dTTP during this second-strand synthesis, which will later be used to selectively degrade it and preserve strand information.
 
-This cDNA is subjected to all the classic NGS pre-processing steps (end-repair, A-tailing, ligation, and size selection) before PCR amplification. Importantly, in RNA-seq, the **strandness** of the DNA molecules wants to be conserved, and that's why the presence of dUTP is important: the mix for this PCR contains the UDG enzyme, which degrades the chain that includes Uracil. Now the polymerase will only copy the information from the first chain produced during cDNA generation, e.g., the one that harbors the original information from the RNA. This specific dUTP workflow is technically referred to as **reverse stranded** or **ISR** (Inward-Strand-Reverse). This is because the first sequencing read (R1) is mapped to the antisense (template) strand of the genome.
+This cDNA is subjected to all the classic NGS pre-processing steps (end-repair, A-tailing, ligation, and size selection) before PCR amplification. Importantly, in RNA-seq, the **strandness** of the DNA molecules wants to be conserved, and that's why the presence of dUTP is important: the mix for this PCR contains the UDG enzyme, which degrades the chain that includes Uracil. Now the polymerase will only copy the information from the first chain produced during cDNA generation, i.e. the one that harbors the original information from the RNA. This specific dUTP workflow is technically referred to as **reverse stranded** or **ISR** (Inward-Strand-Reverse). This is because the first sequencing read (R1) is mapped to the antisense (template) strand of the genome.
 
 <div align="center">
   <img src="../Figures/strandness.png" width="700">
@@ -82,11 +82,11 @@ This cDNA is subjected to all the classic NGS pre-processing steps (end-repair, 
 
 <br>
 
-### The Importance of Strandedness
+### The Importance of Strandness
 
-The primary reason strandedness is required is that the genome is bidirectional. While RNA polymerase always synthesizes in a 5′->3′ direction, it can use either of the two DNA strands as a template. If two genes reside on the same region but on different strands of the DNA, without the strandness method there would be no way for the aligner to know which of the two was the one corresponding to the original RNA molecule.
+The primary reason strandness is required is that the genome is bidirectional. While RNA polymerase always synthesizes in a 5′->3′ direction, it can use either of the two DNA strands as a template. If two genes reside on the same region but on different strands of the DNA, without the strandness method there would be no way for the aligner to know which of the two was the one corresponding to the original RNA molecule.
 
-Additionally, many loci produce non-coding antisense transcripts that overlap with protein-coding genes. Preserving the orientation of the original RNA allows researchers to study these regulatory RNAs independently from their sense counterparts.
+Additionally, many loci produce non-coding antisense transcripts that overlap with protein-coding genes. Preserving the orientation of the original RNA makes it possible to study these regulatory RNAs independently from their sense counterparts.
 
 By using the dUTP method, the library becomes directional. Because the second strand is degraded by the UDG enzyme at the start of PCR, the resulting sequencing reads strictly represent the first-strand cDNA. This allows the aligner to map reads back to the correct strand of the reference genome, ensuring accurate gene counting and transcript identification.
 
@@ -94,13 +94,13 @@ By using the dUTP method, the library becomes directional. Because the second st
 
 Unique Molecular Identifiers (UMIs) are short, random nucleotide sequences (typically 6–12 bp) attached to individual RNA molecules during the cDNA generation or adapter ligation steps. In most specialized protocols, UMI sequences are integrated into the oligonucleotide primers used for reverse transcription (e.g., attached to oligo(dT) or random hexamer primers) or built directly into the sequencing adapters.
 
-The primary function of a UMI is to uniquely label each molecule before amplification. This allows the bioinformatic pipeline to distinguish between true biological duplicates (multiple identical RNA molecules from a high-expression gene) and technical PCR duplicates (clones generated during library enrichment). Importantly, each RNA molecule is bound to a unique UMI, providing a unique "barcode" to every original transcript prior to PCR amplification, thereby allowing distinction between:
+The primary function of a UMI is to uniquely label each molecule before amplification. This allows the bioinformatic pipeline to distinguish between:
 
 - **True biological duplicates:** Multiple identical RNA molecules from a high-expression gene (different UMIs, same mapping position).
 
 - **Technical PCR duplicates:** Clones generated during library enrichment (same UMI, same mapping position).
 
-Reads that share UMI and map to the same location (start/finish) can then be **collapsed** (counted as one read), therefore reducing PCR amplification bias.
+Importantly, each RNA molecule is bound to a unique UMI, providing a unique "barcode" to every original transcript prior to PCR amplification, allowing distinction between biological and technical replicates: reads that share UMI and map to the same location (start/finish) are **collapsed** (counted as one read), thereby reducing PCR amplification bias.
 
-In bulk RNA-seq experiments, UMIs are usually not used. In these cases, duplicates are not removed, because it is not possible to distinguish between biological and technical replicates. However, their use is highly recommended when dealing with low yield or degraded samples, where PCR bias can really distort quantification.
+In bulk RNA-seq experiments, UMIs are often not used. In these cases, duplicates are not removed, because it is not possible to distinguish between biological and technical replicates. However, their use is highly recommended when dealing with low yield or degraded samples, where PCR bias can really distort quantification.
 
