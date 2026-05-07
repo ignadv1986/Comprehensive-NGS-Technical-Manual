@@ -4,7 +4,7 @@ Once the aligner has generated the BAM files, the data is still not ready for do
 
 ## BAM sorting
 
-By default, most sequencing machines produce data in the order the sequences were read, which is effectively random. In order to effectively perform downstream analysis, BAM files need to be sorted by **genomic coordinates** with the `sort` command of the [samtools](https://www.htslib.org) package. For consistency, sorted files are usually created with the name sample.sorted.bam.
+By default, most sequencing machines produce data in the order the sequences were read, which is effectively random. In order to perform downstream analysis, BAM files need to be sorted by **genomic coordinates** with the `sort` command of the [samtools](https://www.htslib.org) package. For consistency, sorted files are usually created with the name sample.sorted.bam.
 
 ## Duplicate Marking
 
@@ -25,24 +25,22 @@ Some pipelines explicitly remove duplicate reads from the BAM files after markin
  
 ## Blacklist Regions and Non-Canonical Chromosomes
 
-### **Blacklist Regions**
+### Blacklist Regions
 
 Blacklist regions are specific parts of the reference genome that systematically produce artificial high signals in sequencing-based assays, even when there's no biological reason for enrichment. These mainly include **repetitive regions** (satellites, rDNA, telomeres, centromeres, etc). Mapping of these regions will give rise to many reads, just because of the high number of repeats, suggesting that there is a real effect when in fact there isn't. ENCODE has blacklist BED files (such as the V2 blacklists for hg38) compiled from previous experiments that can be used to exclude these reads from the samples. These are specific to the genome version used in the mapping, so a mismatch will result in the removal of the wrong sequences. The removal of blacklist regions is standard in most NGS pipelines.
 
-### **Non-canonical Chromosomes**
+### Non-canonical Chromosomes
 
 Extra sequences not found inside the standard chromosomes 1-22 and X-Y, are usually filtered out. These include the following:
 
--	**Unplaced contigs** (sequences that are known to be present in the genome, but not precisely where) and **unlocalized contigs** (sequences that are know to be present in a specific chromosome, but their localization inside that chromosome hasn't been defined). They are leftovers from incomplete assembly — especially in repetitive or highly variable regions (like centromeres, telomeres, immune loci), and can inflate reads artificially.
+-	**Unplaced contigs** (sequences that are known to be present in the genome, but not precisely where) and **unlocalized contigs** (sequences that are known to be present in a specific chromosome, but their localization inside that chromosome hasn't been defined). They are leftovers from incomplete assembly — especially in repetitive or highly variable regions (like centromeres, telomeres, immune loci) that can inflate reads artificially.
 -	**Alternate haplotypes:** Reference genomes include various haplotypes of some genomic regions to represent high variability in structure or sequence. However, small reads can map to several of these haplotypes, making it look as if many reads were detected on the same region (artificial enrichment).
 
-**Note:** For all techniques, removing alt haplotypes can technically erase biologically relevant differences — especially in highly polymorphic regions.
-This trade-off is accepted because most analysis frameworks aren’t designed for multi-haplotype coordinates.
-If the region of interest overlaps with known haplotype-variable loci, the right move is to keep haplotype contigs, verify mapping quality in those regions, and report those peaks separately as haplotype-specific binding.
+**Note:** For all techniques, removing alt haplotypes can technically erase biologically relevant differences, especially in highly polymorphic regions. This trade-off is accepted because most analysis frameworks aren’t designed for multi-haplotype coordinates. If the region of interest overlaps with known haplotype-variable loci, the right move is to keep haplotype contigs, verify mapping quality in those regions, and report those peaks separately as haplotype-specific binding.
 
-### The mitochondrial exception
+### The Mitochondrial Exception
 
-In most techniques, where the aim is to exclusively study nuclear genes, reads mapping to mitochondrial DNA are removed. However, in ATAC-seq, mitochondrial DNA is normally kept for QC, because being naked DNA (no nucleosomes), it's highly targetable by transposases and therefore can serve as a good measurement of the sample's quality. A high number of mtDNA reads (>50%) means that mitochondria were ruptured and/or the nuclear isolation wasn't performed correctly during sample prep. To avoid this, Omni-ATAC protocols, which uses detergents to specifically wash away mitochondria before transposition, can be used. Importantly, mtDNA is only used as a measure of sample prep QC, but it is removed before downstream analysis.
+In most techniques, where the aim is to exclusively study nuclear genes, reads mapping to mitochondrial DNA are removed. However, in ATAC-seq, mitochondrial DNA is normally kept for QC, because being naked DNA (no nucleosomes), it's highly targetable by transposases and therefore can serve as a good measurement of the sample's quality. A high number of mtDNA reads (>50%) means that mitochondria were ruptured and/or the nuclear isolation wasn't performed correctly during sample prep. To avoid this, Omni-ATAC protocols, which use detergents to specifically wash away mitochondria before transposition, can be performed. Importantly, mtDNA is only used as a measure of sample prep QC, but it is removed before downstream analysis.
 
 RNA-seq, on the other hand keeps both mtDNA and contigs, since an increase in the expression of these unlocalized regions can also be biologically meaningful.
 
@@ -56,7 +54,7 @@ RNA-seq, on the other hand keeps both mtDNA and contigs, since an increase in th
 | :--- | :--- | :--- | :--- |
 | RNA-seq | Keep | Drop | Expression in these regions can be biologically meaningful |
 | ATAC-seq | Keep for QC, drop afterwards | Drop | mtDNA is used for QC, but then often removed to save budget |
-| ChIP/CUT&RUN | Drop | Drop | We only want high-confidence nuclear binding peaks |
+| CUT&RUN | Drop | Drop | The focus is on high-confidence nuclear binding peaks |
 
 </div>
 
@@ -64,7 +62,7 @@ RNA-seq, on the other hand keeps both mtDNA and contigs, since an increase in th
 
 ## Final Sorting and Indexing
 
-The previous steps disrupt the coordinate order of the BAM files and therefore they need to be sorted again. To avoid the generation of multiple intermediate files, that would otherwise take up a lot of space and makes file tracking difficult, blacklist region and chromosome/haplotype removal are often combined into one step. Additionally, most downstream analysis tools require the BAM files to be **indexed**, which is usually performed with the *index* command of samtools. This generates a **.bai** version of the bam files, and it is good practice to keep them in the same folder to facilitate downstream analysis. Importantly, any modification to a BAM file invalidates its index, so indexing must be performed after the final processing step.
+The previous steps disrupt the coordinate order of the BAM files and therefore they need to be sorted again. To avoid the generation of multiple intermediate files, that would otherwise take up a lot of space and make file tracking difficult, blacklist region and chromosome/haplotype removal are often combined into one step. Additionally, most downstream analysis tools require the BAM files to be **indexed**, which is usually performed with the `index` command of samtools. This generates a **.bai** version of the bam files, and it is good practice to keep them in the same folder to facilitate downstream analysis. Importantly, any modification to a BAM file invalidates its index, so indexing must be performed after the final processing step.
 
 While the pipeline here described (sorting -> duplicate marking -> filtering -> sorting and indexing) is standard in most cases, some pipelines perform filtering before duplication removal for computational efficiency, at the cost of potentially altering duplicate detection.
 
