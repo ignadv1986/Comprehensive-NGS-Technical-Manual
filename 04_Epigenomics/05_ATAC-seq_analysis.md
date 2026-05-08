@@ -1,4 +1,4 @@
-# Analysis Workflow for ATAC-seq
+# ATAC-seq: Analysis Workflow
 
 Unless otherwise specified, this workflow assumes paired-end ATAC-seq, which is required for accurate fragment size reconstruction and nucleosome pattern analysis.
 
