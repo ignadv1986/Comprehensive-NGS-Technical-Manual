@@ -4,7 +4,7 @@ This section covers the computational workflow for RNA-seq analysis starting fro
 
 ## Quantification of Reads
 
-The BAM files generated during the alignment contain the coordinates of the detected genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option is the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it uses a GTF annotation file to define the boundaries between exons and genes. Importantly, this GTF file must match the genome build version used in the alignment.
+The BAM files generated during the alignment contain the coordinates of the identified genes, but not the number of copies that were detected. To convert the reads into a digital **count matrix**, the go-to option is the feature of the Subread binary package, [featureCounts](https://subread.sourceforge.net/featureCounts.html). Here is the [link](https://bioconductor.org/packages/release/bioc/html/Rsubread.html) for R users, where featureCounts is wrapped in the Bioconductor package Rsubread. It is very fast and memory efficient, and it uses a GTF annotation file to define the boundaries between exons and genes. Importantly, this GTF file must match the genome build version used in the alignment.
 
 The 3 critical settings that must be taken into account when using featureCounts are the following:
 
@@ -61,7 +61,7 @@ When analyzing differential expression, DESeq2 does the following three things:
 
 - **Normalization:** It calculates a scaling factor for each sample. It doesn't just divide by the total number of reads (which is what TPM or RPKM do); it uses a median-of-ratios method. This ensures that a single, massively over-expressed gene doesn't skew the normalization for every other gene in the sample.
 - **Dispersion estimation:** RNA-seq data is overdispersed, meaning the variance grows faster than the mean. DESeq2 uses a **Negative Binomial distribution** to model this biological noise, shrinking the dispersion estimates of individual genes toward a global trend to make the analysis more robust against outliers.
-- **Statistical testing:** It performs a statistical test (**Wald test**)to determine if the change in expression between the conditions is greater than what would be expected by random chance.
+- **Statistical testing:** It performs a statistical test (**Wald test**) to determine if the change in expression between the conditions is greater than what would be expected by random chance.
 
 After performing the analysis, DESeq2 outputs a table containing:
 
