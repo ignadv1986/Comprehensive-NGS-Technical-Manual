@@ -73,7 +73,7 @@ To capture the benefits of both sensitivity and reproducibility, a common approa
 
 - Replicate BAM files are merged for all conditions, converted to bedGraph, and processed through SEACR.
 - Peaks are called in independent replicates and those present in at least 2 out of 3 replicates are identified (using [bedtools multiinter](https://bedtools.readthedocs.io/en/latest/content/tools/multiinter.html)).
-- The reproducible peaks from step 2 are intersected with the master set from step 1 (using [bedtools intersect](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) to build the **final consensus peak set**.
+- The reproducible peaks from step 2 are intersected with the master set from step 1 (using [bedtools intersect](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html)) to build the **final consensus peak set**.
 
 Why is intersection necessary? When files are merged, subtle differences in the signal shape of individual replicates can cause shifts in peak boundaries. Intersecting ensures that the reported peak width is consistent with the individual replicates (which is likely more accurate) while confirming the peak's presence in the higher-depth merged file. Furthermore, merging can create artifacts where weak signals from multiple replicates combine to *trick* SEACR into calling a peak that wasn't reproducible; intersection effectively prevents these artifacts from being included in the final data.
 
