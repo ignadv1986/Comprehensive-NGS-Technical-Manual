@@ -6,8 +6,8 @@ Unless otherwise specified, this workflow assumes paired-end ATAC-seq, which is 
 
 As mentioned in the mapping section of this repository, both [bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/index.shtml) and [BWA-MEM2](https://github.com/bwa-mem2/bwa-mem2) are valid options for mapping when analyzing ATAC-seq data, with the second being preferred for two main reasons:
 
-- It can soft-clip the ends of reads if they contain a bit of adapter sequence that wasn't fully trimmed, whereas bowtie2 might reject the entire read as an unmapped fragment. This maximizes the recovery of short, nucleosome-free fragments.
-- In low-input ATAC-seq, Tn5 can occasionally create chimeric fragments. BWA-MEM2 handles these complex alignments better, preventing false-positive peaks.
+- It can **soft-clip** the ends of reads if they contain a bit of adapter sequence that wasn't fully trimmed, whereas bowtie2 might reject the entire read as an unmapped fragment. This maximizes the recovery of short, nucleosome-free fragments.
+- In low-input ATAC-seq, Tn5 can occasionally create **chimeric fragments**. BWA-MEM2 handles these complex alignments better, preventing false-positive peaks.
 
 ## Post-alignment QC
 
@@ -21,11 +21,11 @@ The remaining reads mapping to mtDNA are removed in the processing steps after m
 
 ### The Tn5 Shift
 
-As mentioned in the [ATAC-seq sample prep](./04_ATAC-seq_sample_prep.md) section of this repository, the mechanism of the Tn5 enzyme leads to a 9 bp shift in the reads: + strand are shifted +4 bp and those on the – strand are shifted –5 bp. Importantly, standard aligners like BWA or Bowtie2 do not handle this. While such a small distance might seem negligible, depending on the experiment this shift needs to be addressed.
+As mentioned in the [ATAC-seq sample prep](./04_ATAC-seq_sample_prep.md) section of this repository, the mechanism of the Tn5 enzyme leads to a 9 bp shift in the reads: + strand are shifted +4 bp and those on the – strand are shifted –5 bp. Importantly, standard aligners like BWA or bowtie2 do not handle this. While such a small distance might seem negligible, depending on the experiment this shift needs to be addressed.
 
 A common approach is to use [alignmentSieve](https://deeptools.readthedocs.io/en/latest/content/tools/alignmentSieve.html) from the deepTools suite with the `--ATACshift` flag to shift the read in the BAM files and generate the coverage files from these. This leads to a better representation of the peaks when looking at the resultant BigWig files in a genome browser.
 
-When calling peaks from paired-end reads, the standard pipeline is to call peaks from the original files with `MACS3 -f BAMPE`. The software doesn't look at individual read ends, but rather at the entire fragment (the space between R1 and R2). Since the +4/-5bp shift happens at both ends of the fragment, for fragments of standard size (300 bp) this shift is negligible when the aim of the experiment is to assess chromatin accessibility, because the center of the fragment remains virtually unchanged.
+When calling peaks from paired-end reads, the standard pipeline is to call peaks from the original files with `MACS3 -f BAMPE`. The software doesn't look at individual read ends, but rather at the entire fragment (the space between R1 and R2). Since the +4/-5bp shift happens at both ends of the fragment, for fragments of standard size (300 bp) this shift is negligible when the aim of the experiment is to assess chromatin accessibility, because the centre of the fragment remains virtually unchanged.
 
 For applications requiring base-pair resolution, such as TF footprinting or motif analysis, Tn5 shift correction is essential to recover precise cut-site positions. In these cases, shifted reads generated with `alignmentSieve --ATACshift` are used to construct cut-site–level signal tracks, which provide the high-resolution input required to detect local patterns of cut depletion and enrichment associated with protein-DNA interactions. MACS3 peaks are typically used as a complementary step to define regions of open chromatin in which footprinting analysis is performed, rather than as a direct indicator of TF binding or protection sites. Importantly, MACS3 identifies accessible regions based on fragment enrichment and **does not resolve base-pair level binding events**. Footprinting is then performed using dedicated tools such as TOBIAS, HINT-ATAC (Regulatory Genomics Toolbox), or CENTIPEDE, which model cut-site distributions within accessible regions to infer transcription factor occupancy from local protection patterns rather than peak boundaries.
 
@@ -54,11 +54,12 @@ Once the reads have been mapped and filtered for mitochondrial contamination, th
 
 The standard format for coverage files in ATAC-seq is BigWig, generated with the [bamcoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) function of deepTools. These are compressed, indexed binary files that can be used for visualization in genome browsers like [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [UCSC Genome Browser](https://genome.ucsc.edu).
 
-Critically, because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this in bamcoverage is using **CPM (counts per million)** (`--normalizeUsing CPM`). Another method, **RPKM (reads per kilobase per million)**, is similar to CPM but additionally divides by the length of the region being measured. In ATAC-seq, this correction is not appropriate: a wider peak reflects the span of an open chromatin region, not greater accessibility, so length-normalizing distorts rather than improves cross-sample comparisons.
-
+Critically, because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this in bamcoverage is using **CPM (counts per million)** (`--normalizeUsing CPM`).
 $$
 \text{CPM} = \frac{\text{Reads in bin} \times 1,000,000}{\text{Total mapped reads}}
 $$
+
+Another method, **RPKM (reads per kilobase per million)**, is similar to CPM but additionally divides by the length of the region being measured. In ATAC-seq, this correction is not appropriate: a wider peak reflects the span of an open chromatin region, not greater accessibility, so length-normalizing distorts rather than improves cross-sample comparisons.
 
 ## Peak Calling
 
@@ -82,7 +83,7 @@ The last column contains the **summit** of the peak, the exact base pair with th
 
 ## Handling of Replicates
 
-While MACS3 allows for multiple BAM files to be provided as input simultaneously, it internally pools these reads into a single dataset. This increases statistical power to find low-signal peaks, but it does not inherently filter for reproducibility. A peak present in only one replicate (due to technical artifact) may still be called. Therefore, a **hybrid consensus workflow**, similar to the one used in CUT&RUN analysis, remains the gold standard to ensure biological relevance.
+While MACS3 allows for multiple BAM files to be provided as input simultaneously, it internally pools these reads into a single dataset. This increases statistical power to find low-signal peaks, but it does not inherently filter for reproducibility. A peak present in only one replicate (due to a technical artifact) may still be called. Therefore, a **hybrid consensus workflow**, similar to the one used in CUT&RUN analysis, remains the gold standard to ensure biological relevance.
 
 First, the BAM files from all replicates of each condition are merged and a master peak set is created with MACS3. Simultaneously, peaks are called from each independent replicate. Next, regions present in at least N-1 replicates (e.g., 2 out of 3) are identified with [bedtools multiinter](https://bedtools.readthedocs.io/en/latest/content/tools/multiinter.html). Lastly, a final set is generated by keeping only peaks present in a majority of replicates (e.g., 2 out of 3) with [bedtools intersect](https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) in a process called **intersection**. This ensures high reproducibility but may lose smaller, genuine peaks that fall just below the statistical threshold in one replicate.
 
