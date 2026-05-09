@@ -48,7 +48,7 @@ A wide, smeared distribution centered at the target size is problematic because 
 
 ## High Molecular Weight Peak or Tail
 
-HMW contamination reduces effective sequencing efficiency by shifting library mass away from the intended fragment range.
+HMW contamination reduces sequencing efficiency and it's usually caused by:
 
 - **Under-fragmentation or insufficient enzymatic digestion:** Suboptimal sonication or enzymatic digestion conditions can lead to the presence of intact genomic DNA contamination.
 - **Inefficient transposase or nuclease access in chromatin assays:** Overly closed chromatin states due to treatment or cell type choice can make enzyme access difficult and reduce fragmentation efficiency, leading to HMW species dominating the signal.
@@ -65,7 +65,7 @@ HMW contamination reduces effective sequencing efficiency by shifting library ma
 
 ## Loss of Expected Intermediate Fragment Populations
 
-As seen in their respective library preparation sections, the expected fragment size distribution is assay-dependent, and it is a good measure of the library quality. While RNA-seq typically shows a relatively tight unimodal distribution around the selected fragment size, a ladder-like distribution is indicative of a good quality library in ATAC-seq. In the case of CUT&RUN, the number and size of the detected peaks depends on the binding activity of the protein of interest (transcription factor/histone binding factor).
+As seen in their respective library preparation sections, the expected fragment size distribution is assay-dependent, and it is a good measure of the library quality. While RNA-seq typically shows a relatively tight unimodal distribution around the selected fragment size, a ladder-like distribution is indicative of a good quality library in ATAC-seq. In the case of CUT&RUN, the number and size of the detected peaks depend on the binding activity of the protein of interest (transcription factor/histone binding factor).
 
 In assays where structured fragment distributions are expected, the absence or weakening of intermediate peaks may indicate disruption of biological signal. Potential causes include:
 
