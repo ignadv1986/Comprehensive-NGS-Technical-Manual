@@ -91,9 +91,9 @@ Once a final consensus BED file per condition is generated, the next step is to 
 
 **Note:** The manual consensus building described above (using bedtools) is essential for custom pipelines or counting with standalone tools like [featureCounts](https://subread.sourceforge.net/featureCounts.html). However, if the downstream analysis is to be performed using the R package [DiffBind](https://bioconductor.org/packages/release/bioc/html/DiffBind.html), this manual intersection and merging is unnecessary. DiffBind automates the consensus peak generation internally when provided with a sample sheet of individual BAM and narrowPeak files.
 
-### Using featureCounts to count reads on consensus peaks
+### Read Counting
 
-The standard tool used to count reads after the consensus peak BED file generation is the feature of the RSubRead package [featureCounts](https://subread.sourceforge.net/featureCounts.html). While bedtools could do theoretically manage this, featureCounts is specifically optimized for high-performance counting. It is strand-aware, handles paired-end data natively, and produces a clean summary of how many reads were successfully assigned to peaks versus how many are just background. featureCounts takes the filtered, indexed BAM files and the master consensus peak set, and it counts reads on each peak for each sample. Then it returns a **count matrix**, a tab-delimited file with different metrics:
+The standard tool used to count reads after the consensus peak BED file generation is the feature of the RSubRead package [featureCounts](https://subread.sourceforge.net/featureCounts.html). While bedtools could theoretically manage this, featureCounts is specifically optimized for high-performance counting. It is strand-aware, handles paired-end data natively, and produces a clean summary of how many reads were successfully assigned to peaks versus how many are just background. featureCounts takes the filtered, indexed BAM files and the master consensus peak set, and it counts reads on each peak for each sample. Then it returns a **count matrix**, a tab-delimited file with different metrics:
 
 <div align="center">
  
@@ -112,11 +112,9 @@ The first few columns (Chr, Start, End, Length) are metadata. If differential ac
 
 While the manual consensus workflow explained above offers maximum transparency, many researchers prefer using the R/Bioconductor package [DiffBind](https://bioconductor.org/packages/devel/bioc/vignettes/DiffBind/inst/doc/DiffBind.pdf/), which automates the transition from peak files to differential analysis.
 
-DiffBind needs to be provided a **sample sheet** (as .csv), containing the paths to the BAM files, their respective narrowPeak files previously generated with MACS3, and (optionally) the condition that each sample belongs to. It creates a consensus peak, it re-centers every peak around its summit and makes them all a fixed width, and counts the reads in those standardized windows. 
+DiffBind needs to be provided a **sample sheet** (as .csv), containing the paths to the BAM files, their respective narrowPeak files previously generated with MACS3, and (optionally) the condition that each sample belongs to. It creates a consensus peak, it re-centers every peak around its summit and gives them all a fixed width, and counts the reads in those standardized windows. 
 
 The primary output is a **DBA Object** in R, which can be exported as a report. This report contains the genomic coordinates of all consensus peaks, their normalized accessibility scores, and the statistical significance of their changes between conditions (Fold Change and FDR). To obtain these data diffBind uses DESeq2 or EdgeR internally (depending on the settings). Additionally, DiffBind provides built-in functions to generate PCA plots and binding affinity heatmaps, which are essential for validating the reproducibility of biological replicates, as well as volcano plots to quickly inspect open or closed chromatin regions.
-
-While DiffBind provides a convenient, integrated R environment for standard differential analysis and re-centered peak quantification, a manual featureCounts approach was also documented to allow for maximum flexibility. This modular path preserves the original MACS3 peak boundaries and produces a raw count matrix that can be easily integrated into custom statistical pipelines beyond the standard DiffBind/DESeq2 framework.
 
 ## Biological Interpretation
 
@@ -139,7 +137,7 @@ The input for DESeq2 is the cleaned count matrix from featureCounts (see above),
 
 DESeq2 returns a **Log2-fold Change (LFC)** indicating the changes in accessibility for each region (peak) and a **padj (adjusted p-value)**, obtained through Benjamini-Hochberg correction.
 
-Once DARs are identified, they are typically annotated to the nearest gene using tools like ChIPseeker or Homer to determine which biological pathways (via Gene Ontology) are being regulated by the changes in chromatin accessibility.
+Once DARs are identified, they are typically annotated to the nearest gene using tools like ChIPseeker or Homer to determine which biological pathways (via Gene Ontology) are being affected by the changes in chromatin accessibility.
 
 ## The FRiP Score
 
@@ -151,11 +149,11 @@ $$FRiP = \frac{\text{Number of reads overlapping peaks}}{\text{Total number of m
  
 | FRiP | Quality | Verdict |
 | :--- | :--- | :--- |
-| >0.3 | Excellent | Outstanding enrichment; the peaks are very clear and the background is low |
-| 0.2-0.3 | Good | Standard for a high-quality ATAC-seq experiment |
-| 0.1-0.2 | Acceptable | Useable data, but may require more conservative statistical filtering |
-| <0.1 | Poor | Indicates a noisy library. This can be caused by over-tagmentation, poor cell viability, or low complexity in the library |
+| > 0.3 | Excellent | Outstanding enrichment; the peaks are very clear and the background is low |
+| 0.2 - 0.3 | Good | Standard for a high-quality ATAC-seq experiment |
+| 0.1 - 0.2 | Acceptable | Useable data, but may require more conservative statistical filtering |
+| < 0.1 | Poor | Indicates a noisy library. This can be caused by over-tagmentation, poor cell viability, or low complexity in the library |
 
 </div>
 
-The FRiP score is calculated automatically during diffBind analysis. When using the featureCounts method, it can be obtained by taking the sum of the counts in the count matrix and dividing it by the total reads (obtained via [samtools flagstat](https://www.htslib.org/doc/samtools-flagstat.html)).
+The FRiP score is calculated automatically during DiffBind analysis. When using the featureCounts method, it can be obtained with the formula noted above. The total number of reads can be retrieved via [samtools flagstat](https://www.htslib.org/doc/samtools-flagstat.html).
