@@ -55,6 +55,7 @@ Once the reads have been mapped and filtered for mitochondrial contamination, th
 The standard format for coverage files in ATAC-seq is BigWig, generated with the [bamcoverage](https://deeptools.readthedocs.io/en/develop/content/tools/bamCoverage.html) function of deepTools. These are compressed, indexed binary files that can be used for visualization in genome browsers like [SeqMonk](https://www.bioinformatics.babraham.ac.uk/projects/seqmonk/), [IGV](https://igv.org) or the [UCSC Genome Browser](https://genome.ucsc.edu).
 
 Critically, because different sequencing runs produce a different amount of total reads, the height of the peaks cannot be compared between samples without normalizing. The most common method to do this in bamcoverage is using **CPM (counts per million)** (`--normalizeUsing CPM`).
+
 $$
 \text{CPM} = \frac{\text{Reads in bin} \times 1,000,000}{\text{Total mapped reads}}
 $$
