@@ -20,7 +20,7 @@ These issues are typically addressed through trimming and should not, on their o
 Additionally, in paired-end sequencing, **R2 reads often show lower overall quality than R1**, especially toward the end of the reads. This is mainly due to increased accumulation of phasing/pre-phasing events and signal decay over additional sequencing cycles. Consequently, R2 reads usually require heavier trimming than R1. Nevertheless, if the differences are very large, there could be library quality or run issues that need to be investigated.
 
 <div align="center">
-  <img src="../Figures/Q_scores_troubleshooting.png" width="650">
+  <img src="../Figures/Q_scores_troubleshooting.png" width="800">
   <br>
   <em>Schematic showing different low Q scores scenarios and their implications.</em>
 </div>
