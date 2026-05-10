@@ -19,6 +19,12 @@ These issues are typically addressed through trimming and should not, on their o
 
 Additionally, in paired-end sequencing, **R2 reads often show lower overall quality than R1**, especially toward the end of the reads. This is mainly due to increased accumulation of phasing/pre-phasing events and signal decay over additional sequencing cycles. Consequently, R2 reads usually require heavier trimming than R1. Nevertheless, if the differences are very large, there could be library quality or run issues that need to be investigated.
 
+<div align="center">
+  <img src="../Figures/Q_scores_troubleshooting.png" width="650">
+  <br>
+  <em>Schematic showing different low Q scores scenarios and their implications.</em>
+</div>
+
 ## Contamination and Sequence Composition Artifacts
 
 The GC distribution shown in the per sequence GC content metric of FastQC is expected to:
@@ -63,8 +69,10 @@ Additionally, if adapter contamination is prominent, an **additional peak** may 
 
 The proportion of duplicate reads should be interpreted in the context of the sequencing strategy and library type, rather than treated as an absolute quality metric (see the [post-alignment processing](../02_Mapping_&_Alignment/03_post-alignment_processing.md) section of this document for more details on this).
 
-**High duplication** rates can arise from PCR overamplification or low-input libraries, both of which reduce library complexity and increase the likelihood that the same original fragments are sequenced multiple times. When high duplication is accompanied by a strong reduction in unique reads, effective sequencing depth is reduced and additional sequencing will yield diminishing returns unless the underlying library complexity issues are addressed first. That said, elevated duplication is not always a technical problem. In RNA-seq, highly expressed genes naturally generate large numbers of identical fragments, and in CUT&RUN, strong enrichment at specific loci can produce locally high duplication levels that reflect genuine biological signal rather than amplification bias.
+**High duplication rates** can arise from PCR overamplification or low-input libraries, both of which reduce library complexity and increase the likelihood that the same original fragments are sequenced multiple times. When high duplication is accompanied by a strong reduction in unique reads, effective sequencing depth is reduced and additional sequencing will yield diminishing returns unless the underlying library complexity issues are addressed first. That said, elevated duplication is not always a technical problem. In RNA-seq, highly expressed genes naturally generate large numbers of identical fragments, and in CUT&RUN, strong enrichment at specific loci can produce locally high duplication levels that reflect genuine biological signal rather than amplification bias.
 
-**Low duplication** rates are generally expected in high-complexity libraries with sufficient input material. Unusually low duplication in techniques such as RNA-seq or CUT&RUN may instead reflect over-fragmentation or insufficient sequencing depth. When **duplication is uneven** across samples within the same experiment, this suggests variability in library preparation quality or input material, and those samples should be interpreted with caution in downstream quantitative analyses.
+**Low duplication rates** are generally expected in high-complexity libraries with sufficient input material. Unusually low duplication in techniques such as RNA-seq or CUT&RUN may instead reflect over-fragmentation or insufficient sequencing depth.
+
+When **duplication is uneven across samples** within the same experiment, this suggests variability in library preparation quality or input material, and those samples should be interpreted with caution in downstream quantitative analyses.
 
 In practice, duplication rates are most informative when interpreted alongside library complexity and sequencing depth. A library showing high duplication but a still-increasing number of unique fragments is likely depth-limited and would benefit from additional sequencing. One that quickly plateaus in unique fragment discovery despite greater depth is amplification-limited, and protocol optimization is required rather than simply sequencing deeper.
