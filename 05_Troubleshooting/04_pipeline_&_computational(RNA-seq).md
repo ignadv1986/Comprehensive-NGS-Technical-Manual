@@ -53,7 +53,8 @@ If specific regions or the overall dataset show reduced counts, filtering parame
 
 An example of a typical featureCounts command would look like the one below:
  
-`featureCounts \
+```bash
+featureCounts \
   -a Homo_sapiens.GRCh38.110.gtf \
   -o counts.txt \
   -t exon \
@@ -62,10 +63,13 @@ An example of a typical featureCounts command would look like the one below:
   -p \
   --countReadPairs \
   -T 8 \
-  sample.bam`
+  sample.bam
+```
 
 Where:
 
+<div align="center">
+  
 | Parameter | Meaning |
 | :--- | :--- |
 | `-a` | GTF annotation file matching the genome build used for alignment |
@@ -75,6 +79,7 @@ Where:
 | `-p` | Enable paired-end counting |
 | `--countReadPairs` | Count fragments instead of individual reads |
 | `-T 8` | Use 8 threads |
+</div>
 
 ### Quick diagnostic guide
 
