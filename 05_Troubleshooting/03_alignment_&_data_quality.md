@@ -32,13 +32,13 @@ The **presence of low quality reads** (Q-score < 28) negatively affects mapping 
 
 Finally, **adapter contamination** will also cause a decrease in this metric, since adapters themselves cannot align with the reference genome. However, because they are already detected in the FastQC step of the pipeline, and trimmed away with fastp/cutadapt, adapters are rarely the main cause of a major mapping drop.
 
-## % of Uniquely- vs multi-mapped Reads
+## % of Uniquely- vs Multi-mapped Reads
 
 When mapping reads to a reference genome, a high % of uniquely mapped and a low % of multi mapped reads is highly desirable, as it greatly increases the confidence in their proper alignment. Nevertheless, it is important to know that **certain level of multi-mapping is expected**, due to the presence of repetitive elements in the genome, and such level greatly varies depending on how well the used technique catches these elements.
 
 Additionally, other factors can contribute to an increase in the % of multi-mapped reads:
 
-- **Shorter reads** are less likely to uniquely match a single genomic location. In this case, the overall mapping rate may remain high, but the proportion of uniquely mapped reads decreases
+- **Shorter reads** are less likely to uniquely match a single genomic location. In this case, the overall mapping rate may remain high, but the proportion of uniquely mapped reads decreases.
 - **Aligner parameters** also play an important role. Permissive settings that allow multiple alignments per read or high mismatch thresholds can artificially inflate the proportion of multi-mapped reads. Therefore, it is important to verify that alignment parameters are appropriate for the experimental design.
 - An increase in multi-mapped reads can also result from properties of the **reference genome** itself. Genomic regions with high sequence similarity (e.g., gene families, paralogous genes, or repetitive elements) make it difficult for the aligner to assign reads to a single unique location.
 
