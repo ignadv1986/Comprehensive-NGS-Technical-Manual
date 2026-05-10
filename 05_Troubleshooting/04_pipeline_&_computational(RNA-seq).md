@@ -4,7 +4,7 @@ Even when sequencing QC and mapping metrics are within expected ranges, RNA-seq 
 
 ## Gene Quantification (featureCounts)
 
-After successful alignment, read counting tools such as featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated unassigned fractions and artificially reduced gene counts, and should therefore be the first thing to be checked.
+After successful alignment, featureCounts may produce unexpected or biologically inconsistent gene count distributions. A common cause is **incomplete or mismatched gene annotation**. If the GTF file does not match the genome build used for alignment, a substantial fraction of reads may map correctly but fail to be assigned to any feature. This results in inflated unassigned fractions and artificially reduced gene counts, and should therefore be the first thing to be checked.
 
 <br>
 
@@ -50,6 +50,25 @@ If specific regions or the overall dataset show reduced counts, filtering parame
 - Selecting the **wrong fragment length thresholds (`-d`, `-D`)** can lead to the loss of valid fragments, but also to the inflation of counts if the lower threshold is too small.
 - Enabling **proper pairing requirement (`-B`)** can lead to the loss of valid partially mapped fragments
 - While **chimeric read exclusion (`-C`)** is usually recommended, there are very specific contexts in which doing so might remove potentially biologically relevant reads.
+
+
+<br>
+
+<div align="center">
+  
+  featureCounts \
+  -a Homo_sapiens.GRCh38.110.gtf \
+  -o counts.txt \
+  -t exon \
+  -g gene_id \
+  -s 2 \
+  -p \
+  --countReadPairs \
+  -T 8 \
+  sample.bam
+  </div>
+
+<br>
 
 ### Quick diagnostic guide
 
