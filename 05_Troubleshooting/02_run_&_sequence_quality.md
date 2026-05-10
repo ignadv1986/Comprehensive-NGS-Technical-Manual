@@ -38,7 +38,7 @@ The presence of **multiple peaks or a clear deviation from the expected organism
 <div align="center">
   <img src="../Figures/GC_content_contamination.png" width="600">
   <br>
-  <em>Per sequence GC content plot showing contamination with foreign DNA. Adapted from [Quality control: Assessing FASTQC results](https://hbctraining.github.io/Intro-to-rnaseq-fasrc-salmon-flipped/lessons/07_qc_fastqc_assessment.html) under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en).</em>
+  <em>Per sequence GC content plot showing contamination with foreign DNA. Adapted from Quality control: Assessing FASTQC results (https://hbctraining.github.io/Intro-to-rnaseq-fasrc-salmon-flipped/lessons/07_qc_fastqc_assessment.html) under CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.en).</em>
 </div>
 
 <br>
