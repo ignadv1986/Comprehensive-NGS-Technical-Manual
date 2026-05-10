@@ -34,6 +34,15 @@ The GC distribution shown in the per sequence GC content metric of FastQC is exp
 
 The presence of **multiple peaks or a clear deviation from the expected organism's GC profile** is indicative of contamination with foreign DNA, either from the sample itself or introduced during library preparation. [FastQ Screen](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) or a k-mer-based tool like [Kraken2](https://github.com/DerrickWood/kraken2) can be used to quantify reads mapping to non-target genomes. A decision must then be made on whether the level of contamination is acceptable, potentially discarding samples if it is too high. The threshold for such acceptable level of contamination depends on the application and its sensitivity to non-target reads: low levels may be tolerable in exploratory analyses, while even minor contamination can compromise high-resolution tasks such as variant calling. Importantly, if the level of contamination is considered acceptable, reads mapping to non-target genomes can be filtered out to prevent interference in downstream analysis, when appropriate.
 
+<br>
+<div align="center">
+  <img src="../Figures/GC_content_contamination.png" width="900">
+  <br>
+  <em>Per sequence GC content plot showing contamination with foreign DNA. Adapted from "Quality control: Assessing FASTQC results" (https://hbctraining.github.io/Intro-to-rnaseq-fasrc-salmon-flipped/lessons/07_qc_fastqc_assessment.html) under CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/deed.en).</em>
+</div>
+
+<br>
+
 An **imbalance in A/T vs G/C content across read positions** can also be a red flag, although this may reflect either technical bias or true biological signal. This can be observed in the per base sequence content plot when the lines corresponding to each nucleotide are not relatively flat.
 
 Some patterns are expected and usually do not require intervention:
