@@ -8,7 +8,7 @@ These metrics are derived directly from the alignment process and reflect how th
 
 ## Mapping Rate
 
-The acceptable % of properly mapped reads varies greatly between different techniques:
+The acceptable **% of properly mapped reads** varies greatly between different techniques:
 
 <br>
 
@@ -24,7 +24,7 @@ The acceptable % of properly mapped reads varies greatly between different techn
 
 <br>
 
-When high quality reads show a very low % of mapped reads (10-30%), this strongly suggests a **wrong reference genome selection** (different species). While not as severe as a species mismatch, choosing a wrong or incomplete version of a reference genome also leads to a decrease in the % of mapped reads. This can for example happen when mapping RNA-seq data to a full genome with a non-splice-aware aligner (see the [aligners](../02_Mapping_&_Alignment/02_aligners.md) section of this repository for more details).
+When high quality reads show a very low % of mapped reads (10-30%), this strongly suggests a **wrong reference genome selection** (different species). While not as severe, choosing a wrong or incomplete version of a reference genome from the correct species also leads to a decrease in the % of mapped reads. This can for example happen when mapping RNA-seq data to a full genome with a non-splice-aware aligner (see the [aligners](../02_Mapping_&_Alignment/02_aligners.md) section of this repository for more details).
 
 The presence of **contamination** in the samples also leads to a decrease in the % of mapped reads (30-70%), since they won't align correctly with the sample's reference genome. As mentioned in the [previous section](./02_run_&_sequence_quality.md), these foreign reads can usually be spotted by checking the "per sequence GC content" metric of FastQC, where they lead to the formation of *humps* in the expected distribution. Reads mapping to non-target genomes can be filtered out to prevent interference with downstream analysis but, when their % is too high, they may have consumed a significant fraction of sequencing capacity, hindering result interpretation. This is why it is important to estimate their percentage with tools like [FastQ Screen](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) or [Kraken2](https://github.com/DerrickWood/kraken2) to assess their impact on the experiment.
 
