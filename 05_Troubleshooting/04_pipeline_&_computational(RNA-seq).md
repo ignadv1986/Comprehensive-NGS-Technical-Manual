@@ -81,6 +81,8 @@ Where:
 | `-T 8` | Use 8 threads |
 </div>
 
+<br>
+
 ### Quick diagnostic guide
 
 <br>
