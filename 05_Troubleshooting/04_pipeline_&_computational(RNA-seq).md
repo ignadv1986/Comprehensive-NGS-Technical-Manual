@@ -109,15 +109,15 @@ Because Salmon operates at the transcript level using probabilistic assignment, 
 
 If Salmon reports a low overall mapping rate (typically visible in the salmon_quant.log file):
 
-- Salmon requires a **transcriptome FASTA**, not a genome FASTA. Using the wrong file type will produce near-zero mapping.
+- Salmon requires a **transcriptome FASTA, not a genome FASTA**. Using the wrong file type will produce near-zero mapping.
 - A **decoy-aware index** should always be generated using `salmon index` with the `--decoys` flag, or downloaded if computational power is limited. The genome FASTA used as decoy must correspond to the same genome build as the transcriptome FASTA.
-- **Strandedness** must be specified correctly via `--libType`. Running a stranded library without specifying it causes Salmon to discard a large fraction of reads as incompatible. It is good practice to use `--libType A` for automatic detection on a small pilot subset first and then lock it in for the full run.
+- **Strandness** must be specified correctly via `--libType`. Running a stranded library without specifying it causes Salmon to discard a large fraction of reads as incompatible. It is good practice to use `--libType A` for automatic detection on a small pilot subset first and then lock it in for the full run.
 
 ### Inflated or unexpectedly high expression estimates
 
 If overall expression appears inflated or disproportionately concentrated in a subset of transcripts, this may indicate mapping ambiguity or missing reference information.
 
-- **Incomplete transcriptomes** can cause reads to map spuriously to similar available transcripts. To avoid this, the transcriptome FASTA used to build the Salmon index should be sourced from a well-maintained reference such as Ensembl or GENCODE, and should match the genome build and annotation version used in all upstream steps.
+- **Incomplete transcriptomes** can cause reads to map spuriously to similar available transcripts. To avoid this, the transcriptome FASTA used to build the Salmon index should be sourced from a well-maintained reference such as Ensembl or GENCODE, and should match the genome build used for decoy generation.
 - Typically caused by **multi-mapping reads being distributed across similar isoforms**. Salmon's algorithm will assign fractional counts to all compatible transcripts, so highly similar isoforms will each receive a share of ambiguous reads. Therefore isoform-level estimates are less reliable than gene-level ones. To collapse these transcripts to gene level, tools like [tximeta](https://bioconductor.org/packages/release/bioc/html/tximeta.html) or [tximport](https://bioconductor.org/packages/release/bioc/html/tximport.html) are often employed before differential expression analysis.
 
 ### Gene-level counts discordant with featureCounts results
