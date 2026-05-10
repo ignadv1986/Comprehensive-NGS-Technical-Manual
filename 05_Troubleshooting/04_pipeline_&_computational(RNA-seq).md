@@ -51,12 +51,9 @@ If specific regions or the overall dataset show reduced counts, filtering parame
 - Enabling **proper pairing requirement (`-B`)** can lead to the loss of valid partially mapped fragments
 - While **chimeric read exclusion (`-C`)** is usually recommended, there are very specific contexts in which doing so might remove potentially biologically relevant reads.
 
-
-<br>
-
-<div align="center">
-  
-  featureCounts \
+An example of a typical featureCounts command would look like the one below:
+ 
+`featureCounts \
   -a Homo_sapiens.GRCh38.110.gtf \
   -o counts.txt \
   -t exon \
@@ -65,10 +62,19 @@ If specific regions or the overall dataset show reduced counts, filtering parame
   -p \
   --countReadPairs \
   -T 8 \
-  sample.bam
-  </div>
+  sample.bam`
 
-<br>
+Where:
+
+| Parameter | Meaning |
+| :--- | :--- |
+| `-a` | GTF annotation file matching the genome build used for alignment |
+| `-t exon` | Count reads overlapping exons |
+| `-g gene_id` | Summarize counts at the gene level |
+| `-s 2` | Reverse-stranded library |
+| `-p` | Enable paired-end counting |
+| `--countReadPairs` | Count fragments instead of individual reads |
+| `-T 8` | Use 8 threads |
 
 ### Quick diagnostic guide
 
