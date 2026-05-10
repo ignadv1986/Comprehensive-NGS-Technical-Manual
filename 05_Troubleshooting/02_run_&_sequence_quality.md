@@ -49,7 +49,7 @@ More concerning patterns include:
 
 <div align="center">
 
-| Feature | Expected? | Likely cause | Action |
+| Issue | Expected? | Likely cause | Action |
 | :--- | :--- | :--- | :--- |
 | **Multiple peaks/unexpected GC content** | No | Contamination with foreign DNA | Run FastQ screen/Kraken2 and assess viability |
 | **Imbalance in A/T vs G/C** | Situational | Technical bias/true biological signal | Evaluate in the context of the assay |
@@ -80,7 +80,17 @@ The per base N content of the reads should stay close to 0, with a small increas
 
 Most sequenced fragments should ideally be of the same size, visualized as a sharp peak at the intended size in this metric. If this is not the case in one or several samples, it is likely due to an issue during library preparation for those samples. When all samples show **a consistent peak that does not match the expected size**, then the fragment size distribution (read length vs insert size) and the size selection conditions should be reviewed. Importantly, excessive trimming can also alter the sequence length distribution, so it is critical to compare this metric between pre- and post-trimming FastQC runs.
 
-Additionally, if adapter contamination is prominent, an **additional peak** may appear in the sequence length distribution plot.
+Additionally, adapter contamination (see above) may introduce an **additional peak** in the sequence length distribution plot.
+
+<div align="center">
+
+| Issue | Likely cause | Action |
+| :--- | :--- | :--- |
+| **High per base N content** | Low signal intensity | Review sequencing metrics |
+| **Fragment size different than expected** | Wrong fragment size distribution or size selection parameters | Review both |
+| **Extra peak in the fragment size plot** | Adapter contamination | Trim and re-run fastQC |
+
+</div>
 
 ### Duplication Levels
 
@@ -93,3 +103,4 @@ The proportion of duplicate reads should be interpreted in the context of the se
 When **duplication is uneven across samples** within the same experiment, this suggests variability in library preparation quality or input material, and those samples should be interpreted with caution in downstream quantitative analyses.
 
 In practice, duplication rates are most informative when interpreted alongside library complexity and sequencing depth. A library showing high duplication but a still-increasing number of unique fragments is likely depth-limited and would benefit from additional sequencing. One that quickly plateaus in unique fragment discovery despite greater depth is amplification-limited, and protocol optimization is required rather than simply sequencing deeper.
+
