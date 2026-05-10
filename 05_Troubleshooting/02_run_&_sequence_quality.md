@@ -34,12 +34,29 @@ The GC distribution shown in the per sequence GC content metric of FastQC is exp
 
 The presence of **multiple peaks or a clear deviation from the expected organism's GC profile** is indicative of contamination with foreign DNA, either from the sample itself or introduced during library preparation. [FastQ Screen](https://www.bioinformatics.babraham.ac.uk/projects/fastq_screen/) or a k-mer-based tool like [Kraken2](https://github.com/DerrickWood/kraken2) can be used to quantify reads mapping to non-target genomes. A decision must then be made on whether the level of contamination is acceptable, potentially discarding samples if it is too high. The threshold for such acceptable level of contamination depends on the application and its sensitivity to non-target reads: low levels may be tolerable in exploratory analyses, while even minor contamination can compromise high-resolution tasks such as variant calling. Importantly, if the level of contamination is considered acceptable, reads mapping to non-target genomes can be filtered out to prevent interference in downstream analysis, when appropriate.
 
-An **imbalance in A/T vs G/C content across read positions** can also be a red flag, although this may reflect either technical bias or true biological signal. This can be observed in the per base sequence content plot when the lines corresponding to each nucleotide are not relatively flat. The presence of wavy lines at the 5' end of reads is common and usually caused by random hexamer priming (RNA-seq) or residual adapter/primer effects, while increased A/T content can reflect Tn5 insertion bias (in ATAC-seq). Alternatively, when an assay is detecting promoter regions, these are usually G/C rich, so an increased level of these bases is normal. These patterns are expected and typically do not require intervention, as they generally do not compromise downstream analysis.
+An **imbalance in A/T vs G/C content across read positions** can also be a red flag, although this may reflect either technical bias or true biological signal. This can be observed in the per base sequence content plot when the lines corresponding to each nucleotide are not relatively flat.
 
-Deviations from uniform base composition that are not caused by true biological signal or a technique-specific bias include:
+Some patterns are expected and usually do not require intervention:
 
-- **Smooth, consistent enrichment in A/T over G/C composition across samples**, indicative of library preparation bias (e.g., PCR or fragmentation bias). PCR amplification conditions should be reviewed, and fragmentation methods or settings may need optimization to mitigate this bias.
-- **Position-specific anomalies**, likely arising from sequencing artifacts or residual technical sequences (e.g., adapters). While trimming may suffice to remove these artifacts, it is not a universal solution. If the anomaly is caused by a fundamental lack of library diversity, mapping quality (MAPQ) will remain low regardless of the trimming strategy employed.
+- **Wavy patterns at the 5’ end** are common in RNA-seq due to random hexamer priming or residual primer/adapter sequence.
+- **Increased A/T content in ATAC-seq** can reflect Tn5 insertion bias.
+- **Increased G/C content** may be expected in promoter-enriched assays.
+  
+More concerning patterns include:
+
+- **Smooth, consistent A/T enrichment across samples**, suggestive of PCR or fragmentation bias during library preparation.
+- **Strong position-specific anomalies** caused by residual adapter or primer sequences or low library diversity. Trimming may remove technical sequences, but low-diversity libraries will still show poor mapping quality even after trimming.
+
+<div align="center">
+
+| Feature | Expected? | Likely cause | Action |
+| :--- | :--- | :--- | :--- |
+| **Multiple peaks/unexpected GC content** | No | Contamination with foreign DNA | Run FastQ screen/Kraken2 and assess viability |
+| **Imbalance in A/T vs G/C** | Situational | Technical bias/true biological signal | Evaluate in the context of the assay |
+| **Consistent enrichment of A/T over G/C composition** | No | Library prep issues | Re-evaluate library prep steps and PCR settings |
+| **Position-specific anomalies** | No | Residual adapters/primers or low library diversity | Trimming and reassessing |
+
+</div>
 
 ## Adapter Contamination
 
