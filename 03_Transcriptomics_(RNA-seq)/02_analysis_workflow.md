@@ -57,6 +57,9 @@ Example of a metadata matrix:
 
 <br>
 
+If mapping was performed with Salmon/kallisto, it is important to note that differential expression tools such as DESeq2 require count-based input, and therefore TPM values cannot be used directly for differential expression analysis.
+To bridge this gap, the Bioconductor package **tximport** is used to import Salmon quantifications and summarize transcript-level estimates into gene-level count-like values suitable for DESeq2.
+
 When analyzing differential expression, DESeq2 does the following three things:
 
 - **Normalization:** It calculates a scaling factor for each sample. It doesn't just divide by the total number of reads (which is what TPM or RPKM do); it uses a median-of-ratios method. This ensures that a single, massively over-expressed gene doesn't skew the normalization for every other gene in the sample.
