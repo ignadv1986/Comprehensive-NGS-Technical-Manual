@@ -125,7 +125,7 @@ If overall expression appears inflated or disproportionately concentrated in a s
 Salmon and featureCounts operate on fundamentally different inputs — a transcriptome vs a genome — and use different assignment logic. Some discordance is expected, particularly for multi-isoform genes. However, if such discordance is extreme (order-of-magnitude differences for most genes), the following should be checked:
 
 - **Correct strandedness** was specified in both tools
-- **Same annotation version** was used to build the Salmon index and the featureCounts GTF.
+- **The transcriptome FASTA used to build the Salmon index and the GTF file used by featureCounts** should originate from the same annotation release/build.
 
 ### TPM values look reasonable but DESeq2 results are poor
 
@@ -193,7 +193,7 @@ Where:
 | Low overall mapping rate | Wrong reference type or missing decoy | Transcriptome vs genome FASTA, decoy-aware index |
 | Large fraction of incompatible reads | Strandedness mismatch | `--libType`, library prep protocol |
 | Inflated counts in lowly expressed transcripts | Multi-mapping across similar isoforms | Isoform similarity, collapse to gene level |
-| Discordance with featureCounts | Expected; different assignment logic | Strandedness consistency, annotation version |
+| Discordance with featureCounts | Expected; different assignment logic | Strandness consistency, annotation version |
 | DESeq2 results look wrong after Salmon | TPM used instead of counts | Use tximport/tximeta to import `quant.sf` |
 
 ## Differential Expression (DESeq2)
