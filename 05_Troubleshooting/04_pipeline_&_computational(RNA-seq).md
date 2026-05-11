@@ -129,7 +129,62 @@ Salmon and featureCounts operate on fundamentally different inputs — a transcr
 
 ### TPM values look reasonable but DESeq2 results are poor
 
-Salmon's **TPM output should never be fed directly into DESeq2**. DESeq2 requires raw, unnormalized counts. tximport or tximeta are typically used to import Salmon's `quant.sf` files, which correctly handles the conversion to estimated counts while preserving the information DESeq2 needs for its own normalization. Passing TPM values into DESeq2 will produce results that appear to run without error but are statistically invalid.
+While possible issues with the DESeq2 workflow are covered below, it is important to mention now that Salmon's **TPM output should never be fed directly into DESeq2**. DESeq2 requires raw, unnormalized counts. tximport or tximeta are typically used to import Salmon's `quant.sf` files, which correctly handles the conversion to estimated counts while preserving the information DESeq2 needs for its own normalization. Passing TPM values into DESeq2 will produce results that appear to run without error but are statistically invalid.
+
+A standard Salmon command would look something like this:
+
+- **Salmon index generation:**
+
+```bash
+salmon index \
+  -t transcripts.fa \
+  -i salmon_index \
+  -d decoys.txt \
+  -k 31
+```
+
+Where:
+
+<div align="center">
+  
+| Parameter | Meaning |
+| :--- | :--- |
+| `-t` | Transcriptome FASTA |
+| `-i` | Output index folder |
+| `-d` | Decoy sequences (usually genome FASTA-derived list) |
+| `-k` | k-mer size (default often fine, but explicitly shown here) |
+</div>
+
+<br>
+
+- **Sample quantification:**
+
+```bash
+salmon quant \
+  -i salmon_index \
+  -l A \
+  -1 sample_R1.fastq.gz \
+  -2 sample_R2.fastq.gz \
+  -p 8 \
+  --validateMappings \
+  -o sample_quant
+```
+
+Where:
+
+<div align="center">
+  
+| Parameter | Meaning |
+| :--- | :--- |
+| `-i` | Salmon index |
+| `-l A` | Automatic library type detection |
+| `-1 / -2` | Paired-end reads |
+| `-p` | Threads |
+| `--validateMappings` | Improves mapping accuracy (recommended) |
+| `-o` | Output folder |
+</div>
+
+<br>
 
 ### Quick diagnostic guide
 
